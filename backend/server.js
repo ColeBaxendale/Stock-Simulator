@@ -2,11 +2,13 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/users');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 
 const app = express();
 app.use(cors());
+app.use(cookieParser());
 // Mongo Connection
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))

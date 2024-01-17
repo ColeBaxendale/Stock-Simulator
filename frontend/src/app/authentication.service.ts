@@ -6,17 +6,24 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthenticationService {
+  private authTokenKey = 'authToken';
+
   constructor() {}
 
   setAuthToken(token: string): void {
-    localStorage.setItem('authToken', token);
+    // Store the token in an HttpOnly cookie for enhanced security
+    document.cookie = `authToken=${token}; HttpOnly; Secure; SameSite=Strict`;
   }
 
   getAuthToken(): string | null {
-    return localStorage.getItem('authToken');
+    const authToken = document.cookie
+      .split('; ')
+      .find((cookie) => cookie.startsWith('authToken='));
+    return authToken ? authToken.split('=')[1] : null;
   }
 
   clearAuthToken(): void {
-    localStorage.removeItem('authToken');
+    // Clear the authentication token from the cookie
+    document.cookie = 'authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; HttpOnly; Secure; SameSite=Strict';
   }
 }

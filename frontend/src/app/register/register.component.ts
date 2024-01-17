@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiService } from '../api.service'; // Update the path as needed
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,9 @@ export class RegisterComponent {
   email: string = '';
   password: string = '';
 
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private router: Router,
+    private apiService: ApiService) {}
 
   register() {
     const userData = {
@@ -23,7 +26,8 @@ export class RegisterComponent {
     this.apiService.registerUser(userData).subscribe(
       (response) => {
         // Handle a successful registration response here
-        console.log('Registration successful', response);
+        console.log('Registration successful');
+        this.router.navigate(['/login']);
       },
       (error) => {
         // Handle registration error here
