@@ -93,7 +93,7 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Send the token as the response
-        res.json({ token, username: user.username});
+        res.json({ token });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -343,7 +343,7 @@ exports.changeUserDetails = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        
+
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Email already in use' });
