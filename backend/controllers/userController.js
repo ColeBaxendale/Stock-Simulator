@@ -294,7 +294,7 @@ exports.resetUserAccount = async (req, res) => {
     try {
         // Retrieve user ID from request and fetch user's transactions
         const userId = req.user.userId;
-        const user = await User.findById(userId).select('transactions');
+        const user = await User.findById(userId);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
@@ -310,6 +310,57 @@ exports.resetUserAccount = async (req, res) => {
 
         // Respond with a success message
         res.status(200).json({ message: 'User account has been reset successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.getUserDetails = async (req, res) => {
+    try {
+        // Retrieve user ID from request and fetch user's details
+        const userId = req.user.userId;
+        const user = await User.findById(userId).select('username email');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Respond with the user's details
+        res.status(200).json({ username: user.username, email: user.email });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+exports.changeUserDetails = async (req, res) => {
+    try {
+        const userId = req.user.userId; // Retrieve user ID from the authenticated user
+        const { email, username } = req.body; // Get updated email and username from request body
+
+        // Fetch the user by ID
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already in use' });
+        }
+        // Update user details if provided
+        if (email) {
+            user.email = email;
+        }
+        if (username) {
+            user.username = username;
+        }
+
+        // Save the updated user document
+        await user.save();
+
+        // Respond with a success message
+        res.status(200).json({ message: 'User details updated successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

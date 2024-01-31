@@ -96,5 +96,9 @@ router.get('/transaction-portfolio', authenticateToken, userController.getUserPo
  */
 router.put('/reset-account', authenticateToken, userController.resetUserAccount);
 
+router.get('/user-details', authenticateToken, userController.getUserDetails);
+
+router.post('/change-user-details', authenticateToken, userController.changeUserDetails);
+
 // Export the router so it can be used in the main server file (usually server.js or app.js).
 module.exports = router;
