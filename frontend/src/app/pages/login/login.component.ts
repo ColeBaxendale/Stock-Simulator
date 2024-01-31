@@ -25,7 +25,13 @@ export class LoginComponent {
   }
 
   constructor(private http: HttpClient, private router: Router) { }
-  
+  ngOnInit() {
+    // Set the 'chk' checkbox to be checked by default
+    const chk = document.getElementById('chk') as HTMLInputElement;
+    if (chk) {
+      chk.checked = true;
+    }
+  }
   onRegister() {
     console.log('Register button clicked');
     console.log('registerObj:', this.registerObj);
@@ -68,6 +74,9 @@ export class LoginComponent {
         console.log('Response:', res);
         if (res.token) {
           // Successful login, store the token in local storage
+          const username = res.username;
+          localStorage.setItem('username', username);
+          console.log(username)
           localStorage.setItem('loginToken', res.token);
           this.router.navigateByUrl('/dashboard');
         } else {
