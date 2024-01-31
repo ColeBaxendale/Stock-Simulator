@@ -8,13 +8,16 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { CurrentTimeComponent } from './components/current-time/current-time.component';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    CurrentTimeComponent
   ],
   imports: [
     BrowserModule,
@@ -22,7 +25,7 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
