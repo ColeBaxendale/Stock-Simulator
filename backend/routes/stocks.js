@@ -42,5 +42,7 @@ router.get('/stock', stockController.viewStockDetails);
  */
 router.get('/news', stockController.getStockNews);
 
+router.get('/searchbar', stockController.searchBar);
+
 // Exporting the router so it can be used in the main server file (usually server.js or app.js).
 module.exports = router;

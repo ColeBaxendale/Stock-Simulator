@@ -1,0 +1,25 @@
+<!-- stock-page.component.html -->
+
+<div>
+    <h1>Stock Details</h1>
+    <h2>Stock: {{ stockData.symbol }}</h2>
+    <p>Current Price: {{ stockData.currentPrice }}</p>
+    <p>Previous Close Price: {{ stockData.previousClosePrice }}</p>
+    <p>Opening Price: {{ stockData.openingPrice }}</p>
+    <p>High Price: {{ stockData.highPrice }}</p>
+    <p>Low Price: {{ stockData.lowPrice }}</p>
+    <p>Volume: {{ stockData.volume }}</p>
+    <p>Change Percentage: {{ stockData.change_percentage }}%</p>
+
+    <div *ngIf="stockNews.length > 0" class="stock-news">
+        <h1>Latest News</h1>
+        <div *ngFor="let newsItem of stockNews" class="news-item">
+            <img [src]="newsItem.bannerImage" [alt]="newsItem.title" class="news-image">
+            <div class="news-content">
+                <a [href]="newsItem.url" target="_blank">
+                    <h3>{{ newsItem.title }}</h3>
+                </a>
+                <p>{{ newsItem.summary }}</p>
+            </div>
+        </div>
+    </div>

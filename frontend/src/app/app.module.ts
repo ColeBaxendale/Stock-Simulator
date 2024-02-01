@@ -10,6 +10,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CurrentTimeComponent } from './components/current-time/current-time.component';
 import { DatePipe } from '@angular/common';
+import { SearchbarComponent } from './components/searchbar/searchbar.component';
+import { StockPageComponent } from './components/stock-page/stock-page.component';
+
 
 @NgModule({
   declarations: [
@@ -17,7 +20,9 @@ import { DatePipe } from '@angular/common';
     LoginComponent,
     DashboardComponent,
     PageNotFoundComponent,
-    CurrentTimeComponent
+    CurrentTimeComponent,
+    SearchbarComponent,
+    StockPageComponent
   ],
   imports: [
     BrowserModule,

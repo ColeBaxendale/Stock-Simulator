@@ -83,11 +83,11 @@ exports.viewStockDetails = async (req, res) => {
       // Extract relevant stock information from the response data
       const stockData = response.data['Global Quote'];
       const stockSymbol = stockData['01. symbol'];
-      const currentPrice = parseFloat(stockData['05. price']);
-      const previousClosePrice = parseFloat(stockData['08. previous close']);
-      const openingPrice = parseFloat(stockData['02. open']);
-      const highPrice = parseFloat(stockData['03. high']);
-      const lowPrice = parseFloat(stockData['04. low']);
+      const currentPrice = parseFloat(stockData['05. price']).toFixed(2);
+      const previousClosePrice = parseFloat(stockData['08. previous close']).toFixed(2);
+      const openingPrice = parseFloat(stockData['02. open']).toFixed(2);
+      const highPrice = parseFloat(stockData['03. high']).toFixed(2);
+      const lowPrice = parseFloat(stockData['04. low']).toFixed(2);
       const volume = parseFloat(stockData['06. volume']);
       const changePercent = parseFloat(stockData['10. change percent']).toFixed(2);
 
@@ -147,5 +147,38 @@ exports.getStockNews = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while fetching news data' });
+  }
+};
+
+
+/**
+ * Handles symbol search using Alpha Vantage API.
+ * @param {Request} req - The express request object, containing the query with the keywords.
+ * @param {Response} res - The express response object.
+ */
+exports.searchBar = async (req, res) => {
+  const { keywords } = req.query;
+  const apiUrl = `${baseUrl}?function=SYMBOL_SEARCH&keywords=${keywords}&apikey=${apiKey}`;
+
+  try {
+    const response = await axios.get(apiUrl, {
+      headers: { 'User-Agent': 'axios' },
+    });
+
+    if (response.status !== 200) {
+      console.error('Status:', response.status);
+      res.status(response.status).json({ error: 'API Error' });
+      return;
+    }
+
+    const data = response.data;
+    const usStocks = data.bestMatches
+      .filter(stock => stock['4. region'] === 'United States')
+      .slice(0, 4); // Limit to the first 4 US stocks
+
+    res.json({ bestMatches: usStocks });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
