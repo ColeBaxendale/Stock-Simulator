@@ -36,13 +36,14 @@ const { buyStockPortfolio, addTransaction, sellStockPortfolio } = require('./buy
 exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-
+        if (password === '') {
+            return res.status(400).json({ message: 'Invalid password' });
+        }
         // Check if a user with the given email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Email already in use' });
         }
-
         // Hash the password for secure storage
         const hashedPassword = await bcrypt.hash(password, 10);
 

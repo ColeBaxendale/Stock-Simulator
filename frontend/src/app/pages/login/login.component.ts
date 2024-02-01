@@ -54,7 +54,7 @@ export class LoginComponent {
       },
       error: (error: any) => {
         if (error.status === 400) {
-          alert('Email already in use');
+          alert(error.message);
         } else {
           console.error('An error occurred:', error);
         }
