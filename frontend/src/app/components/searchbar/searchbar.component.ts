@@ -70,6 +70,9 @@ export class SearchbarComponent {
   
     if (stockExists) {
       this.router.navigate(['/stock', stockSymbol]); // Navigate if the stock exists
+      this.keywords = '';
+      this.searchResults = [];
+      this.searchPerformed = false;
     } else {
       // Handle the case where the stock does not exist
       // You might want to show an error message to the user
