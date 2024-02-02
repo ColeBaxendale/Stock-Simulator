@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>{{ data.ticker }}</h2> <!-- Make sure this matches the property name -->
+<mat-dialog-content>
+  <p>Quantity Owned: {{ data.quantityOwned }}</p>
+  <p>Average Buy Price: ${{ data.averageBuyPrice }}</p>
+  <!-- Input for specifying sell quantity -->
+  <div>
+    <label for="sellQuantity">Sell Quantity:</label>
+    <input id="sellQuantity" type="number" [(ngModel)]="sellQuantity" min="1" [max]="data.quantityOwned" />
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="true">Close</button>
+  <!-- Update sell button to use sellQuantity -->
+  <button mat-button (click)="sellStock()">Sell</button>
+</mat-dialog-actions>
