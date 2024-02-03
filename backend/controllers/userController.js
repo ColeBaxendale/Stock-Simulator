@@ -77,7 +77,7 @@ exports.register = async (req, res) => {
         if (existingUser) {
             return res.status(409).json({ message: 'Email already in use' });
         }
-
+        email.toLowerCase()
         // Hash the password for secure storage
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -130,6 +130,8 @@ exports.login = async (req, res) => {
         if (email.length > 100 || password.length > 100) {
             return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
+
+        email.toLowerCase()
 
         // Find the user by email
         const user = await User.findOne({ email });

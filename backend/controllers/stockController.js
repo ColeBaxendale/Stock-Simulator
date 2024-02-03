@@ -46,6 +46,7 @@ exports.searchStock = async (req, res) => {
     if (symbol.length > 5) {
       return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
     }
+    symbol.toUpperCase()
 
 
     const currentPrice = await fetchStockPrice(symbol);
@@ -76,7 +77,7 @@ exports.viewStockDetails = async (req, res) => {
     if (symbol.length > 5) {
       return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
     }
-
+    symbol.toUpperCase()
     const functionParam = 'GLOBAL_QUOTE'; // Alpha Vantage function parameter for global quote
 
     // Check if the request includes a 'search' query parameter
@@ -154,7 +155,7 @@ exports.getStockNews = async (req, res) => {
     if (symbol.length > 5) {
       return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
     }
-
+    symbol.toUpperCase()
     const functionParam = 'NEWS_SENTIMENT'; // Alpha Vantage function parameter for news sentiment data
 
     // Make a request to Alpha Vantage to get news and sentiment data
@@ -205,6 +206,8 @@ exports.searchBar = async (req, res) => {
       if (keywords.length > 5) {
         return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
       }
+
+      keywords.toUpperCase()
   const apiUrl = `${baseUrl}?function=SYMBOL_SEARCH&keywords=${keywords}&apikey=${apiKey}`;
 
   try {

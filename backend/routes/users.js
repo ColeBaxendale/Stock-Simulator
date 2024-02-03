@@ -82,12 +82,6 @@ router.get('/portfolio', authenticateToken, userController.getUserPortfolio);
  */
 router.get('/transaction-history', authenticateToken, userController.getUserTransactions);
 
-/**
- * GET route for fetching combined details of a user's portfolio and transaction history.
- * Authenticated users can get a combined view of their portfolio and transactions.
- * The 'getUserPortfolioTransactions' function in the userController returns both portfolio and transaction data.
- */
-router.get('/transaction-portfolio', authenticateToken, userController.getUserPortfolioTransactions);
 
 /**
  * PUT route for reseting the user's account back to default variables after registering.
