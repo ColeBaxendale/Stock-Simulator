@@ -35,14 +35,21 @@ const { fetchStockPrice } =      require('../fetchCurrentPrice/fetchPrice'); // 
  */
 exports.searchStock = async (req, res) => {
   try {
-    const symbol = req.query.symbol; // Extract stock symbol from request query
-    const currentPrice = await fetchStockPrice(symbol); // Fetch current price of the stock
-    res.json({ currentPrice }); // Send the current price in response
+    const symbol = req.query.symbol;
+
+    // Check if the symbol is missing or empty
+    if (!symbol || symbol === '') {
+      return res.status(400).json({ message: 'Symbol is required' });
+    }
+
+    const currentPrice = await fetchStockPrice(symbol);
+    res.json({ currentPrice });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while fetching the stock quote' });
   }
 };
+
 
 /**
  * Retrieves detailed information about a specific stock using its symbol.
