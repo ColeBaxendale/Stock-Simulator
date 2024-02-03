@@ -39,11 +39,55 @@ export class UserServiceService {
     return this.http.post<any>(url, requestBody, { headers });
   }
 
+  private validateStockSymbol(symbol: string): string | null {
+    // Check if the symbol is missing or empty
+    if (!symbol || symbol === '') {
+      return 'Stock symbol is required.';
+    }
+  
+    // Test for input length exceeding the maximum allowed
+    if (symbol.length > 5) {
+      return 'Stock symbol length should not exceed 5 characters.';
+    }
+
+    // If all checks pass, return null (no error)
+    return null;
+  }
+
+
+
+  private isValidQuantity(quantity: number): boolean {
+
+    
+  }
+
+  private isValidStockSymbol(stockSymbol: string): boolean {
+    // Implement your validation logic for stock symbols
+    // Return true if valid, false otherwise
+  }
+
+  private isValidQuantity(quantity: number): boolean {
+    // Implement your validation logic for quantity
+    // Return true if valid, false otherwise
+  }
+
+  private getAuthorizationHeaders(): HttpHeaders {
+    // Test 3: Validate user authorization token
+    const token = localStorage.getItem('loginToken');
+    if (!token) {
+      return new HttpHeaders();
+    }
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  }
 }
 
+
+
+
 /*
-register
-login
 deposit
 getUserPortfolio
 getUserTransactions
