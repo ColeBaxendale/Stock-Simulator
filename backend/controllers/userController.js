@@ -94,29 +94,34 @@ exports.register = async (req, res) => {
  * @param {Response} res - Express response object.
  */
 exports.login = async (req, res) => {
-    // Validate request body for errors
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
-    }
-
     try {
         const { email, password } = req.body;
 
-        // Find the user by email
-        const user = await User.findOne({ email });
-        if (!user) {
+        // Validate input lengths to prevent excessively long inputs
+        if (email.length > 100 || password.length > 100) {
+            return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+        }
+
+        // Check for valid email format using a regular expression
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+        // Check if a user with the given email exists
+        const existingUser = await User.findOne({ email });
+        if (!existingUser) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Compare the provided password with the stored hash
-        const isMatch = await bcrypt.compare(password, user.passwordHash);
-        if (!isMatch) {
+        // Check if the password matches
+        const isPasswordValid = await bcrypt.compare(password, existingUser.passwordHash);
+        if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
         // Generate a JWT token for the user
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: User._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Send the token as the response
         res.json({ token });
