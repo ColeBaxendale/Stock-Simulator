@@ -6,8 +6,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserServiceService {
+  private baseUrl = 'http://localhost:3000/api/users';
 
   constructor(private http: HttpClient) { }
+
+  register(userData: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/register`, userData);
+  }
+
+  login(credentials: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login`, credentials);
+  }
+
 
   sellStock(stockSymbol: string, quantity: number): Observable<any> {
     const url = 'http://localhost:3000/api/users/sell-stock';

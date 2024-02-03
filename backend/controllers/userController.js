@@ -36,14 +36,35 @@ const { buyStockPortfolio, addTransaction, sellStockPortfolio } = require('./buy
 exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        if (password === '') {
-            return res.status(400).json({ message: 'Invalid password' });
+
+        // Validate input lengths to prevent excessively long inputs
+        if (username.length > 50 || email.length > 100 || password.length > 100) {
+            return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
+
+        // Check for valid email format using a regular expression
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+        // Check for a secure password (at least 8 characters with a mix of letters, numbers, and symbols)
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+        if (!passwordRegex.test(password)) {
+            return res.status(400).json({ message: 'Password must be at least 8 characters with a mix of letters, numbers, and symbols' });
+        }
+
+        // Check for a valid username (at least 4 characters)
+        if (username.length < 4) {
+            return res.status(400).json({ message: 'Username must be at least 4 characters' });
+        }
+
         // Check if a user with the given email already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.status(400).json({ message: 'Email already in use' });
+            return res.status(409).json({ message: 'Email already in use' });
         }
+
         // Hash the password for secure storage
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -62,6 +83,10 @@ exports.register = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+
+
+
 
 /**
  * Handles user login.

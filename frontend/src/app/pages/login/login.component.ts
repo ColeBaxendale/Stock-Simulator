@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { UserServiceService } from '../../services/user-service.service';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +25,7 @@ export class LoginComponent {
     "password": ""
   }
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private userService: UserServiceService) { }
   ngOnInit() {
     // Set the 'chk' checkbox to be checked by default
     const chk = document.getElementById('chk') as HTMLInputElement;
@@ -36,25 +37,21 @@ export class LoginComponent {
     console.log('Register button clicked');
     console.log('registerObj:', this.registerObj);
   
-    this.registerSubscription = this.http.post('http://localhost:3000/api/users/register', this.registerObj).subscribe({
+    this.registerSubscription = this.userService.register(this.registerObj).subscribe({
       next: (res: any) => {
         console.log('Response:', res);
-        if (res.message === 'User registered successfully') {
-          const chk = document.getElementById('chk') as HTMLInputElement;
-          if (chk) {
-            chk.checked = true;
-          }
-          this.loginObj.email = this.registerObj.email
-          alert('User registered successfully');
-          this.registerObj = {}
-          this.router.navigateByUrl('');
+        if (res) {
+          // Handle successful registration
         } else {
           alert('Register failed');
         }
       },
       error: (error: any) => {
-        if (error.status === 400) {
-          alert(error.message);
+        if (error.status === 409) {
+          alert('Email already in use');
+        } else if (error.status === 400) {
+          // Handle other validation errors (e.g., invalid data format)
+          alert('Invalid data format');
         } else {
           console.error('An error occurred:', error);
         }
