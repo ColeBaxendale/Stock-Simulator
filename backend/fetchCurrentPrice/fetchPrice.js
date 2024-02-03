@@ -34,6 +34,15 @@ const apiKey = process.env.ALPHA_ADV_API;
  * @throws {Error} - Throws an error if the stock symbol is not found or the API fails to respond.
  */
 async function fetchStockPrice(symbol) {
+    // Check if the symbol is missing or empty
+    if (!symbol || symbol === '') {
+        return res.status(400).json({ message: 'Symbol is required' });
+    }
+
+    // Test for input length exceeding maximum allowed
+    if (symbol.length > 5) {
+        return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+    }
     const functionParam = 'GLOBAL_QUOTE';
     const response = await axios.get(baseUrl, {
         params: {
