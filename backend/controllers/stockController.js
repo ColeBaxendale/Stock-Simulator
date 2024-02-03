@@ -43,7 +43,7 @@ exports.searchStock = async (req, res) => {
     }
 
     // Test for input length exceeding maximum allowed
-    if (symbol.length > 5 || quantity > 1000) {
+    if (symbol.length > 5) {
       return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
     }
 
@@ -73,7 +73,7 @@ exports.viewStockDetails = async (req, res) => {
 
 
     // Test for input length exceeding maximum allowed
-    if (symbol.length > 5 || quantity > 1000) {
+    if (symbol.length > 5) {
       return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
     }
 
@@ -151,7 +151,7 @@ exports.getStockNews = async (req, res) => {
 
 
     // Test for input length exceeding maximum allowed
-    if (symbol.length > 5 || quantity > 1000) {
+    if (symbol.length > 5) {
       return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
     }
 
