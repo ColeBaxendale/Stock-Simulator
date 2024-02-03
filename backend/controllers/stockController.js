@@ -59,6 +59,12 @@ exports.searchStock = async (req, res) => {
 exports.viewStockDetails = async (req, res) => {
   try {
     const symbol = req.query.symbol; // Extract stock symbol from request query
+
+    // Check if the symbol is missing or empty
+    if (!symbol || symbol === '') {
+      return res.status(400).json({ message: 'Symbol is required' });
+    }
+
     const functionParam = 'GLOBAL_QUOTE'; // Alpha Vantage function parameter for global quote
 
     // Check if the request includes a 'search' query parameter
