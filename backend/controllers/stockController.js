@@ -71,6 +71,12 @@ exports.viewStockDetails = async (req, res) => {
       return res.status(400).json({ message: 'Symbol is required' });
     }
 
+    
+    // Test for input length exceeding maximum allowed
+    if (symbol.length > 5 || quantity > 1000) {
+      return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+    }
+
     const functionParam = 'GLOBAL_QUOTE'; // Alpha Vantage function parameter for global quote
 
     // Check if the request includes a 'search' query parameter
