@@ -30,15 +30,17 @@ const authenticateToken = (req, res, next) => {
     // Extract the token from the authorization header
     const token = authHeader && authHeader.split(' ')[1];
     
-    // If the token is null (not present), return a 401 Unauthorized status
-    if (token == null) return res.sendStatus(401);
+    // Test 1: Token Validation
+    if (token == null) {
+        return res.sendStatus(401); // Test: Token Not Provided
+    }
 
-    // Verify the token using jwt.verify
+    // Test 2: Token Expiry
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        // Log an error if there's an issue with the token verification
+        // Test 3: Error Handling
         if (err) {
-            console.log('Error authorizing user');
-            return res.sendStatus(403); // Forbidden status if the token is invalid
+            console.error('Error authorizing user:', err);
+            return res.sendStatus(403); // Test: Token Verification Failure
         }
 
         // If the token is valid, attach the user info to the request object
