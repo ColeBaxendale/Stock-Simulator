@@ -36,6 +36,19 @@ const { buyStockPortfolio, addTransaction, sellStockPortfolio } = require('./buy
 exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
+        
+        if (!username || username === '') {
+            return res.status(400).json({ message: 'Username is required' });
+        }
+
+        if (!email || email === '') {
+            return res.status(400).json({ message: 'Email is required' });
+        }
+
+        if (!password || password === '') {
+            return res.status(400).json({ message: 'Password is required' });
+        }
+
 
         // Validate input lengths to prevent excessively long inputs
         if (username.length > 50 || email.length > 100 || password.length > 100) {
@@ -94,34 +107,44 @@ exports.register = async (req, res) => {
  * @param {Response} res - Express response object.
  */
 exports.login = async (req, res) => {
+    // Validate request body for errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    
+
     try {
         const { email, password } = req.body;
 
-        // Validate input lengths to prevent excessively long inputs
+        if (!email || email === '') {
+            return res.status(400).json({ message: 'Email is required' });
+        }
+
+        if (!password || password === '') {
+            return res.status(400).json({ message: 'Password is required' });
+        }
+
+
+        // Test for input length exceeding maximum allowed
         if (email.length > 100 || password.length > 100) {
             return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
 
-        // Check for valid email format using a regular expression
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
-        }
-
-        // Check if a user with the given email exists
-        const existingUser = await User.findOne({ email });
-        if (!existingUser) {
+        // Find the user by email
+        const user = await User.findOne({ email });
+        if (!user) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Check if the password matches
-        const isPasswordValid = await bcrypt.compare(password, existingUser.passwordHash);
-        if (!isPasswordValid) {
+        // Compare the provided password with the stored hash
+        const isMatch = await bcrypt.compare(password, user.passwordHash);
+        if (!isMatch) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
         // Generate a JWT token for the user
-        const token = jwt.sign({ userId: User._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         // Send the token as the response
         res.json({ token });
@@ -129,7 +152,6 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 /**
  * Processes a stock purchase for a user.
  * @param {Request} req - Express request object with user ID, stock symbol, and quantity.
@@ -141,9 +163,34 @@ exports.buyStock = async (req, res) => {
         const { symbol, quantity } = req.body;
         const userId = req.user.userId;
 
-        // Fetch user and stock price from the database and API, respectively
+        // Validate input
+        if (!symbol || !quantity || isNaN(quantity) || quantity <= 0) {
+            return res.status(400).json({ message: 'Invalid input' });
+        }
+
+        // Check if inputs are too large
+        if (symbol.length > 5) {
+            return res.status(400).json({ message: 'Symbol length exceeds maximum allowed' });
+        }
+
+        if (quantity > 1000) {
+            return res.status(400).json({ message: 'Quantity exceeds maximum allowed' });
+        }
+
+        // Fetch user from the database
         const user = await User.findById(userId);
+
+        // Check if the user is not found
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if the user has enough funds
         const stockPrice = await fetchStockPrice(symbol);
+        const totalCost = quantity * stockPrice;
+        if (totalCost > user.balance) {
+            return res.status(400).json({ message: 'Insufficient funds' });
+        }
 
         // Execute the buy stock operation
         await buyStockPortfolio(user, symbol, quantity, stockPrice);
