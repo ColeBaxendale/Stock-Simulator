@@ -36,7 +36,7 @@ const { buyStockPortfolio, addTransaction, sellStockPortfolio } = require('./buy
 exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
-        
+
         if (!username || username === '') {
             return res.status(400).json({ message: 'Username is required' });
         }
@@ -112,7 +112,7 @@ exports.login = async (req, res) => {
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    
+
 
     try {
         const { email, password } = req.body;
@@ -283,31 +283,6 @@ exports.deposit = async (req, res) => {
 
 
 /**
- * Retrieves user's portfolio and transaction history.
- * @param {Request} req - Express request object with user ID.
- * @param {Response} res - Express response object.
- */
-exports.getUserPortfolioTransactions = async (req, res) => {
-    try {
-        // Retrieve user ID from request and fetch user details
-        const userId = req.user.userId;
-        const user = await User.findById(userId).select('portfolio transactions');
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Respond with both portfolio and transaction history
-        res.status(200).json({
-            portfolio: user.portfolio,
-            transactions: user.transactions
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
-/**
  * Retrieves user's portfolio.
  * @param {Request} req - Express request object with user ID.
  * @param {Response} res - Express response object.
@@ -384,6 +359,7 @@ exports.resetUserAccount = async (req, res) => {
         user.transactions = []; // Clear transactions array
         user.buyingPower = 1000; // Reset buying power to initial value, or any other value as per business logic
         user.totalInvestment = 1000;
+
         // Save the updated user details
         await user.save();
 
@@ -416,11 +392,28 @@ exports.changeUserDetails = async (req, res) => {
         const userId = req.user.userId; // Retrieve user ID from the authenticated user
         const { email, username } = req.body; // Get updated email and username from request body
 
+
         // Fetch the user by ID
         const user = await User.findById(userId);
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (username.length > 50 || email.length > 100) {
+            return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+        }
+
+        // Check for valid email format using a regular expression
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+
+        // Check for a valid username (at least 4 characters)
+        if (username.length < 4) {
+            return res.status(400).json({ message: 'Username must be at least 4 characters' });
         }
 
         const existingUser = await User.findOne({ email });
@@ -444,3 +437,4 @@ exports.changeUserDetails = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
