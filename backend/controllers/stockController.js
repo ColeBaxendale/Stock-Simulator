@@ -25,7 +25,7 @@ const axios = require('axios');
 // Set up for accessing Alpha Vantage API
 const baseUrl = 'https://www.alphavantage.co/query'; // Base URL for Alpha Vantage API
 const apiKey = process.env.ALPHA_ADV_API; // API key for Alpha Vantage, stored in environment variable
-const { fetchStockPrice } =      require('../fetchCurrentPrice/fetchPrice'); // Import function to fetch current stock price
+const { fetchStockPrice } = require('../fetchCurrentPrice/fetchPrice'); // Import function to fetch current stock price
 
 // Function to search for the latest price of a given stock symbol
 /**
@@ -41,6 +41,12 @@ exports.searchStock = async (req, res) => {
     if (!symbol || symbol === '') {
       return res.status(400).json({ message: 'Symbol is required' });
     }
+
+    // Test for input length exceeding maximum allowed
+    if (symbol.length > 5 || quantity > 1000) {
+      return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+    }
+
 
     const currentPrice = await fetchStockPrice(symbol);
     res.json({ currentPrice });
