@@ -219,9 +219,20 @@ exports.sellStock = async (req, res) => {
         const { symbol, quantity } = req.body;
         const userId = req.user.userId;
 
+        // Test for input length exceeding maximum allowed
+        if (symbol.length > 5 || quantity > 1000) {
+            return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+        }
+
         // Fetch user and stock price from the database and API, respectively
         const user = await User.findById(userId);
         const stockPrice = await fetchStockPrice(symbol);
+
+        // Check if the user has enough shares to sell
+        const userStockQuantity = user.portfolio.get(symbol) || 0;
+        if (quantity > userStockQuantity) {
+            return res.status(400).json({ message: 'Insufficient shares to sell' });
+        }
 
         // Execute the sell stock operation
         await sellStockPortfolio(user, symbol, quantity, stockPrice);
@@ -238,7 +249,6 @@ exports.sellStock = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
 /*
 * Processes a deposit into a user's account.
 * @param {Request} req - Express request object with user ID and deposit amount.
