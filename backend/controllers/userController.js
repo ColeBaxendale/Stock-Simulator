@@ -55,6 +55,10 @@ exports.register = async (req, res) => {
             return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
 
+        // Check for a valid username (at least 4 characters)
+        if (username.length < 4) {
+            return res.status(400).json({ message: 'Username must be at least 4 characters' });
+        }
         // Check for valid email format using a regular expression
         const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
         if (!emailRegex.test(email)) {
@@ -65,11 +69,6 @@ exports.register = async (req, res) => {
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
         if (!passwordRegex.test(password)) {
             return res.status(400).json({ message: 'Password must be at least 8 characters with a mix of letters, numbers, and symbols' });
-        }
-
-        // Check for a valid username (at least 4 characters)
-        if (username.length < 4) {
-            return res.status(400).json({ message: 'Username must be at least 4 characters' });
         }
 
         // Check if a user with the given email already exists
