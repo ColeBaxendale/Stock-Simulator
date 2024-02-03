@@ -71,7 +71,7 @@ exports.viewStockDetails = async (req, res) => {
       return res.status(400).json({ message: 'Symbol is required' });
     }
 
-    
+
     // Test for input length exceeding maximum allowed
     if (symbol.length > 5 || quantity > 1000) {
       return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
@@ -143,6 +143,18 @@ exports.viewStockDetails = async (req, res) => {
 exports.getStockNews = async (req, res) => {
   try {
     const symbol = req.query.symbol; // Extract stock symbol from request query
+
+    // Check if the symbol is missing or empty
+    if (!symbol || symbol === '') {
+      return res.status(400).json({ message: 'Symbol is required' });
+    }
+
+
+    // Test for input length exceeding maximum allowed
+    if (symbol.length > 5 || quantity > 1000) {
+      return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+    }
+
     const functionParam = 'NEWS_SENTIMENT'; // Alpha Vantage function parameter for news sentiment data
 
     // Make a request to Alpha Vantage to get news and sentiment data
