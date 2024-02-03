@@ -265,18 +265,8 @@ exports.deposit = async (req, res) => {
         const maxBuyingPower = 100000000;
 
         // Check for invalid or excessive deposit amounts
-        if (isNaN(amountNum)) {
-            return res.status(400).json({ message: `Please enter a valid number` });
-        }
-        if (amountNum <= 0) {
-            return res.status(400).json({ message: `Please enter a number greater than zero` });
-        }
-        if (amountNum > maxDepositAmount) {
-            return res.status(400).json({ message: `The max amount you can deposit at one time is $100,000` });
-        }
-        if (amountNum + user.buyingPower > maxBuyingPower) {
-            const maxDepositAllowed = (maxBuyingPower - user.buyingPower).toFixed(2);
-            return res.status(400).json({ message: `The max amount you can have in buying power is $100,000,000. The most you can deposit is ${maxDepositAllowed}` });
+        if (isNaN(amountNum) || amountNum <= 0 || amountNum > maxDepositAmount || (amountNum + user.buyingPower) > maxBuyingPower) {
+            return res.status(400).json({ message: 'Invalid deposit amount' });
         }
 
         // Update the user's buying power and total investment
@@ -290,6 +280,7 @@ exports.deposit = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 /**
  * Retrieves user's portfolio and transaction history.
