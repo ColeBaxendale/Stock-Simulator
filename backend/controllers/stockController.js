@@ -195,6 +195,16 @@ exports.getStockNews = async (req, res) => {
  */
 exports.searchBar = async (req, res) => {
   const { keywords } = req.query;
+
+      // Check if the symbol is missing or empty
+      if (!keywords || keywords === '') {
+        return res.status(400).json({ message: 'Symbol is required' });
+      }
+  
+      // Test for input length exceeding maximum allowed
+      if (keywords.length > 5) {
+        return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+      }
   const apiUrl = `${baseUrl}?function=SYMBOL_SEARCH&keywords=${keywords}&apikey=${apiKey}`;
 
   try {
