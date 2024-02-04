@@ -24,7 +24,7 @@ const User = require('../models/user');
 async function buyStockPortfolio(user, symbol, quantity, stockPrice) {
     const totalCost = stockPrice * quantity;
     if (user.buyingPower < totalCost) {
-        throw new Error('Insufficient buying power to complete the transaction.');
+        return 'Insufficient buying power to complete the transaction.';
     }
     const existingStock = user.portfolio.get(symbol);
     if (existingStock) {
@@ -47,6 +47,7 @@ async function buyStockPortfolio(user, symbol, quantity, stockPrice) {
             averageBuyPrice: stockPrice
         });
         user.buyingPower -= totalCost;
+        return null;
     }
 }
 

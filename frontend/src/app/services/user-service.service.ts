@@ -34,7 +34,12 @@ export class UserServiceService {
     }
   }
 
-  buyStock(symbol: string, quantity: number): Observable<any> {
+  buyStock(requestBody: { symbol: string; quantity: number; currentPrice: number }): Observable<any> {
+    const symbol = requestBody.symbol
+    const quantity = requestBody.quantity
+    const currentPrice = requestBody
+    console.log(symbol, quantity, currentPrice);
+    
     const symbolErrorMessage = this.validateStockSymbol(symbol);
     const quantityErrorMessage = this.isValidQuantity(quantity);
     if (symbolErrorMessage !== null || quantityErrorMessage !== null) {
@@ -46,17 +51,22 @@ export class UserServiceService {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${authToken}`
       });
-      const requestBody = { symbol: symbol, quantity: quantity };
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
-          // Handle the authentication error here (e.g., show an error message or redirect to login)
-          console.error('Authentication error:', error);
-          alert("Please log in again.");
-          localStorage.removeItem('loginToken');
-          window.location.reload();
-
-          // You can return an observable with an error message here if needed
-          return throwError(() => new Error('Authentication error'));
+          console.error('Error:', error);
+          if (error.status === 400) {
+            const errorMessage = error.error?.message || 'Bad Request';
+            alert(errorMessage)
+            return throwError(() => new Error(errorMessage));
+          } else {
+            console.error('Authentication error:', error);
+            alert('Please log in again.');
+            localStorage.removeItem('loginToken');
+            window.location.reload();
+  
+            // You can return an observable with an error message here if needed
+            return throwError(() => new Error('Authentication error'));
+          }
         })
       );
     }

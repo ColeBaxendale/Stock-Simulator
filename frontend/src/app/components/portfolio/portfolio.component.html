@@ -1,4 +1,10 @@
-<div *ngIf="loading">Loading...</div>
+<div *ngIf="loading">
+  <div class="loading-animation">
+    <div class="dot dot1"></div>
+    <div class="dot dot2"></div>
+    <div class="dot dot3"></div>
+  </div>
+</div>
 <div *ngIf="!loading && stocks.length > 0">
   <h2>Portfolio</h2>
   <table>
@@ -16,8 +22,10 @@
         <td>{{ stock.ticker }}</td>
         <td>{{ stock.quantityOwned }}</td>
         <td>{{ stock.averageBuyPrice | currency }}</td>
-        <td *ngIf="stock.currentPrice !== undefined">{{ stock.currentPrice?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
-        <td *ngIf="stock.profitLoss !== undefined">{{ stock.profitLoss?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
+        <td *ngIf="stock.currentPrice !== undefined">{{ stock.currentPrice?.toLocaleString('en-US', { style: 'currency',
+          currency: 'USD' }) }}</td>
+        <td *ngIf="stock.profitLoss !== undefined">{{ stock.profitLoss?.toLocaleString('en-US', { style: 'currency',
+          currency: 'USD' }) }}</td>
       </tr>
     </tbody>
   </table>

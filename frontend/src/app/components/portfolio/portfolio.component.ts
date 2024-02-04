@@ -57,6 +57,7 @@ export class PortfolioComponent implements OnInit {
         this.stocks.forEach((stock) => {
           this.fetchCurrentPrices(stock);
         });
+        this.loading = false;
       },
       (error) => {
         console.error('Error fetching portfolio data:', error);
@@ -91,6 +92,9 @@ export class PortfolioComponent implements OnInit {
       width: '250px',
       data: {
         ...stockData,
+        symbol: stockData.ticker,
+        currentPrice: stockData.currentPrice, // Pass the current price
+        profitLoss: stockData.profitLoss, // Pass the profit/loss
         sellStock: (ticker: string, quantityOwned: number) => this.sellStock(ticker, quantityOwned)
       }
     });

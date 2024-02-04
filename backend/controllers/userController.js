@@ -161,9 +161,21 @@ exports.login = async (req, res) => {
 exports.buyStock = async (req, res) => {
     try {
         // Extract buy details from the request body
-        const { symbol, quantity } = req.body;
+        const { symbol, quantity, currentPrice } = req.body;
         const userId = req.user.userId;
 
+        if(!currentPrice || isNaN(currentPrice)){
+            return res.status(400).json({ message: 'Hmm current price is not a number or empty?' });
+        }
+
+        if(currentPrice <= 0){
+            return res.status(400).json({ message: 'Whoops current price cant be negative' });
+        }
+
+        if(currentPrice >= 500000){
+            return res.status(400).json({ message: 'Whoops current price cant be that high' });
+        }
+        
         // Validate input
         if (!symbol || !quantity || isNaN(quantity) || quantity <= 0) {
             return res.status(400).json({ message: 'Invalid input' });
@@ -187,27 +199,31 @@ exports.buyStock = async (req, res) => {
         }
 
         // Check if the user has enough funds
-        const stockPrice = await fetchStockPrice(symbol);
-        const totalCost = quantity * stockPrice;
+        const totalCost = quantity * currentPrice;
         if (totalCost > user.balance) {
             return res.status(400).json({ message: 'Insufficient funds' });
         }
 
         // Execute the buy stock operation
-        await buyStockPortfolio(user, symbol, quantity, stockPrice);
-
+        const result = await buyStockPortfolio(user, symbol, quantity, currentPrice);
+        if(!result) {
         // Record the transaction
-        await addTransaction(user, 'BUY', symbol, quantity, stockPrice);
+        await addTransaction(user, 'BUY', symbol, quantity, currentPrice);
 
         // Save the updated user details to the database
         await saveUserDetails(user);
-
+        res.status(201).json({ message: `User purchased ${quantity} shares of ${symbol} for $${currentPrice} a share and user account saved` });
+        } else{
+            res.status(400).json({message: result});
+        }
         // Respond to the request indicating successful purchase
-        res.status(201).json({ message: `User purchased ${quantity} shares of ${symbol} and user account saved` });
+        
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
+
 
 /**
  * Processes a stock sale for a user.

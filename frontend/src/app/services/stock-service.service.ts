@@ -25,12 +25,14 @@ export class StockService {
   
   viewStockDetails(symbol: string): Observable<any> {
     symbol = symbol.toUpperCase();
+    console.log(symbol);
+    
     const symbolErrorMessage = this.validateStockSymbol(symbol);
     if (symbolErrorMessage !== null) {
       const errorMessage = symbolErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
-      return this.http.get(`${this.baseUrl}/stock`, { params: { symbol } });
+      return this.http.get(`${this.baseUrl}/stock?symbol=${symbol}`);
     }
   }
 
@@ -42,7 +44,7 @@ export class StockService {
       const errorMessage = symbolErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
-      return this.http.get(`${this.baseUrl}/news`, { params: { symbol } });
+      return this.http.get(`${this.baseUrl}/news?symbol=${symbol}`);
     }
   }
 

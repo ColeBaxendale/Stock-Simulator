@@ -4,6 +4,7 @@
   <p>Current Price: ${{ data.currentPrice | number: '1.2-2' }}</p>
   <p>Quantity Owned: {{ data.quantityOwned }}</p>
   <p>Average Buy Price: ${{ data.averageBuyPrice }}</p>
+  <p>Profit: ${{ data.profitLoss | number: '1.2-2' }}</p>
   <!-- Input for specifying sell quantity -->
   <div>
     <label for="sellQuantity">Sell Quantity:</label>
@@ -14,4 +15,5 @@
   <button mat-button [mat-dialog-close]="true">Close</button>
   <!-- Update sell button to use sellQuantity -->
   <button mat-button (click)="sellStock()">Sell</button>
+  <button mat-button (click)="buyStock()">Buy More</button>
 </mat-dialog-actions>
