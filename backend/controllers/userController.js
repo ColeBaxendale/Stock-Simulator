@@ -217,8 +217,20 @@ exports.buyStock = async (req, res) => {
 exports.sellStock = async (req, res) => {
     try {
         // Extract sell details from the request body
-        const { symbol, quantity } = req.body;
+        const { symbol, quantity, currentPrice } = req.body;
         const userId = req.user.userId;
+
+        if(!currentPrice || isNaN(currentPrice)){
+            return res.status(400).json({ message: 'Hmm current price is not a number or empty?' });
+        }
+
+        if(currentPrice <= 0){
+            return res.status(400).json({ message: 'Whoops current price cant be negative' });
+        }
+
+        if(currentPrice >= 500000){
+            return res.status(400).json({ message: 'Whoops current price cant be that high' });
+        }
 
         // Test for input length exceeding maximum allowed
         if (symbol.length > 5 || quantity > 1000) {
@@ -227,7 +239,6 @@ exports.sellStock = async (req, res) => {
 
         // Fetch user and stock price from the database and API, respectively
         const user = await User.findById(userId);
-        const stockPrice = await fetchStockPrice(symbol);
 
         // Check if the user has enough shares to sell
         const userStockQuantity = user.portfolio.get(symbol) || 0;
@@ -236,16 +247,21 @@ exports.sellStock = async (req, res) => {
         }
 
         // Execute the sell stock operation
-        await sellStockPortfolio(user, symbol, quantity, stockPrice);
+        const result = await sellStockPortfolio(user, symbol, quantity, currentPrice);
+        if (!result) {
+            // Record the transaction
+            await addTransaction(user, 'SELL', symbol, quantity, currentPrice);
 
-        // Record the transaction
-        await addTransaction(user, 'SELL', symbol, quantity, stockPrice);
+            // Save the updated user details to the database
+            await saveUserDetails(user);
 
-        // Save the updated user details to the database
-        await saveUserDetails(user);
+            // Respond to the request indicating successful sale
+            res.status(201).json({ message: `User sold ${quantity} shares of ${symbol} and user account saved` });
+        }
+        else{
+            res.status(400).json({message: result});
+        }
 
-        // Respond to the request indicating successful sale
-        res.status(201).json({ message: `User sold ${quantity} shares of ${symbol} and user account saved` });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -438,4 +454,5 @@ exports.changeUserDetails = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 

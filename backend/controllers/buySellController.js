@@ -53,9 +53,9 @@ async function buyStockPortfolio(user, symbol, quantity, stockPrice) {
 async function sellStockPortfolio(user, symbol, quantity, stockPrice) {
     const existingStock = user.portfolio.get(symbol);
     if (!existingStock) 
-        throw new Error(`You do not own any ${symbol}.`);
+        return`You do not own any ${symbol}.`
     if(existingStock.quantityOwned < quantity)
-        throw new Error(`You only own ${existingStock.quantityOwned} of ${symbol} you cannot sell more than that.`);
+        return`You only own ${existingStock.quantityOwned} of ${symbol} you cannot sell more than that.`;
     const totalSalePrice = quantity * stockPrice;
     const newQuantity = Number(existingStock.quantityOwned) - Number(quantity);
     if(newQuantity === 0){
@@ -66,8 +66,8 @@ async function sellStockPortfolio(user, symbol, quantity, stockPrice) {
         user.portfolio.set(symbol, {
             quantityOwned: newQuantity,
             averageBuyPrice: existingStock.averageBuyPrice
-        });
-        console.log(`User sold ${quantity} shares of ${symbol}. Bringing their shares of ${symbol} to ${newQuantity}`);
+            });
+        return null;
     }
     user.buyingPower += totalSalePrice;
 }

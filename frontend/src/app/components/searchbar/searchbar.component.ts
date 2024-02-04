@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, of, throwError } from 'rxjs';
 import { debounceTime, switchMap, filter, catchError, tap } from 'rxjs/operators';
+import { StockService } from '../../services/stock-service.service';
 
 @Component({
   selector: 'app-searchbar',
@@ -16,7 +17,7 @@ export class SearchbarComponent {
   isLoading: boolean = false;
   private searchTerms = new Subject<string>();
   searchPerformed: boolean = false;
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router,  private stockService: StockService) {
 
     this.searchTerms.pipe(
       debounceTime(500),
@@ -39,7 +40,7 @@ export class SearchbarComponent {
 
     this.isLoading = true; // Start loading
     this.searchPerformed = true;
-    return this.http.get(`http://localhost:3000/api/stocks/searchbar?keywords=${term}`).pipe(
+    return this.stockService.searchBar(term).pipe(
       catchError(error => {
         console.error('Error in HTTP request', error);
         this.isLoading = false; // Set loading to false in case of error
@@ -61,7 +62,6 @@ export class SearchbarComponent {
       this.isLoading = true; // Start loading only when there's a term to search
       this.searchTerms.next(this.keywords);
     }
-  
   }
 
   onStockSelect(stockSymbol: string) {

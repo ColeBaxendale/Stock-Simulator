@@ -6,7 +6,9 @@
       <tr>
         <th>Ticker</th>
         <th>Quantity</th>
-        <th>Average Buy Price</th>
+        <th>Average</th>
+        <th>Currently</th>
+        <th>Profit</th>
       </tr>
     </thead>
     <tbody>
@@ -14,6 +16,8 @@
         <td>{{ stock.ticker }}</td>
         <td>{{ stock.quantityOwned }}</td>
         <td>{{ stock.averageBuyPrice | currency }}</td>
+        <td *ngIf="stock.currentPrice !== undefined">{{ stock.currentPrice?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
+        <td *ngIf="stock.profitLoss !== undefined">{{ stock.profitLoss?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
       </tr>
     </tbody>
   </table>

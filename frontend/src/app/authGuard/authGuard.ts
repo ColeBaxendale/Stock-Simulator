@@ -20,9 +20,9 @@ export class AuthGuard implements CanActivate {
 
     // Decode the token to get the expiration time
     const tokenData = JSON.parse(atob(token.split('.')[1]));
-    const expirationTime = tokenData.exp * 1000; // Convert to milliseconds
+    const expirationTime = tokenData.exp; // Convert to milliseconds
     // Check if the token has expired
-    if (Date.now() >= expirationTime) {
+    if (Date.now() <= expirationTime) {
       // If the token has expired, the user is not authenticated
       this.router.navigate(['/login']);
       return false;

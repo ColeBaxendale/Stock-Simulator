@@ -33,47 +33,40 @@ export class LoginComponent {
       chk.checked = true;
     }
   }
-  onRegister() {
-    console.log('Register button clicked');
-    console.log('registerObj:', this.registerObj);
-  
+  onRegister() {  
     this.registerSubscription = this.userService.register(this.registerObj).subscribe({
       next: (res: any) => {
-        console.log('Response:', res);
         if (res) {
-          // Handle successful registration
+          const chk = document.getElementById('chk') as HTMLInputElement;
+          if (chk) {
+            chk.checked = true;
+          }
+          this.loginObj.email = this.registerObj.email
+          this.registerObj.username = '';
+          this.registerObj.email = '';
+          this.registerObj.password = ''; 
+          alert('Response: ' + res.message);
+          
         } else {
           alert('Register failed');
         }
       },
       error: (error: any) => {
-        if (error.status === 409) {
-          alert('Email already in use');
-        } else if (error.status === 400) {
-          // Handle other validation errors (e.g., invalid data format)
-          alert('Invalid data format');
-        } else {
-          console.error('An error occurred:', error);
-        }
+        alert(error.message); // Display the error message from the thrown error
       }
     });
   }
+  
 
 
 
   
   onLogin() {
-    console.log('Login button clicked');
-    console.log('loginObj:', this.loginObj);
-  
-    this.loginSubscription = this.http.post('http://localhost:3000/api/users/login', this.loginObj).subscribe({
+    this.loginSubscription = this.userService.login(this.loginObj).subscribe({
       next: (res: any) => {
         console.log('Response:', res);
         if (res.token) {
           // Successful login, store the token in local storage
-          const username = res.username;
-          localStorage.setItem('username', username);
-          console.log(username)
           localStorage.setItem('loginToken', res.token);
           this.router.navigateByUrl('/dashboard');
         } else {
@@ -84,7 +77,7 @@ export class LoginComponent {
         if (error.status === 401) {
           alert('Invalid email or password');
         } else {
-          console.error('An error occurred:', error);
+          alert(error.message);
         }
       }
     });

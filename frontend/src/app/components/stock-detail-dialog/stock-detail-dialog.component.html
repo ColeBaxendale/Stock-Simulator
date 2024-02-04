@@ -1,5 +1,7 @@
-<h2 mat-dialog-title>{{ data.ticker }}</h2> <!-- Make sure this matches the property name -->
+<h2 mat-dialog-title>{{ data.ticker }}</h2>
+<!-- Display the current price here -->
 <mat-dialog-content>
+  <p>Current Price: ${{ data.currentPrice | number: '1.2-2' }}</p>
   <p>Quantity Owned: {{ data.quantityOwned }}</p>
   <p>Average Buy Price: ${{ data.averageBuyPrice }}</p>
   <!-- Input for specifying sell quantity -->
