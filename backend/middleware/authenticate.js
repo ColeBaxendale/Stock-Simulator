@@ -15,9 +15,6 @@
  * 
  * The middleware uses the 'jsonwebtoken' package to validate the tokens.
  * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
- * 
  */
 
 const jwt = require('jsonwebtoken');

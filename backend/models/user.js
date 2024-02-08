@@ -16,9 +16,6 @@
  * The portfolio is implemented as a Map for efficient stock management, and transactions are stored
  * as an array to keep a record of all stock transactions made by the user.
  * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
- * 
  */
 
 const mongoose = require('mongoose');

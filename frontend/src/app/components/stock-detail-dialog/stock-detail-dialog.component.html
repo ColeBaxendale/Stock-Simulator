@@ -1,19 +1,25 @@
+<!-- Dialog title displaying the stock ticker -->
 <h2 mat-dialog-title>{{ data.ticker }}</h2>
-<!-- Display the current price here -->
+
+<!-- Display the current price, quantity owned, average buy price, and profit/loss -->
 <mat-dialog-content>
   <p>Current Price: ${{ data.currentPrice | number: '1.2-2' }}</p>
   <p>Quantity Owned: {{ data.quantityOwned }}</p>
   <p>Average Buy Price: ${{ data.averageBuyPrice }}</p>
   <p>Profit: ${{ data.profitLoss | number: '1.2-2' }}</p>
-  <!-- Input for specifying sell quantity -->
+  
+  <!-- Input field for specifying the sell quantity -->
   <div>
     <label for="sellQuantity">Sell Quantity:</label>
     <input id="sellQuantity" type="number" [(ngModel)]="sellQuantity" min="1" [max]="data.quantityOwned" />
   </div>
 </mat-dialog-content>
+
+<!-- Dialog actions including close, sell, and buy more buttons -->
 <mat-dialog-actions>
   <button mat-button [mat-dialog-close]="true">Close</button>
-  <!-- Update sell button to use sellQuantity -->
+  <!-- Sell button triggers the sellStock method -->
   <button mat-button (click)="sellStock()">Sell</button>
+  <!-- Buy more button triggers the buyStock method -->
   <button mat-button (click)="buyStock()">Buy More</button>
 </mat-dialog-actions>

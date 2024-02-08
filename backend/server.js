@@ -17,9 +17,6 @@
  * - Registers routes for user and stock operations.
  * - Starts the Express server on a defined port.
  * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
- * 
  */
 
 // Load environment variables from .env file

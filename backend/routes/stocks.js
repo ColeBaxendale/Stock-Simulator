@@ -12,9 +12,6 @@
  * viewing detailed stock information, and retrieving news about specific stocks. It defines 
  * routes using express.Router and uses methods from the stockController to handle the requests.
  * 
- * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
  */
 
 const express = require('express');
@@ -42,6 +39,11 @@ router.get('/stock', stockController.viewStockDetails);
  */
 router.get('/news', stockController.getStockNews);
 
+/**
+ * GET route to search for stocks in a search bar.
+ * This route handles requests to search for stocks using a search bar.
+ * It delegates the request handling to the 'searchBar' function in the stockController.
+ */
 router.get('/searchbar', stockController.searchBar);
 
 // Exporting the router so it can be used in the main server file (usually server.js or app.js).

@@ -14,13 +14,20 @@
  * tracking of user portfolios and buying power, thereby facilitating a seamless trading experience.
  * 
  * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
- * 
  */
 
 const User = require('../models/user');
 
+/**
+ * Buy stocks and update the user's portfolio.
+ * Time Complexity: O(1)
+ * 
+ * @param {User} user - The user object.
+ * @param {string} symbol - The symbol of the stock to buy.
+ * @param {number} quantity - The quantity of stocks to buy.
+ * @param {number} stockPrice - The price of the stock.
+ * @returns {string|null} - Error message if unable to buy stocks, otherwise null.
+ */
 async function buyStockPortfolio(user, symbol, quantity, stockPrice) {
     const totalCost = stockPrice * quantity;
     if (user.buyingPower < totalCost) {
@@ -51,6 +58,16 @@ async function buyStockPortfolio(user, symbol, quantity, stockPrice) {
     }
 }
 
+/**
+ * Sell stocks from the user's portfolio.
+ * Time Complexity: O(1)
+ * 
+ * @param {User} user - The user object.
+ * @param {string} symbol - The symbol of the stock to sell.
+ * @param {number} quantity - The quantity of stocks to sell.
+ * @param {number} stockPrice - The price of the stock.
+ * @returns {string|null} - Error message if unable to sell stocks, otherwise null.
+ */
 async function sellStockPortfolio(user, symbol, quantity, stockPrice) {
     const existingStock = user.portfolio.get(symbol);
     if (!existingStock) 
@@ -73,7 +90,16 @@ async function sellStockPortfolio(user, symbol, quantity, stockPrice) {
     user.buyingPower += totalSalePrice;
 }
 
-
+/**
+ * Add a transaction to the user's transaction history.
+ * Time Complexity: O(1)
+ * 
+ * @param {User} user - The user object.
+ * @param {string} buyOrSell - The type of transaction (buy or sell).
+ * @param {string} symbol - The symbol of the stock.
+ * @param {number} quantity - The quantity of stocks involved in the transaction.
+ * @param {number} stockPrice - The price of the stock.
+ */
 async function addTransaction(user, buyOrSell, symbol, quantity, stockPrice) {
     // Create a timestamp with the current date and time
     const timestamp = new Date();

@@ -1,14 +1,30 @@
 <!-- searchbar.component.html -->
+
 <div class="search-bar-container">
-  <input type="text" [(ngModel)]="keywords" (input)="onInputChange()" (keyup.enter)="onEnterPress()" placeholder="Search for symbols" class="search-input" maxlength="5" >
+  <!-- Input field for searching symbols -->
+  <input 
+    type="text" 
+    [(ngModel)]="keywords" 
+    (input)="onInputChange()" 
+    (keyup.enter)="onEnterPress()" 
+    placeholder="Search for symbols" 
+    class="search-input" 
+    maxlength="5"
+  >
+  
+  <!-- Loading spinner -->
   <div *ngIf="isLoading" class="loading-spinner">
     <!-- Replace the following with your preferred spinner -->
   </div>
+  
+  <!-- Display search results -->
   <ul *ngIf="searchResults.length > 0 && !isLoading" class="results-list">
-    <li *ngFor="let result of searchResults" (click)="onStockSelect(result['1. symbol'])"class="result-item">
+    <li *ngFor="let result of searchResults" (click)="onStockSelect(result['1. symbol'])" class="result-item">
       <span class="symbol">{{ result['1. symbol'] }}</span> - <span class="name">{{ result['2. name'] }}</span>
     </li>
   </ul>
+  
+  <!-- Display message when no search results are found -->
   <div *ngIf="searchResults.length === 0 && !isLoading && searchPerformed" class="no-results">
     No stocks found.
   </div>

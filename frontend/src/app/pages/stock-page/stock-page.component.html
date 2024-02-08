@@ -1,54 +1,63 @@
 <!-- stock-page.component.html -->
 
+<!-- Search bar component -->
 <app-searchbar></app-searchbar>
-  <h1>Stock Details</h1>
-  <div *ngIf="loadingStockData">
-    <div class="loading-animation">
-        <div class="dot dot1"></div>
-        <div class="dot dot2"></div>
-        <div class="dot dot3"></div>
-      </div>
-    <h2>Stock: {{ stockData?.symbol }}</h2>
-    <p>Current Price:</p>
-    <p>Previous Close Price:</p>
-    <p>Opening Price:</p>
-    <p>High Price:</p>
-    <p>Low Price:</p>
-    <p>Volume:</p>
-    <p>Change Percentage:%</p>
 
+<!-- Stock Details Section -->
+<h1>Stock Details</h1>
+<div *ngIf="loadingStockData">
+  <!-- Loading animation while stock data is loading -->
+  <div class="loading-animation">
+    <div class="dot dot1"></div>
+    <div class="dot dot2"></div>
+    <div class="dot dot3"></div>
   </div>
-<div *ngIf="!loadingStockData">
-    <h2>Stock: {{ stockData?.symbol }}</h2>
-    <p>Current Price: {{ stockData?.currentPrice }}</p>
-    <p>Previous Close Price: {{ stockData?.previousClosePrice }}</p>
-    <p>Opening Price: {{ stockData?.openingPrice }}</p>
-    <p>High Price: {{ stockData?.highPrice }}</p>
-    <p>Low Price: {{ stockData?.lowPrice }}</p>
-    <p>Volume: {{ stockData?.volume }}</p>
-    <p>Change Percentage: {{ stockData?.change_percentage }}%</p>
-    <button (click)="buyStock()">Buy Stock</button>
+  <!-- Display stock data -->
+  <h2>Stock: {{ stockData?.symbol }}</h2>
+  <p>Current Price:</p>
+  <p>Previous Close Price:</p>
+  <p>Opening Price:</p>
+  <p>High Price:</p>
+  <p>Low Price:</p>
+  <p>Volume:</p>
+  <p>Change Percentage:%</p>
 </div>
 
+<div *ngIf="!loadingStockData">
+  <!-- Display stock data once loaded -->
+  <h2>Stock: {{ stockData?.symbol }}</h2>
+  <p>Current Price: {{ stockData?.currentPrice }}</p>
+  <p>Previous Close Price: {{ stockData?.previousClosePrice }}</p>
+  <p>Opening Price: {{ stockData?.openingPrice }}</p>
+  <p>High Price: {{ stockData?.highPrice }}</p>
+  <p>Low Price: {{ stockData?.lowPrice }}</p>
+  <p>Volume: {{ stockData?.volume }}</p>
+  <p>Change Percentage: {{ stockData?.change_percentage }}%</p>
+  <!-- Button to buy stock -->
+  <button (click)="buyStock()">Buy Stock</button>
+</div>
 
-    <div *ngIf="stockNews.length > 0" class="stock-news">
-        <h1>Latest News</h1>
-        <div *ngIf="loadingNewsData">
-            <div class="loading-animation">
-              <div class="dot dot1"></div>
-              <div class="dot dot2"></div>
-              <div class="dot dot3"></div>
-            </div>
-          </div>
-          <div *ngIf="!loadingNewsData">
-        <div *ngFor="let newsItem of stockNews" class="news-item">
-            <img [src]="newsItem?.bannerImage" [alt]="newsItem.title" class="news-image">
-            <div class="news-content">
-                <a [href]="newsItem?.url" target="_blank">
-                    <h3>{{ newsItem?.title }}</h3>
-                </a>
-                <p>{{ newsItem.summary }}</p>
-            </div>
-        </div>
+<!-- Stock News Section -->
+<div *ngIf="stockNews.length > 0" class="stock-news">
+  <h1>Latest News</h1>
+  <div *ngIf="loadingNewsData">
+    <!-- Loading animation while news data is loading -->
+    <div class="loading-animation">
+      <div class="dot dot1"></div>
+      <div class="dot dot2"></div>
+      <div class="dot dot3"></div>
     </div>
+  </div>
+  <div *ngIf="!loadingNewsData">
+    <!-- Display news items -->
+    <div *ngFor="let newsItem of stockNews" class="news-item">
+      <img [src]="newsItem?.bannerImage" [alt]="newsItem.title" class="news-image">
+      <div class="news-content">
+        <a [href]="newsItem?.url" target="_blank">
+          <h3>{{ newsItem?.title }}</h3>
+        </a>
+        <p>{{ newsItem.summary }}</p>
+      </div>
+    </div>
+  </div>
 </div>

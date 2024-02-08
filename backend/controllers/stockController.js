@@ -2,9 +2,9 @@
  * Stock Controller
  * 
  * Filename: stockController.js
- * Author: [Cole Baxendale]
- * Contact: [thecodercole@gmail.com]
- * Created on: [January 2024]
+ * Author: Cole Baxendale
+ * Contact: thecodercole@gmail.com
+ * Created on: January 2024
  * Version: 1.0
  * 
  * Description: 
@@ -14,9 +14,6 @@
  * to search for stocks, view detailed stock information, and retrieve news articles, thereby 
  * providing users with comprehensive stock market insights.
  * 
- * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
  * 
  */
 
@@ -29,6 +26,8 @@ const { fetchStockPrice } = require('../fetchCurrentPrice/fetchPrice'); // Impor
 
 // Function to search for the latest price of a given stock symbol
 /**
+ * The time complexity of API requests typically depends on the server response time and network latency, which are beyond the control of the application.
+ * 
  * Searches for the latest price of a specified stock symbol.
  * @param {Request} req - The express request object, containing the query with the stock symbol.
  * @param {Response} res - The express response object.
@@ -59,6 +58,7 @@ exports.searchStock = async (req, res) => {
 
 
 /**
+ * The time complexity of API requests typically depends on the server response time and network latency, which are beyond the control of the application.
  * Retrieves detailed information about a specific stock using its symbol.
  * @param {Request} req - The express request object, containing the query with the stock symbol or search keywords.
  * @param {Response} res - The express response object.
@@ -137,6 +137,7 @@ exports.viewStockDetails = async (req, res) => {
 };
 
 /**
+ * The time complexity of API requests typically depends on the server response time and network latency, which are beyond the control of the application.
  * Retrieves news articles related to a specific stock symbol.
  * @param {Request} req - The express request object, containing the query with the stock symbol.
  * @param {Response} res - The express response object.
@@ -190,6 +191,7 @@ exports.getStockNews = async (req, res) => {
 
 
 /**
+ * The time complexity of API requests typically depends on the server response time and network latency, which are beyond the control of the application.
  * Handles symbol search using Alpha Vantage API.
  * @param {Request} req - The express request object, containing the query with the keywords.
  * @param {Response} res - The express response object.

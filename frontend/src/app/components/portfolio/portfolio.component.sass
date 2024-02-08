@@ -1,28 +1,42 @@
-.loading-animation
-  display: flex
-  align-items: center
-  justify-content: center
-  height: 30px
+// Styles for the loading animation component
 
-.dot
-  width: 10px
-  height: 10px
-  background-color: #007bff
-  border-radius: 50%
-  animation: dotScale 1s infinite
-  margin: 0 5px
+.loading-animation {
+  // Center the loading animation vertically and horizontally
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px; // Set the height of the loading animation container
+}
 
-.dot1
-  animation-delay: 0.2s
+.dot {
+  // Common styles for each dot in the animation
+  width: 10px;
+  height: 10px;
+  background-color: #007bff; // Blue color for the dots
+  border-radius: 50%; // Make the dots circular
+  animation: dotScale 1s infinite; // Apply the scaling animation to each dot
+  margin: 0 5px; // Add some margin between dots
+}
 
-.dot2
-  animation-delay: 0.4s
+// Different delay for each dot to create a sequential animation effect
+.dot1 {
+  animation-delay: 0.2s; // Delay the animation for the first dot
+}
 
-.dot3
-  animation-delay: 0.6s
+.dot2 {
+  animation-delay: 0.4s; // Delay the animation for the second dot
+}
 
-@keyframes dotScale
-  0%, 100%
-    transform: scale(1)
-  50%
-    transform: scale(1.2)
+.dot3 {
+  animation-delay: 0.6s; // Delay the animation for the third dot
+}
+
+// Keyframes for the scaling animation of the dots
+@keyframes dotScale {
+  0%, 100% {
+    transform: scale(1); // Initial and final state: normal scale
+  }
+  50% {
+    transform: scale(1.2); // Middle state: slightly larger scale
+  }
+}

@@ -1,9 +1,13 @@
 // searchbar.component.sass
+
+// Styling for the search bar container
 .search-bar-container
   position: relative
   margin: auto
   width: 100%
   max-width: 600px
+
+// Styling for the loading spinner animation
 .loading-spinner
   border: 4px solid rgba(0, 0, 0, .1)
   border-radius: 50%
@@ -13,19 +17,21 @@
   -webkit-animation: spin 2s linear infinite // Safari
   animation: spin 2s linear infinite
 
+// Animation keyframes for the loading spinner (Safari compatibility)
 @-webkit-keyframes spin // Safari
   0%
     -webkit-transform: rotate(0deg)
   100%
     -webkit-transform: rotate(360deg)
 
+// Animation keyframes for the loading spinner
 @keyframes spin
   0%
     transform: rotate(0deg)
   100%
     transform: rotate(360deg)
 
-
+// Styling for the search input field
 .search-input
   width: 100%
   padding: 12px 20px
@@ -35,18 +41,21 @@
   border-radius: 4px
   box-sizing: border-box
 
+// Styling for the results container
 .results-container
   position: absolute
   width: 100%
   background: white
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2)
   z-index: 10
 
+// Styling for the list of search results
 .results-list
   list-style-type: none
   margin: 0
   padding: 0
 
+// Styling for each search result item
 .result-item
   padding: 12px
   border-bottom: 1px solid #f2f2f2
@@ -55,9 +64,11 @@
   &:hover
     background-color: #f8f8f8
 
+// Styling for the symbol text
 .symbol
   font-weight: bold
 
+// Styling for the name text
 .name
   margin-left: 5px
   color: #555

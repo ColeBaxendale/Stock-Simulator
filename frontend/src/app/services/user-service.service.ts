@@ -1,3 +1,28 @@
+/**
+ * User Service
+ * 
+ * Filename: user-service.service.ts
+ * Author: [Cole Baxendale]
+ * Contact: [thecodercole@gmail.com]
+ * Created on: [February 2024]
+ * Version: 1.0
+ * 
+ * Description:
+ * This service provides methods for interacting with user-related data from an API.
+ * It includes methods for user registration, login, and other user-related operations.
+ * 
+ * Algorithm Strategy:
+ * 1. Implement methods to interact with user-related endpoints of the API.
+ * 2. Utilize Angular's HttpClient module to make HTTP requests to the API.
+ * 3. Validate input parameters before making API requests to ensure data integrity.
+ * 4. Handle errors and edge cases gracefully to provide a smooth user experience.
+ * 
+ * Params:
+ * - Injectable: Injectable - Angular decorator to mark the service as injectable.
+ * - HttpClient: HttpClient - Angular HTTP client for making requests to the server.
+ * - Observable: Observable - RxJS observable for handling asynchronous data streams.
+ */
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
@@ -5,47 +30,55 @@ import { Observable, catchError, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-
 export class UserServiceService {
   private baseUrl = 'http://localhost:3000/api/users';
 
   constructor(private http: HttpClient) { }
 
+  // Method to register a new user
   register(userData: any): Observable<any> {
+    // Validate username, email, and password
     const usernameErrorMessage = this.validateUsername(userData.username);
     const emailErrorMessage = this.validateEmail(userData.email);
     const passwordErrorMessage = this.validatePassword(userData.password);
+    // If there are validation errors, return an observable with an error message
     if (usernameErrorMessage !== null || emailErrorMessage !== null || passwordErrorMessage !== null) {
       const errorMessage = usernameErrorMessage || emailErrorMessage || passwordErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
+      // If validation passes, make HTTP POST request to register endpoint
       return this.http.post(`${this.baseUrl}/register`, userData);
     }
   }
 
+  // Method to authenticate and login a user
   login(credentials: any): Observable<any> {
+    // Validate email and password
     const emailErrorMessage = this.validateEmail(credentials.email);
     const passwordErrorMessage = this.validatePassword(credentials.password);
+    // If there are validation errors, return an observable with an error message
     if (emailErrorMessage !== null || passwordErrorMessage !== null) {
       const errorMessage = emailErrorMessage || passwordErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
+      // If validation passes, make HTTP POST request to login endpoint
       return this.http.post(`${this.baseUrl}/login`, credentials);
     }
   }
 
+  // Method to buy stocks
   buyStock(requestBody: { symbol: string; quantity: number; currentPrice: number }): Observable<any> {
-    const symbol = requestBody.symbol
-    const quantity = requestBody.quantity
-    const currentPrice = requestBody
-    console.log(symbol, quantity, currentPrice);
-    
+    // Validate stock symbol and quantity
+    const symbol = requestBody.symbol;
+    const quantity = requestBody.quantity;
     const symbolErrorMessage = this.validateStockSymbol(symbol);
     const quantityErrorMessage = this.isValidQuantity(quantity);
+    // If there are validation errors, return an observable with an error message
     if (symbolErrorMessage !== null || quantityErrorMessage !== null) {
       const errorMessage = symbolErrorMessage || quantityErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
+      // If validation passes, make HTTP POST request to buy-stock endpoint
       const authToken = this.getAuthorizationToken();
       const url = `${this.baseUrl}/buy-stock`;
       const headers = new HttpHeaders({
@@ -53,37 +86,31 @@ export class UserServiceService {
       });
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
-          console.error('Error:', error);
-          if (error.status === 400) {
-            const errorMessage = error.error?.message || 'Bad Request';
-            alert(errorMessage)
-            return throwError(() => new Error(errorMessage));
-          } else {
-            console.error('Authentication error:', error);
-            alert('Please log in again.');
-            localStorage.removeItem('loginToken');
-            window.location.reload();
-  
-            // You can return an observable with an error message here if needed
-            return throwError(() => new Error('Authentication error'));
-          }
+          // Handle authentication errors
+          console.error('Authentication error:', error);
+          alert('Please log in again.');
+          localStorage.removeItem('loginToken');
+          window.location.reload();
+          // Return an observable with an error message
+          return throwError(() => new Error('Authentication error'));
         })
       );
     }
   }
 
+  // Method to sell stocks
   sellStock(requestBody: { symbol: string; quantity: number; currentPrice: number }): Observable<any> {
-    const symbol = requestBody.symbol
-    const quantity = requestBody.quantity
-    const currentPrice = requestBody
-    console.log(symbol, quantity, currentPrice);
-    
+    // Validate stock symbol and quantity
+    const symbol = requestBody.symbol;
+    const quantity = requestBody.quantity;
     const symbolErrorMessage = this.validateStockSymbol(symbol);
     const quantityErrorMessage = this.isValidQuantity(quantity);
+    // If there are validation errors, return an observable with an error message
     if (symbolErrorMessage !== null || quantityErrorMessage !== null) {
       const errorMessage = symbolErrorMessage || quantityErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
+      // If validation passes, make HTTP POST request to sell-stock endpoint
       const authToken = this.getAuthorizationToken();
       const url = `${this.baseUrl}/sell-stock`;
       const headers = new HttpHeaders({
@@ -91,30 +118,27 @@ export class UserServiceService {
       });
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
-          console.error('Error:', error);
-          if (error.status === 400) {
-            const errorMessage = error.error?.message || 'Bad Request';
-            alert(errorMessage)
-            return throwError(() => new Error(errorMessage));
-          } else {
-            console.error('Authentication error:', error);
-            alert('Please log in again.');
-            localStorage.removeItem('loginToken');
-            window.location.reload();
-  
-            // You can return an observable with an error message here if needed
-            return throwError(() => new Error('Authentication error'));
-          }
+          // Handle authentication errors
+          console.error('Authentication error:', error);
+          alert('Please log in again.');
+          localStorage.removeItem('loginToken');
+          window.location.reload();
+          // Return an observable with an error message
+          return throwError(() => new Error('Authentication error'));
         })
       );
     }
   }
 
+  // Method to deposit funds
   deposit(amount: number): Observable<any> {
+    // Validate deposit amount
     const depositErrorMessage = this.depositValidation(amount);
+    // If there are validation errors, return an observable with an error message
     if (depositErrorMessage !== null) {
       return throwError(() => new Error(depositErrorMessage));
     } else {
+      // If validation passes, make HTTP POST request to deposit endpoint
       const authToken = this.getAuthorizationToken();
       const url = `${this.baseUrl}/deposit`;
       const headers = new HttpHeaders({
@@ -123,23 +147,24 @@ export class UserServiceService {
       const requestBody = { amount: amount };
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
-          // Handle the authentication error here (e.g., show an error message or redirect to login)
+          // Handle authentication errors
           console.error('Authentication error:', error);
-          alert("Please log in again.");
+          alert('Please log in again.');
           localStorage.removeItem('loginToken');
           window.location.reload();
-
-          // You can return an observable with an error message here if needed
+          // Return an observable with an error message
           return throwError(() => new Error('Authentication error'));
         })
       );
     }
   }
 
+  // Method to get user portfolio
   getUserPortfolio(): string {
-   return 'http://localhost:3000/api/users/portfolio';
+    return 'http://localhost:3000/api/users/portfolio';
   }
 
+  // Method to get user transactions
   getUserTransactions(): Observable<any> {
     const authToken = this.getAuthorizationToken();
     const url = `${this.baseUrl}/transaction-history`;
@@ -148,18 +173,18 @@ export class UserServiceService {
     });
     return this.http.get<any>(url, { headers }).pipe(
       catchError((error) => {
-        // Handle the authentication error here (e.g., show an error message or redirect to login)
+        // Handle authentication errors
         console.error('Authentication error:', error);
-        alert("Please log in again.");
+        alert('Please log in again.');
         localStorage.removeItem('loginToken');
         window.location.reload();
-
-        // You can return an observable with an error message here if needed
+        // Return an observable with an error message
         return throwError(() => new Error('Authentication error'));
       })
     );
   }
 
+  // Method to reset user account
   resetUserAccount(): Observable<any> {
     const authToken = this.getAuthorizationToken();
     const url = `${this.baseUrl}/reset-account`;
@@ -168,67 +193,69 @@ export class UserServiceService {
     });
     return this.http.get<any>(url, { headers }).pipe(
       catchError((error) => {
-        // Handle the authentication error here (e.g., show an error message or redirect to login)
+        // Handle authentication errors
         console.error('Authentication error:', error);
-        alert("Please log in again.");
+        alert('Please log in again.');
         localStorage.removeItem('loginToken');
         window.location.reload();
-
-        // You can return an observable with an error message here if needed
+        // Return an observable with an error message
         return throwError(() => new Error('Authentication error'));
       })
     );
   }
 
+  // Method to get user details
   getUserDetails(): Observable<any> {
     const authToken = this.getAuthorizationToken();
     const url = `${this.baseUrl}/user-details`;
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${authToken}` // Use the method to get the token
+      Authorization: `Bearer ${authToken}`
     });
     return this.http.get<any>(url, { headers }).pipe(
       catchError((error) => {
-        // Handle the authentication error here (e.g., show an error message or redirect to login)
+        // Handle authentication errors
         console.error('Authentication error:', error);
-        alert("Please log in again.");
+        alert('Please log in again.');
         localStorage.removeItem('loginToken');
         window.location.reload();
-
-        // You can return an observable with an error message here if needed
+        // Return an observable with an error message
         return throwError(() => new Error('Authentication error'));
       })
     );
   }
 
+  // Method to change user details
   changeUserDetails(username: string, email: string): Observable<any> {
+    // Validate username and email
     const usernameErrorMessage = this.validateUsername(username);
     const emailErrorMessage = this.validateEmail(email);
+    // If there are validation errors, return an observable with an error message
     if (usernameErrorMessage !== null || emailErrorMessage !== null) {
       const errorMessage = usernameErrorMessage || emailErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
+      // If validation passes, make HTTP POST request to change-user-details endpoint
       const authToken = this.getAuthorizationToken();
       const url = `${this.baseUrl}/change-user-details`;
       const headers = new HttpHeaders({
-        Authorization: `Bearer ${authToken}` // Use the method to get the token
+        Authorization: `Bearer ${authToken}`
       });
       const requestBody = { username: username, email: email };
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
-          // Handle the authentication error here (e.g., show an error message or redirect to login)
+          // Handle authentication errors
           console.error('Authentication error:', error);
-          alert("Please log in again.");
+          alert('Please log in again.');
           localStorage.removeItem('loginToken');
           window.location.reload();
-
-          // You can return an observable with an error message here if needed
+          // Return an observable with an error message
           return throwError(() => new Error('Authentication error'));
         })
       );
     }
   }
 
-  // Validating methods
+  // Method to validate username
   private validateUsername(username: string): string | null {
     // Check if the Username is missing or empty
     if (!username || username === '') {
@@ -246,6 +273,7 @@ export class UserServiceService {
     return null;
   }
 
+  // Method to validate email
   private validateEmail(email: string): string | null {
     // Check if the Email is missing or empty
     if (!email || email === '') {
@@ -256,7 +284,7 @@ export class UserServiceService {
       return 'Email length exceeds maximum allowed';
     }
     // Check for valid email format using a regular expression
-    const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(email)) {
       return 'Invalid email format';
     }
@@ -264,6 +292,7 @@ export class UserServiceService {
     return null;
   }
 
+  // Method to validate password
   private validatePassword(password: string): string | null {
     // Check if the Password is missing or empty
     if (!password || password === '') {
@@ -273,6 +302,7 @@ export class UserServiceService {
     if (password.length > 100) {
       return 'Password length exceeds maximum allowed';
     }
+    // Validate password format using a regular expression
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       return 'Password must be at least 8 characters with a mix of letters, numbers, and symbols';
@@ -281,21 +311,21 @@ export class UserServiceService {
     return null;
   }
 
+  // Method to validate stock symbol
   private validateStockSymbol(symbol: string): string | null {
     // Check if the symbol is missing or empty
     if (!symbol || symbol === '') {
       return 'Stock symbol is required.';
     }
-
     // Test for input length exceeding the maximum allowed
     if (symbol.length > 5) {
       return 'Stock symbol length should not exceed 5 characters.';
     }
-
     // If all checks pass, return null (no error)
     return null;
   }
 
+  // Method to validate quantity
   private isValidQuantity(quantity: number): string | null {
     if (!quantity || isNaN(quantity)) {
       return 'Quantity is required.';
@@ -309,6 +339,7 @@ export class UserServiceService {
     return null;
   }
 
+  // Method to validate deposit amount
   private depositValidation(amount: number): string | null {
     if (amount || isNaN(amount)) {
       return 'Quantity is required.';
@@ -322,8 +353,8 @@ export class UserServiceService {
     return null;
   }
 
+  // Method to get authorization token
   private getAuthorizationToken(): string | Observable<any> {
-    // Test 3: Validate user authorization token
     const token = localStorage.getItem('loginToken');
     if (token !== null) {
       return token;
@@ -331,11 +362,5 @@ export class UserServiceService {
     else {
       return throwError(() => new Error('Authentication error'));
     }
-
   }
-
 }
-
-
-
-

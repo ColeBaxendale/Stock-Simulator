@@ -1,22 +1,32 @@
 <div class="parent">
+	<!-- Main container for the sign-up and login sections -->
 	<div class="main">
+	  <!-- Checkbox for toggling between sign-up and login sections -->
 	  <input type="checkbox" id="chk" aria-hidden="true">
-  
+	
+	  <!-- Sign-up section -->
 	  <div class="signup" id="signup-section">
 		<form>
+		  <!-- Checkbox label for sign-up -->
 		  <label for="chk" aria-hidden="true">Sign up</label>
+		  <!-- Input fields for username, email, and password -->
 		  <input type="username" name="username" [(ngModel)]="registerObj.username" placeholder="User name" required="">
 		  <input type="email" name="email" [(ngModel)]="registerObj.email" placeholder="Email" required="">
 		  <input type="password" name="password" [(ngModel)]="registerObj.password" placeholder="Password" required="">
+		  <!-- Button to trigger sign-up action -->
 		  <button (click)="onRegister()">Sign up</button>
 		</form>
 	  </div>
-  
+	
+	  <!-- Login section -->
 	  <div class="login" id="login-section">
 		<form>
+		  <!-- Checkbox label for login -->
 		  <label for="chk" aria-hidden="true">Login</label>
+		  <!-- Input fields for email and password -->
 		  <input type="email" name="email" [(ngModel)]="loginObj.email" placeholder="Email" required="">
 		  <input type="password" name="password" [(ngModel)]="loginObj.password" placeholder="Password" required="">
+		  <!-- Button to trigger login action -->
 		  <button (click)="onLogin()">Login</button>
 		</form>
 	  </div>

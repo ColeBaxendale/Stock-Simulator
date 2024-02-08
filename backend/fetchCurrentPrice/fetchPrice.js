@@ -16,9 +16,6 @@
  * handling related to stock price retrieval, offering a streamlined and efficient 
  * method for accessing critical financial data.
  * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
- * 
  */
 
 const axios = require('axios');
@@ -32,6 +29,8 @@ const apiKey = process.env.ALPHA_ADV_API;
  * @param {string} symbol - The symbol of the stock to fetch the price for.
  * @returns {Promise<number>} - The current price of the stock.
  * @throws {Error} - Throws an error if the stock symbol is not found or the API fails to respond.
+ * 
+ * The time complexity of API requests typically depends on the server response time and network latency, which are beyond the control of the application.
  */
 async function fetchStockPrice(symbol) {
     // Check if the symbol is missing or empty

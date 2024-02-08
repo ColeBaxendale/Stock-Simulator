@@ -1,55 +1,81 @@
-.stock-news
-  .news-item
+// Sass comments
+// .stock-news styles
+.stock-news 
+  // .news-item styles
+  .news-item 
     display: flex
     align-items: center
     border: 1px solid #ddd
     padding: 15px
     margin-bottom: 10px
 
-    .news-image
-      width: 275px // Adjust the size as needed
+    // .news-image styles
+    .news-image 
+      width: 275px 
       height: 200px
       margin-right: 15px
+    
 
-    h3
-        font-size: 40px
-      
+    // h3 styles
+    h3 
+      font-size: 40px
+    
 
-    p
-        font-size: 20px
-        margin: 0 0 10px 0
-    a
+    // p styles
+    p 
+      font-size: 20px
+      margin: 0 0 10px 0
+    
+
+    // a styles
+    a 
       text-decoration: none
       color: inherit
+    
 
-    &:hover a
+    // Hover state for a
+    &:hover a 
       text-decoration: underline
+  
+  
 
-.loading-animation
-  display: flex
-  align-items: center
-  justify-content: center
-  height: 30px
+  // .loading-animation styles
+  .loading-animation 
+    display: flex
+    align-items: center
+    justify-content: center
+    height: 30px
+  
 
-.dot
-  width: 10px
-  height: 10px
-  background-color: #007bff
-  border-radius: 50%
-  animation: dotScale 1s infinite
-  margin: 0 5px
+  // .dot styles
+  .dot 
+    width: 10px
+    height: 10px
+    background-color: #007bff
+    border-radius: 50%
+    animation: dotScale 1s infinite
+    margin: 0 5px
+  
 
-.dot1
-  animation-delay: 0.2s
+  // .dot1 animation delay
+  .dot1 
+    animation-delay: 0.2s
+  
 
-.dot2
-  animation-delay: 0.4s
+  // .dot2 animation delay
+  .dot2 
+    animation-delay: 0.4s
+  
 
-.dot3
-  animation-delay: 0.6s
+  // .dot3 animation delay
+  .dot3 
+    animation-delay: 0.6s
+  
 
-@keyframes dotScale
-  0%, 100%
-    transform: scale(1)
-  50%
-    transform: scale(1.2)
+  // @keyframes for dot scaling animation
+  @keyframes dotScale 
+    0%, 100% 
+      transform: scale(1)
+    
+    50% 
+      transform: scale(1.2)

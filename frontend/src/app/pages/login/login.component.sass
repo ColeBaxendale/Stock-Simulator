@@ -1,12 +1,20 @@
+// Define font family variable
 $font-family: 'Jost', sans-serif
+// Define main background color variable
 $main-bg: red
+// Define button background color variable
 $button-bg: #573b8a
+// Define button hover background color variable
 $button-hover-bg: #6d44b8
+// Define login background color variable
 $login-bg: #eee
+// Define label color for sign-up section variable
 $label-color-signup: #fff
+// Define label color for login section variable
 $label-color-login: #573b8a
 
-.parent
+// Parent container styles
+.parent 
   margin: 0
   padding: 0
   display: flex
@@ -14,9 +22,12 @@ $label-color-login: #573b8a
   align-items: center
   min-height: 100vh
   font-family: $font-family
+  // Background gradient
   background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e)
 
-.main
+
+// Main container styles
+.main 
   width: 350px
   height: 500px
   background: $main-bg
@@ -25,44 +36,61 @@ $label-color-login: #573b8a
   border-radius: 10px
   box-shadow: 5px 20px 50px #000
 
-#chk
+
+// Checkbox styles
+#chk 
   display: none
 
-.signup, .login
+
+// Sign-up and login section styles
+.signup, .login 
   position: relative
-  width:100%
+  width: 100%
   height: 100%
 
-  label
-    color: $label-color-signup
-    font-size: 2.3em
-    justify-content: center
-    display: flex
-    margin: 60px
-    font-weight: bold
-    cursor: pointer
-    transition: .5s ease-in-out
 
-  @at-root #chk:checked ~ &.signup label
-    transform: scale(.6)
+// Label styles
+label 
+  font-size: 2.3em
+  justify-content: center
+  display: flex
+  margin: 60px
+  font-weight: bold
+  cursor: pointer
+  transition: .5s ease-in-out
 
-.login
+
+// Checked state for label styles
+#chk:checked ~ .signup label 
+  transform: scale(.6)
+
+
+// Login section styles
+.login 
   background: $login-bg
   border-radius: 60% / 10%
   transform: translateY(-180px)
   transition: .8s ease-in-out
 
-  label
-    color: $label-color-login
-    transform: scale(.6)
 
-  @at-root #chk:checked ~ &
-    transform: translateY(-500px)
+// Label styles for login section
+.login label 
+  color: $label-color-login
+  transform: scale(.6)
 
-    label
-      transform: scale(1)
 
-input, button
+// Checked state for login section
+#chk:checked ~ .login 
+  transform: translateY(-500px)
+
+
+// Styles for label in checked state
+#chk:checked ~ .login label 
+  transform: scale(1)
+
+
+// Input and button styles
+input, button 
   width: 60%
   justify-content: center
   display: flex
@@ -72,11 +100,15 @@ input, button
   outline: none
   border-radius: 5px
 
-input
+
+// Input styles
+input 
   height: 20px
   background: #e0dede
 
-button
+
+// Button styles
+button 
   height: 40px
   color: #fff
   background: $button-bg
@@ -86,5 +118,7 @@ button
   cursor: pointer
   transition: .2s ease-in
 
-  &:hover
+  &:hover 
     background: $button-hover-bg
+  
+

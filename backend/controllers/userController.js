@@ -15,10 +15,6 @@
  * Alpha Vantage API for real-time stock data. Each function is designed to handle specific 
  * API requests, ensuring robustness and reliability in user and stock data management.
  * 
- * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
- * 
  */
 
 const bcrypt = require('bcryptjs');
@@ -32,40 +28,37 @@ const { buyStockPortfolio, addTransaction, sellStockPortfolio } = require('./buy
  * Handles user registration.
  * @param {Request} req - Express request object.
  * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
  */
 exports.register = async (req, res) => {
     try {
+        // Extract user details from the request body
         const { username, email, password } = req.body;
 
-        if (!username || username === '') {
-            return res.status(400).json({ message: 'Username is required' });
+        // Validate user input
+        // Check for missing fields
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: 'Username, email, and password are required' });
         }
 
-        if (!email || email === '') {
-            return res.status(400).json({ message: 'Email is required' });
-        }
-
-        if (!password || password === '') {
-            return res.status(400).json({ message: 'Password is required' });
-        }
-
-
-        // Validate input lengths to prevent excessively long inputs
+        // Validate input lengths
         if (username.length > 50 || email.length > 100 || password.length > 100) {
             return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
 
-        // Check for a valid username (at least 4 characters)
+        // Validate username length
         if (username.length < 4) {
             return res.status(400).json({ message: 'Username must be at least 4 characters' });
         }
-        // Check for valid email format using a regular expression
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
+
+        // Validate email format using regex
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
-        // Check for a secure password (at least 8 characters with a mix of letters, numbers, and symbols)
+        // Validate password format
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
         if (!passwordRegex.test(password)) {
             return res.status(400).json({ message: 'Password must be at least 8 characters with a mix of letters, numbers, and symbols' });
@@ -76,7 +69,7 @@ exports.register = async (req, res) => {
         if (existingUser) {
             return res.status(409).json({ message: 'Email already in use' });
         }
-        email.toLowerCase()
+
         // Hash the password for secure storage
         const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -96,14 +89,12 @@ exports.register = async (req, res) => {
     }
 };
 
-
-
-
-
 /**
  * Handles user login.
  * @param {Request} req - Express request object.
  * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
  */
 exports.login = async (req, res) => {
     // Validate request body for errors
@@ -112,25 +103,18 @@ exports.login = async (req, res) => {
         return res.status(400).json({ errors: errors.array() });
     }
 
-
     try {
         const { email, password } = req.body;
 
-        if (!email || email === '') {
-            return res.status(400).json({ message: 'Email is required' });
+        // Validate input
+        if (!email || !password) {
+            return res.status(400).json({ message: 'Email and password are required' });
         }
-
-        if (!password || password === '') {
-            return res.status(400).json({ message: 'Password is required' });
-        }
-
 
         // Test for input length exceeding maximum allowed
         if (email.length > 100 || password.length > 100) {
             return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
-
-        email.toLowerCase()
 
         // Find the user by email
         const user = await User.findOne({ email });
@@ -153,10 +137,13 @@ exports.login = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 /**
  * Processes a stock purchase for a user.
  * @param {Request} req - Express request object with user ID, stock symbol, and quantity.
  * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
  */
 exports.buyStock = async (req, res) => {
     try {
@@ -164,24 +151,12 @@ exports.buyStock = async (req, res) => {
         const { symbol, quantity, currentPrice } = req.body;
         const userId = req.user.userId;
 
-        if(!currentPrice || isNaN(currentPrice)){
-            return res.status(400).json({ message: 'Hmm current price is not a number or empty?' });
-        }
-
-        if(currentPrice <= 0){
-            return res.status(400).json({ message: 'Whoops current price cant be negative' });
-        }
-
-        if(currentPrice >= 500000){
-            return res.status(400).json({ message: 'Whoops current price cant be that high' });
-        }
-        
         // Validate input
-        if (!symbol || !quantity || isNaN(quantity) || quantity <= 0) {
+        if (!symbol || !quantity || isNaN(quantity) || quantity <= 0 || !currentPrice || isNaN(currentPrice) || currentPrice <= 0 || currentPrice >= 500000) {
             return res.status(400).json({ message: 'Invalid input' });
         }
 
-        // Check if inputs are too large
+        // Check for input length exceeding maximum allowed
         if (symbol.length > 5) {
             return res.status(400).json({ message: 'Symbol length exceeds maximum allowed' });
         }
@@ -206,29 +181,27 @@ exports.buyStock = async (req, res) => {
 
         // Execute the buy stock operation
         const result = await buyStockPortfolio(user, symbol, quantity, currentPrice);
-        if(!result) {
-        // Record the transaction
-        await addTransaction(user, 'BUY', symbol, quantity, currentPrice);
+        if (!result) {
+            // Record the transaction
+            await addTransaction(user, 'BUY', symbol, quantity, currentPrice);
 
-        // Save the updated user details to the database
-        await saveUserDetails(user);
-        res.status(201).json({ message: `User purchased ${quantity} shares of ${symbol} for $${currentPrice} a share and user account saved` });
-        } else{
-            res.status(400).json({message: result});
+            // Save the updated user details to the database
+            await saveUserDetails(user);
+            res.status(201).json({ message: `User purchased ${quantity} shares of ${symbol} for $${currentPrice} a share and user account saved` });
+        } else {
+            res.status(400).json({ message: result });
         }
-        // Respond to the request indicating successful purchase
-        
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-
-
 /**
  * Processes a stock sale for a user.
  * @param {Request} req - Express request object with user ID, stock symbol, and quantity.
  * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
  */
 exports.sellStock = async (req, res) => {
     try {
@@ -236,21 +209,18 @@ exports.sellStock = async (req, res) => {
         const { symbol, quantity, currentPrice } = req.body;
         const userId = req.user.userId;
 
-        if(!currentPrice || isNaN(currentPrice)){
-            return res.status(400).json({ message: 'Hmm current price is not a number or empty?' });
+        // Validate input
+        if (!symbol || !quantity || isNaN(quantity) || quantity <= 0 || !currentPrice || isNaN(currentPrice) || currentPrice <= 0 || currentPrice >= 500000) {
+            return res.status(400).json({ message: 'Invalid input' });
         }
 
-        if(currentPrice <= 0){
-            return res.status(400).json({ message: 'Whoops current price cant be negative' });
+        // Check for input length exceeding maximum allowed
+        if (symbol.length > 5) {
+            return res.status(400).json({ message: 'Symbol length exceeds maximum allowed' });
         }
 
-        if(currentPrice >= 500000){
-            return res.status(400).json({ message: 'Whoops current price cant be that high' });
-        }
-
-        // Test for input length exceeding maximum allowed
-        if (symbol.length > 5 || quantity > 1000) {
-            return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+        if (quantity > 1000) {
+            return res.status(400).json({ message: 'Quantity exceeds maximum allowed' });
         }
 
         // Fetch user and stock price from the database and API, respectively
@@ -273,20 +243,22 @@ exports.sellStock = async (req, res) => {
 
             // Respond to the request indicating successful sale
             res.status(201).json({ message: `User sold ${quantity} shares of ${symbol} and user account saved` });
-        }
-        else{
-            res.status(400).json({message: result});
+        } else {
+            res.status(400).json({ message: result });
         }
 
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
+
 /*
-* Processes a deposit into a user's account.
-* @param {Request} req - Express request object with user ID and deposit amount.
-* @param {Response} res - Express response object.
-*/
+ * Processes a deposit into a user's account.
+ * @param {Request} req - Express request object with user ID and deposit amount.
+ * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
+ */
 exports.deposit = async (req, res) => {
     try {
         // Parse and validate the deposit amount
@@ -314,11 +286,12 @@ exports.deposit = async (req, res) => {
     }
 };
 
-
 /**
  * Retrieves user's portfolio.
  * @param {Request} req - Express request object with user ID.
  * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
  */
 exports.getUserPortfolio = async (req, res) => {
     try {
@@ -343,6 +316,8 @@ exports.getUserPortfolio = async (req, res) => {
  * Retrieves user's transaction history.
  * @param {Request} req - Express request object with user ID.
  * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
  */
 exports.getUserTransactions = async (req, res) => {
     try {
@@ -367,6 +342,8 @@ exports.getUserTransactions = async (req, res) => {
  * Helper function to save user details to the database.
  * @param {User} user - User document to be saved.
  * @throws {Error} - Throws an error if saving fails.
+ * 
+ * Time Complexity: O(1)
  */
 async function saveUserDetails(user) {
     try {
@@ -376,7 +353,13 @@ async function saveUserDetails(user) {
     }
 }
 
-
+/**
+ * Resets user's account to initial state.
+ * @param {Request} req - Express request object with user ID.
+ * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
+ */
 exports.resetUserAccount = async (req, res) => {
     try {
         // Retrieve user ID from request and fetch user's transactions
@@ -403,6 +386,13 @@ exports.resetUserAccount = async (req, res) => {
     }
 };
 
+/**
+ * Retrieves user's details (username and email).
+ * @param {Request} req - Express request object with user ID.
+ * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
+ */
 exports.getUserDetails = async (req, res) => {
     try {
         // Retrieve user ID from request and fetch user's details
@@ -420,11 +410,17 @@ exports.getUserDetails = async (req, res) => {
     }
 };
 
+/**
+ * Updates user's email and/or username.
+ * @param {Request} req - Express request object with user ID and updated details.
+ * @param {Response} res - Express response object.
+ * 
+ * Time Complexity: O(1)
+ */
 exports.changeUserDetails = async (req, res) => {
     try {
         const userId = req.user.userId; // Retrieve user ID from the authenticated user
         const { email, username } = req.body; // Get updated email and username from request body
-
 
         // Fetch the user by ID
         const user = await User.findById(userId);
@@ -433,26 +429,28 @@ exports.changeUserDetails = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Validate input lengths
         if (username.length > 50 || email.length > 100) {
             return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
 
-        // Check for valid email format using a regular expression
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;;
+        // Validate email format using a regular expression
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
-
-        // Check for a valid username (at least 4 characters)
+        // Validate username length
         if (username.length < 4) {
             return res.status(400).json({ message: 'Username must be at least 4 characters' });
         }
 
+        // Check if the new email is already in use
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({ message: 'Email already in use' });
         }
+
         // Update user details if provided
         if (email) {
             user.email = email;
@@ -470,5 +468,3 @@ exports.changeUserDetails = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-
-

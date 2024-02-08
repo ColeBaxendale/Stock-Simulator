@@ -15,13 +15,7 @@
  * Each route is protected with authentication middleware where necessary, ensuring that only authenticated
  * users can access certain operations.
  * 
- * Update History:
- * - [January 24, 2024]: [Initial setup]
- * 
  */
-
-
-
 
 const express = require('express');
 const userController = require('../controllers/userController');
@@ -56,7 +50,7 @@ router.post('/buy-stock', authenticateToken, userController.buyStock);
  * This route is protected by the 'authenticateToken' middleware.
  * The 'sellStock' function in the userController handles the stock selling.
  */
-router.post('/sell-stock/', authenticateToken, userController.sellStock);
+router.post('/sell-stock', authenticateToken, userController.sellStock);
 
 /**
  * POST route for depositing money.
@@ -82,16 +76,27 @@ router.get('/portfolio', authenticateToken, userController.getUserPortfolio);
  */
 router.get('/transaction-history', authenticateToken, userController.getUserTransactions);
 
-
 /**
- * PUT route for reseting the user's account back to default variables after registering.
+ * PUT route for resetting the user's account back to default variables after registering.
  * Authenticated users can reset their account.
  * The 'resetUserAccount' function in the userController resets the user's account.
  */
 router.put('/reset-account', authenticateToken, userController.resetUserAccount);
 
+/**
+ * GET route for fetching user details.
+ * Authenticated users can retrieve their username and email.
+ * This route is protected by the 'authenticateToken' middleware.
+ * The 'getUserDetails' function in the userController returns the user's details.
+ */
 router.get('/user-details', authenticateToken, userController.getUserDetails);
 
+/**
+ * POST route for changing user details.
+ * Authenticated users can change their email or username.
+ * This route is protected by the 'authenticateToken' middleware.
+ * The 'changeUserDetails' function in the userController handles the user details change.
+ */
 router.post('/change-user-details', authenticateToken, userController.changeUserDetails);
 
 // Export the router so it can be used in the main server file (usually server.js or app.js).

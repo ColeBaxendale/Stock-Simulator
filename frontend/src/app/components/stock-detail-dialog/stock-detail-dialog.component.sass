@@ -1,9 +1,10 @@
-.loading-animation
+// Container for the loading animation
+  .loading-animation
   display: flex
   align-items: center
   justify-content: center
   height: 30px
-
+// Dot element of the loading animation
 .dot
   width: 10px
   height: 10px
@@ -12,17 +13,21 @@
   animation: dotScale 1s infinite
   margin: 0 5px
 
+// Delayed animation for dot1
 .dot1
   animation-delay: 0.2s
-
+// Delayed animation for dot2
 .dot2
   animation-delay: 0.4s
-
+// Delayed animation for dot3
 .dot3
   animation-delay: 0.6s
-
+// Keyframes for the dot scale animation
 @keyframes dotScale
   0%, 100%
     transform: scale(1)
   50%
     transform: scale(1.2)
+// Sass comments describing the loading animation styles
+
+
