@@ -42,7 +42,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MomentDateAdapter, MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter } from '@angular/material/core';
-import { ParseCurrencyPipe } from './components/parse-currency.pipe';
+
 
 @NgModule({
   declarations: [
@@ -57,7 +57,7 @@ import { ParseCurrencyPipe } from './components/parse-currency.pipe';
     StockDetailDialogComponent,
     TransactionComponent,
     TransactionFilterDialogComponent,
-    ParseCurrencyPipe
+
   ],
   imports: [
     BrowserModule,
