@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { UserServiceService } from '../../services/user-service.service';
 import { HttpClient } from '@angular/common/http';
 import { TransactionFilterDialogComponent } from '../transaction-filter-dialog/transaction-filter-dialog.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 // Define the structure of a Transaction object
 interface Transaction {
@@ -25,36 +25,49 @@ export class TransactionComponent implements OnInit {
   transactions: Transaction[] = [];
   filteredTransactions: Transaction[] = []; // Filtered transactions based on user criteria
   sortDirection: { [key: string]: string } = {}; // Store sorting direction for each column
-  
+  showFilterButtons: boolean = true;
 
   constructor(
     private userService: UserServiceService,
     private http: HttpClient,
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<TransactionComponent>
+    public dialogRef: MatDialogRef<TransactionComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   ngOnInit() {
     this.loading = true;
     this.fetchTransactionData();
+    if (this.data && this.data.symbol) {
+      this.applyInitialSymbolFilter(this.data.symbol);
+      this.showFilterButtons = false; // Hide filter buttons if a symbol is provided
+    } else {
+      this.showFilterButtons = true; // Show filter buttons otherwise
+    }
+  }
+
+  applyInitialSymbolFilter(symbol: string) {
+    // Ensure the filter is case-insensitive and direct comparison
+    this.filteredTransactions = this.filteredTransactions.filter(transaction => transaction.symbol.toLowerCase() === symbol.toLowerCase());
   }
 
   fetchTransactionData() {
-    this.userService.getUserTransactions().subscribe(
-      (data: { transactions: Transaction[] }) => {
-        // Sort transactions by timestamp in descending order
-        this.transactions = data.transactions.sort((a, b) => {
-          return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
-        });
-        // Initialize filtered transactions with all transactions
-        this.filteredTransactions = [...this.transactions]; 
+    this.userService.getUserTransactions().subscribe({
+      next: (data: { transactions: Transaction[] }) => {
+        this.transactions = data.transactions.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        this.filteredTransactions = [...this.transactions];
         this.loading = false;
+  
+        // Apply symbol filter after data is fetched and sorted
+        if (this.data && this.data.symbol) {
+          this.applyInitialSymbolFilter(this.data.symbol);
+        }
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching transaction data:', error);
         this.loading = false;
       }
-    );
+    });
   }
 
   // Function to toggle sorting direction for a column

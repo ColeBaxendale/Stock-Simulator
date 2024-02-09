@@ -26,11 +26,12 @@
  */
 
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { interval, Subscription } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { StockService } from '../../services/stock-service.service';
 import { UserServiceService } from '../../services/user-service.service';
+import { TransactionComponent } from '../transaction/transaction.component';
 
 @Component({
   selector: 'app-stock-detail-dialog',
@@ -38,6 +39,7 @@ import { UserServiceService } from '../../services/user-service.service';
   styleUrls: ['./stock-detail-dialog.component.sass']
 })
 export class StockDetailDialogComponent implements OnInit, OnDestroy {
+
   sellQuantity: number = 1; // Sell quantity for the stock
   currentPrice = -1; // Current price of the stock
   profitLoss: number | undefined; // Profit or loss of the stock
@@ -49,7 +51,8 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<StockDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private stockService: StockService,
-    private userService: UserServiceService
+    private userService: UserServiceService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -116,6 +119,19 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
       });
     }
   }
+  viewTransactions(symbol: string) {
+    const dialogRef = this.dialog.open(TransactionComponent, {
+      width: '1200px', // Adjust width as needed
+      data: {
+        symbol: this.symbol
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
 
     // Function to close the dialog
     closeDialog(): void {

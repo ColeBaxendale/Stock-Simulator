@@ -5,8 +5,8 @@
   <h2>Transactions</h2>
   <!-- Close button (X) -->
 
-  <button class="filter" mat-raised-button (click)="openFilterDialog()">Filter Transactions</button>
-  <button class="filter" mat-raised-button color="warn" (click)="clearFilters()">Clear Filters</button>
+  <button *ngIf="showFilterButtons" class="filter" mat-raised-button (click)="openFilterDialog()">Filter Transactions</button>
+  <button *ngIf="showFilterButtons" class="filter" mat-raised-button color="warn" (click)="clearFilters()">Clear Filters</button>
   <div class="transaction-container">
    
     <table class="transaction-table">

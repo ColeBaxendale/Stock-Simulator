@@ -71,6 +71,7 @@ export class PortfolioComponent implements OnInit {
     const portfolioUpdateInterval = interval(10000); // 10 seconds
     portfolioUpdateInterval.subscribe(() => {
       this.fetchPortfolioData();
+      
     });
   }
 
@@ -106,13 +107,12 @@ export class PortfolioComponent implements OnInit {
 
   // Function to fetch current prices for a given stock
   fetchCurrentPrices(stock: Stock): void {
+   
     this.stockService.searchStock(stock.ticker).subscribe(
       (data) => {
         const stockData = data['currentPrice']; // Get current price from API response
         if (stockData) {
-          console.log(stockData)
-          console.log(stock.averageBuyPrice);
-          console.log(stock.quantityOwned);
+
           
           
           stock.currentPrice = stockData; // Set current price for the stock
@@ -120,7 +120,7 @@ export class PortfolioComponent implements OnInit {
         } else {
           console.error(`Error fetching current prices for ${stock.ticker}`); // Log error if fetching current prices fails
         }
-        this.loading = false; // Set loading flag to false after data is fetched
+       // Set loading flag to false after data is fetched
       },
       (error) => {
         console.error('Error fetching current prices:', error); // Log error if fetching current prices fails
