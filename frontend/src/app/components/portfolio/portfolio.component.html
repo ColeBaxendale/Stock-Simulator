@@ -1,44 +1,33 @@
-<!-- Portfolio Component Template -->
-
-<!-- Loading Animation -->
-<div *ngIf="loading">
-  <div class="loading-animation">
-    <!-- Animation elements -->
-    <div class="dot dot1"></div>
-    <div class="dot dot2"></div>
-    <div class="dot dot3"></div>
+<div>
+  <h2 class="title">Portfolio</h2>
+  <!-- Portfolio Table with scrolling -->
+  <div class="portfolio-container">
+    <table class="portfolio-table">
+      <thead>
+        <!-- Table headers with sticky header -->
+        <tr class="sticky-header">
+          <th class="title-box" (click)="toggleSortDirection('ticker')">Ticker</th>
+          <th class="title-box" (click)="toggleSortDirection('quantityOwned')">Quantity</th>
+          <th class="title-box" (click)="toggleSortDirection('averageBuyPrice')">Average</th>
+          <th class="title-box" (click)="toggleSortDirection('currentPrice')">Currently</th>
+          <th class="title-box" (click)="toggleSortDirection('profitLoss')">Profit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows for each stock -->
+        <tr *ngFor="let stock of stocks" (click)="openDialog(stock)" class="stock-row">
+          <!-- Table data for each stock -->
+          <td>{{ stock.ticker }}</td>
+          <td>{{ stock.quantityOwned }}</td>
+          <td>{{ stock.averageBuyPrice | currency }}</td>
+          <!-- Conditional rendering for current price -->
+          <td *ngIf="stock.currentPrice !== undefined">{{ stock.currentPrice?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
+          <!-- Conditional rendering for profit/loss -->
+          <td *ngIf="stock.profitLoss !== undefined">{{ stock.profitLoss?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+  <!-- Message for Empty Portfolio -->
+  <div *ngIf="!loading && stocks.length === 0">No stocks in portfolio.</div>
 </div>
-
-<!-- Portfolio Table -->
-<div *ngIf="!loading && stocks.length > 0">
-  <h2>Portfolio</h2>
-  <table>
-    <thead>
-      <!-- Table headers -->
-      <tr>
-        <th>Ticker</th>
-        <th>Quantity</th>
-        <th>Average</th>
-        <th>Currently</th>
-        <th>Profit</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Table rows for each stock -->
-      <tr *ngFor="let stock of stocks" (click)="openDialog(stock)">
-        <!-- Table data for each stock -->
-        <td>{{ stock.ticker }}</td>
-        <td>{{ stock.quantityOwned }}</td>
-        <td>{{ stock.averageBuyPrice | currency }}</td>
-        <!-- Conditional rendering for current price -->
-        <td *ngIf="stock.currentPrice !== undefined">{{ stock.currentPrice?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
-        <!-- Conditional rendering for profit/loss -->
-        <td *ngIf="stock.profitLoss !== undefined">{{ stock.profitLoss?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<!-- Message for Empty Portfolio -->
-<div *ngIf="!loading && stocks.length === 0">No stocks in portfolio.</div>

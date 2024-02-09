@@ -34,6 +34,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { StockDetailDialogComponent } from './components/stock-detail-dialog/stock-detail-dialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
+import { TransactionComponent } from './components/transaction/transaction.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     SearchbarComponent,
     StockPageComponent,
     PortfolioComponent,
-    StockDetailDialogComponent
+    StockDetailDialogComponent,
+    TransactionComponent
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,30 @@
+<div>
+  <h2>Transactions</h2>
+  <div class="transaction-container">
+    <table class="transaction-table">
+      <thead class="sticky-header">
+        <!-- Table headers with click event binding to toggle sorting -->
+        <tr>
+          <th (click)="toggleSortDirection('timestamp')">Timestamp</th>
+          <th (click)="toggleSortDirection('transactionType')">Type</th>
+          <th (click)="toggleSortDirection('symbol')">Symbol</th>
+          <th (click)="toggleSortDirection('quantity')">Quantity</th>
+          <th (click)="toggleSortDirection('price')">Price</th>
+          <th (click)="toggleSortDirection('totalPrice')">Total Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Table rows for each transaction, iterating over sorted transactions -->
+        <tr *ngFor="let transaction of transactions">
+          <!-- Table data for each transaction -->
+          <td>{{ transaction.timestamp | date: 'MMM d, y h:mm:ss a' }}</td>
+          <td>{{ transaction.transactionType }}</td>
+          <td>{{ transaction.symbol }}</td>
+          <td>{{ transaction.quantity }}</td>
+          <td>{{ transaction.price | currency }}</td>
+          <td>{{ transaction.totalPrice | currency }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

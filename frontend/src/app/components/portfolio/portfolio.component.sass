@@ -1,42 +1,49 @@
-// Styles for the loading animation component
+// Styles for the portfolio component
 
-.loading-animation {
-  // Center the loading animation vertically and horizontally
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px; // Set the height of the loading animation container
-}
+// Container for the portfolio table with scrolling
+.portfolio-container 
+  overflow-y: auto // Enable vertical scrolling
+  max-height: 400px // Limit the maximum height
 
-.dot {
-  // Common styles for each dot in the animation
-  width: 10px;
-  height: 10px;
-  background-color: #007bff; // Blue color for the dots
-  border-radius: 50%; // Make the dots circular
-  animation: dotScale 1s infinite; // Apply the scaling animation to each dot
-  margin: 0 5px; // Add some margin between dots
-}
+// Styles for the portfolio table
+.portfolio-table 
+  width: 100% // Set the table width to 100% of the container
+  border-collapse: separate // Separate borders for cells
+  border-spacing: 10px // Add spacing between cells
 
-// Different delay for each dot to create a sequential animation effect
-.dot1 {
-  animation-delay: 0.2s; // Delay the animation for the first dot
-}
+// Styles for table headers and cells
+.portfolio-table th,
+.portfolio-table td 
+  padding: 15px // Add padding to cells
+  text-align: center // Center-align text
+  border: 1px solid #ddd // Add border to cells
 
-.dot2 {
-  animation-delay: 0.4s; // Delay the animation for the second dot
-}
+// Styles for table headers
+.portfolio-table th 
+  font-weight: bold // Apply bold font weight
+  background-color: #f2f2f2 // Set background color for headers
 
-.dot3 {
-  animation-delay: 0.6s; // Delay the animation for the third dot
-}
+// Make the headers sticky
+.sticky-header th 
+  position: sticky // Make the headers sticky
+  top: 0 // Stick to the top of the container
+  background-color: #f2f2f2 // Set background color for sticky headers
+  z-index: 1 // Ensure the headers appear above other content
 
-// Keyframes for the scaling animation of the dots
-@keyframes dotScale {
-  0%, 100% {
-    transform: scale(1); // Initial and final state: normal scale
-  }
-  50% {
-    transform: scale(1.2); // Middle state: slightly larger scale
-  }
-}
+
+
+
+  .title-box 
+  cursor: pointer
+
+  &:hover 
+    background-color: lightgray // Change background color on hover
+    color: black // Change text color on hover
+    // Add any other styles you want to change on hover
+  
+
+
+/* Hover effect on stock rows */
+.stock-row:hover 
+  background-color: #f0f0f0
+  cursor: pointer

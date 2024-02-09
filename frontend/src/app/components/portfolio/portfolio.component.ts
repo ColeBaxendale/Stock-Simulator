@@ -41,7 +41,7 @@ interface Stock {
   quantityOwned: number;
   averageBuyPrice: number;
   currentPrice?: number; 
-  profitLoss?: number;
+  profitLoss?: number | string;
 }
 
 @Component({
@@ -53,6 +53,7 @@ export class PortfolioComponent implements OnInit {
   loading: boolean = false; // Flag to indicate loading state
   stocks: Stock[] = []; // Array to hold portfolio stocks
   sellQuantity: number = 1; // Quantity for selling stocks
+  sortDirection: { [key: string]: string } = {};
 
   constructor(
     private http: HttpClient,
@@ -109,8 +110,14 @@ export class PortfolioComponent implements OnInit {
       (data) => {
         const stockData = data['currentPrice']; // Get current price from API response
         if (stockData) {
+          console.log(stockData)
+          console.log(stock.averageBuyPrice);
+          console.log(stock.quantityOwned);
+          
+          
           stock.currentPrice = stockData; // Set current price for the stock
-          stock.profitLoss = (stockData - stock.averageBuyPrice) * stock.quantityOwned; // Calculate profit/loss
+          stock.profitLoss = `$ ${((stockData - parseFloat(stock.averageBuyPrice.toFixed(2))) * stock.quantityOwned).toFixed(2)}`;
+
         } else {
           console.error(`Error fetching current prices for ${stock.ticker}`); // Log error if fetching current prices fails
         }
@@ -165,5 +172,25 @@ export class PortfolioComponent implements OnInit {
         }
       }
     );
+}
+
+toggleSortDirection(column: keyof Stock) {
+  if (this.isValidColumn(column)) {
+    const validColumn = column as keyof Stock; // Type assertion
+    this.sortDirection[validColumn] = this.sortDirection[validColumn] === 'asc' ? 'desc' : 'asc';
+    // Sort stocks based on the selected column and direction
+    this.stocks.sort((a, b) => {
+      const direction = this.sortDirection[validColumn] === 'asc' ? 1 : -1;
+      // Use bracket notation to access properties dynamically
+      // Make sure to handle the case where a[validColumn] or b[validColumn] is undefined
+      return (a[validColumn] ?? '') > (b[validColumn] ?? '') ? direction : -direction;
+    });
   }
+}
+
+isValidColumn(column: keyof Stock): column is keyof Stock {
+  // Check if the column is a valid key of the Stock interface
+  return column in this.stocks[0]; // Assuming stocks is not empty
+}
+
 }
