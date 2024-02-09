@@ -63,34 +63,36 @@ export class StockPageComponent implements OnInit, OnDestroy {
     private userService: UserServiceService
   ) { }
 
-  // Lifecycle hook - ngOnInit
   ngOnInit(): void {
     // Subscribe to route parameter changes
     this.route.paramMap.subscribe((params) => {
-      const symbol = params.get('symbol');
-      if (symbol) {
-        if (this.intervalSubscription) {
-          this.intervalSubscription.unsubscribe();
-        }
-        this.currentSymbol = symbol; // Update the current symbol
-        this.fetchStockData(symbol); // Fetch stock data immediately
+        const symbol = params.get('symbol');
+        if (symbol && this.currentSymbol !== symbol) {
+            this.currentSymbol = symbol; // Update the current symbol
+            this.fetchStockData(symbol); // Fetch stock data immediately
+            this.fetchStockNews(symbol); // Always fetch news when the symbol changes
 
-        // Check if news has already been fetched
-        if (!this.newsFetched) {
-          this.fetchStockNews(symbol); // Fetch news only once
-          this.newsFetched = true; // Set the flag to true after fetching news
-        }
+            // If there's an existing interval subscription, unsubscribe first
+            if (this.intervalSubscription) {
+                this.intervalSubscription.unsubscribe();
+            }
 
-        // Set up a new interval to refresh stock data every 10 seconds
-        this.intervalSubscription = interval(100000)
-          .pipe(
-            takeUntil(this.stopRefresh),
-            switchMap(() => this.fetchStockData(this.currentSymbol!))
-          )
-          .subscribe(() => {});
-      }
+            // Set up a new interval to refresh stock data every 10 seconds
+            this.setupDataRefreshInterval();
+        }
     });
-  }
+}
+
+private setupDataRefreshInterval(): void {
+  this.intervalSubscription = interval(10000) // Adjusted to 10 seconds as seems to be the original intent
+      .pipe(
+          takeUntil(this.stopRefresh),
+          switchMap(() => this.fetchStockData(this.currentSymbol!))
+      )
+      .subscribe({
+          // You can also handle errors or responses here if needed
+      });
+}
 
   // Lifecycle hook - ngOnDestroy
   ngOnDestroy(): void {

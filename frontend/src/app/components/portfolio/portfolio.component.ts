@@ -41,7 +41,7 @@ interface Stock {
   quantityOwned: number;
   averageBuyPrice: number;
   currentPrice?: number; 
-  profitLoss?: number | string;
+  profitLoss?: number;
 }
 
 @Component({
@@ -116,8 +116,7 @@ export class PortfolioComponent implements OnInit {
           
           
           stock.currentPrice = stockData; // Set current price for the stock
-          stock.profitLoss = `$ ${((stockData - parseFloat(stock.averageBuyPrice.toFixed(2))) * stock.quantityOwned).toFixed(2)}`;
-
+          stock.profitLoss = (stockData - stock.averageBuyPrice) * stock.quantityOwned;
         } else {
           console.error(`Error fetching current prices for ${stock.ticker}`); // Log error if fetching current prices fails
         }
@@ -142,7 +141,7 @@ export class PortfolioComponent implements OnInit {
         sellStock: (ticker: string, quantityOwned: number) => this.sellStock(ticker, quantityOwned)
       }
     });
-  }
+}
   
   // Function to sell stocks
   sellStock(stockSymbol: string, quantityOwned: number): void {

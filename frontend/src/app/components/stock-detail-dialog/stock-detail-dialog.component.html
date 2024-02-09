@@ -3,9 +3,9 @@
 
 <!-- Display the current price, quantity owned, average buy price, and profit/loss -->
 <mat-dialog-content>
-  <p>Current Price: ${{ data.currentPrice | number: '1.2-2' }}</p>
+  <p>Current Price: ${{ data.currentPrice.toFixed(2) | number: '1.2-2' }}</p>
   <p>Quantity Owned: {{ data.quantityOwned }}</p>
-  <p>Average Buy Price: ${{ data.averageBuyPrice }}</p>
+  <p>Average Buy Price: ${{ data.averageBuyPrice.toFixed(2) }}</p>
   <p>Profit: ${{ data.profitLoss | number: '1.2-2' }}</p>
   
   <!-- Input field for specifying the sell quantity -->
