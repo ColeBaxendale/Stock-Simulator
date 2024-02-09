@@ -3,6 +3,7 @@
   max-height: 400px
 
 .sticky-header th
+  margin-bottom: 10px
   position: sticky
   top: 0
   background-color: #f2f2f2
@@ -16,12 +17,33 @@
   width: 100%
   border-collapse: separate
   border-spacing: 10px
+  
 
-.transaction-table th, .transaction-table td
+.transaction-table th,
+.transaction-table td
   padding: 15px
   text-align: center
   border: 1px solid #ddd
+  background-color: white
 
+.buy-transaction
+  background-color: green !important
+
+.sell-transaction
+  background-color: red !important
+  
 .transaction-table th
   font-weight: bold
   background-color: #f2f2f2
+/* Ensure the filter buttons remain visible when scrolling */
+
+.filter
+  cursor: pointer  
+  margin-bottom: 10px
+  top: 0
+  z-index: 2
+  background-color: white
+  &:hover 
+    background-color: lightgray // Change background color on hover
+    color: black // Change text color on hover
+

@@ -27,6 +27,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { UserServiceService } from '../../services/user-service.service';
+import { TransactionComponent } from '../../components/transaction/transaction.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,8 +37,8 @@ import { UserServiceService } from '../../services/user-service.service';
 })
 export class DashboardComponent implements OnInit {
   loggedInUsername: string | null = null;
-
-  constructor(private http: HttpClient, private userService: UserServiceService) { }
+  
+  constructor(private http: HttpClient, private userService: UserServiceService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     // Fetch user details when the component initializes
@@ -48,6 +50,19 @@ export class DashboardComponent implements OnInit {
       error: (error) => {
         console.error('Error fetching username:', error);
       },
+    });
+  }
+
+  openTransactionsDialog(): void {
+    const dialogRef = this.dialog.open(TransactionComponent, {
+      width: '1200px', // Adjust width as needed
+      data: {
+        // Pass your transactions data to the dialog if needed
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
     });
   }
 }

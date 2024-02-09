@@ -1,6 +1,14 @@
 <div>
+  <button mat-icon-button class="close-button" (click)="closeDialog()">
+  <mat-icon>close</mat-icon>
+</button>
   <h2>Transactions</h2>
+  <!-- Close button (X) -->
+
+  <button class="filter" mat-raised-button (click)="openFilterDialog()">Filter Transactions</button>
+  <button class="filter" mat-raised-button color="warn" (click)="clearFilters()">Clear Filters</button>
   <div class="transaction-container">
+   
     <table class="transaction-table">
       <thead class="sticky-header">
         <!-- Table headers with click event binding to toggle sorting -->
@@ -9,21 +17,24 @@
           <th (click)="toggleSortDirection('transactionType')">Type</th>
           <th (click)="toggleSortDirection('symbol')">Symbol</th>
           <th (click)="toggleSortDirection('quantity')">Quantity</th>
-          <th (click)="toggleSortDirection('price')">Price</th>
+          <th (click)="toggleSortDirection('price')">Price Per Share</th>
           <th (click)="toggleSortDirection('totalPrice')">Total Price</th>
         </tr>
       </thead>
       <tbody>
         <!-- Table rows for each transaction, iterating over sorted transactions -->
-        <tr *ngFor="let transaction of transactions">
-          <!-- Table data for each transaction -->
+        <tr *ngFor="let transaction of filteredTransactions">
           <td>{{ transaction.timestamp | date: 'MMM d, y h:mm:ss a' }}</td>
-          <td>{{ transaction.transactionType }}</td>
+          <!-- Apply conditional styling here -->
+          <td [ngClass]="{'buy-transaction': transaction.transactionType === 'BUY', 'sell-transaction': transaction.transactionType === 'SELL'}">
+            {{ transaction.transactionType }}
+          </td>
           <td>{{ transaction.symbol }}</td>
           <td>{{ transaction.quantity }}</td>
           <td>{{ transaction.price | currency }}</td>
           <td>{{ transaction.totalPrice | currency }}</td>
         </tr>
+        
       </tbody>
     </table>
   </div>

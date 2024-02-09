@@ -1,0 +1,39 @@
+<h2>Filter Transactions</h2>
+
+<!-- Close button (X) -->
+<button mat-icon-button class="close-button" (click)="closeDialog()">
+  <mat-icon>close</mat-icon>
+</button>
+
+<!-- Dropdown for transaction type -->
+<mat-form-field class="filter-dropdown">
+  <mat-label>Type</mat-label>
+  <mat-select [(value)]="selectedType">
+    <mat-option value="">All</mat-option>
+    <mat-option value="BUY">Buy</mat-option>
+    <mat-option value="SELL">Sell</mat-option>
+  </mat-select>
+</mat-form-field>
+
+<!-- Date range picker -->
+<mat-form-field class="date-picker">
+  <mat-label>Between Dates</mat-label>
+  <input matInput [matDatepicker]="startPicker" placeholder="Start Date" [(ngModel)]="selectedStartDate">
+  <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+  <mat-datepicker #startPicker></mat-datepicker>
+</mat-form-field>
+<mat-form-field class="date-picker">
+  <mat-label>To</mat-label>
+  <input matInput [matDatepicker]="endPicker" placeholder="End Date" [(ngModel)]="selectedEndDate">
+  <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+  <mat-datepicker #endPicker></mat-datepicker>
+</mat-form-field>
+
+<!-- Ticker input -->
+<mat-form-field class="ticker-input">
+  <mat-label>Ticker</mat-label>
+  <input matInput placeholder="Enter ticker" [(ngModel)]="ticker">
+</mat-form-field>
+
+<!-- Apply button -->
+<button mat-raised-button color="primary" (click)="applyFilters()">Apply</button>

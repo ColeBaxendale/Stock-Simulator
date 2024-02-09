@@ -30,11 +30,19 @@ import { DatePipe } from '@angular/common';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { StockPageComponent } from './pages/stock-page/stock-page.component';
 import { PortfolioComponent } from './components/portfolio/portfolio.component';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { StockDetailDialogComponent } from './components/stock-detail-dialog/stock-detail-dialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TransactionComponent } from './components/transaction/transaction.component';
+import { TransactionFilterDialogComponent } from './components/transaction-filter-dialog/transaction-filter-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MomentDateAdapter, MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { DateAdapter } from '@angular/material/core';
+import { ParseCurrencyPipe } from './components/parse-currency.pipe';
 
 @NgModule({
   declarations: [
@@ -47,17 +55,29 @@ import { TransactionComponent } from './components/transaction/transaction.compo
     StockPageComponent,
     PortfolioComponent,
     StockDetailDialogComponent,
-    TransactionComponent
+    TransactionComponent,
+    TransactionFilterDialogComponent,
+    ParseCurrencyPipe
   ],
   imports: [
     BrowserModule,
-    MatDialogModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule,
+    MatSelectModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MatMomentDateModule
   ],
-  providers: [DatePipe, provideAnimationsAsync()],
+  providers: [
+    DatePipe,
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
+    { provide: DateAdapter, useClass: MomentDateAdapter }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
