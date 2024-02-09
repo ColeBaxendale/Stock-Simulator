@@ -145,4 +145,9 @@ export class StockPageComponent implements OnInit, OnDestroy {
     this.stockNews = newsData as any[]; // Assign fetched data to stockNews array
     this.loadingNewsData = false; // Set loading flag to false
   }
+
+  
+  backToDashboard(){
+    this.router.navigateByUrl('/dashboard');
+  }
 }

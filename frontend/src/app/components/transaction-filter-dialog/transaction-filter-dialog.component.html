@@ -15,6 +15,12 @@
   </mat-select>
 </mat-form-field>
 
+<!-- Ticker input -->
+<mat-form-field class="ticker-input">
+  <mat-label>Ticker</mat-label>
+  <input matInput placeholder="Enter ticker" [(ngModel)]="ticker">
+</mat-form-field>
+
 <!-- Date range picker -->
 <mat-form-field class="date-picker">
   <mat-label>Between Dates</mat-label>
@@ -29,11 +35,6 @@
   <mat-datepicker #endPicker></mat-datepicker>
 </mat-form-field>
 
-<!-- Ticker input -->
-<mat-form-field class="ticker-input">
-  <mat-label>Ticker</mat-label>
-  <input matInput placeholder="Enter ticker" [(ngModel)]="ticker">
-</mat-form-field>
 
 <!-- Apply button -->
 <button mat-raised-button color="primary" (click)="applyFilters()">Apply</button>

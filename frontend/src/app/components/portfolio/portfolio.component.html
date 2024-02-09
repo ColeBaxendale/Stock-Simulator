@@ -1,22 +1,21 @@
 <div>
-  <h2>Portfolio</h2>
+  <h2 class="title">Portfolio</h2>
   <!-- Portfolio Table with scrolling -->
   <div class="portfolio-container">
     <table class="portfolio-table">
       <thead>
         <!-- Table headers with sticky header -->
         <tr class="sticky-header">
-          <th (click)="toggleSortDirection('ticker')">Ticker</th>
-          <th (click)="toggleSortDirection('quantityOwned')">Quantity</th>
-          <th (click)="toggleSortDirection('averageBuyPrice')">Average</th>
-          <th (click)="toggleSortDirection('currentPrice')">Currently</th>
-          <th (click)="toggleSortDirection('profitLoss')">Profit</th>
-          
+          <th class="title-box" (click)="toggleSortDirection('ticker')">Ticker</th>
+          <th class="title-box" (click)="toggleSortDirection('quantityOwned')">Quantity</th>
+          <th class="title-box" (click)="toggleSortDirection('averageBuyPrice')">Average</th>
+          <th class="title-box" (click)="toggleSortDirection('currentPrice')">Currently</th>
+          <th class="title-box" (click)="toggleSortDirection('profitLoss')">Profit</th>
         </tr>
       </thead>
       <tbody>
         <!-- Table rows for each stock -->
-        <tr *ngFor="let stock of stocks" (click)="openDialog(stock)">
+        <tr *ngFor="let stock of stocks" (click)="openDialog(stock)" class="stock-row">
           <!-- Table data for each stock -->
           <td>{{ stock.ticker }}</td>
           <td>{{ stock.quantityOwned }}</td>
@@ -24,6 +23,7 @@
           <!-- Conditional rendering for current price -->
           <td *ngIf="stock.currentPrice !== undefined">{{ stock.currentPrice?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
           <!-- Conditional rendering for profit/loss -->
+          
           <td *ngIf="stock.profitLoss !== undefined">{{ stock.profitLoss?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) }}</td>
         </tr>
       </tbody>
