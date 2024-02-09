@@ -116,4 +116,9 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+    // Function to close the dialog
+    closeDialog(): void {
+      this.dialogRef.close();
+    }
 }
