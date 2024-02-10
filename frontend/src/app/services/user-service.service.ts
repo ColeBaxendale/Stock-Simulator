@@ -25,7 +25,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { EMPTY, Observable, catchError, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -86,56 +86,64 @@ export class UserServiceService {
       });
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
-          // Handle authentication errors
-          console.error('Authentication error:', error);
-          alert('Please log in again.');
-          localStorage.removeItem('loginToken');
-          window.location.reload();
-          // Return an observable with an error message
-          return throwError(() => new Error('Authentication error'));
+          const errorMessage = error.error.message; // Correct way to access the error message
+          if(error.status === 403){
+            // Handle authentication errors
+            console.error('Authentication error:', errorMessage);
+            alert('Please log in again.');
+            localStorage.removeItem('loginToken');
+            window.location.reload();
+            return EMPTY;
+          } else {
+            // Corrected to use `errorMessage` directly
+            alert('Error: ' + errorMessage);
+            return EMPTY;
+          }
         })
       );
     }
   }
 
   // Method to sell stocks
-  sellStock(requestBody: { symbol: string; quantity: number; currentPrice: number }): Observable<any> {
-    // Validate stock symbol and quantity
-    const symbol = requestBody.symbol;
-    const quantity = requestBody.quantity;
-    const symbolErrorMessage = this.validateStockSymbol(symbol);
-    const quantityErrorMessage = this.isValidQuantity(quantity);
-    // If there are validation errors, return an observable with an error message
-    if (symbolErrorMessage !== null || quantityErrorMessage !== null) {
-      const errorMessage = symbolErrorMessage || quantityErrorMessage || 'Unknown error message';
-      return throwError(() => new Error(errorMessage));
-    } else {
-      // If validation passes, make HTTP POST request to sell-stock endpoint
-      const authToken = this.getAuthorizationToken();
-      const url = `${this.baseUrl}/sell-stock`;
-      const headers = new HttpHeaders({
-        Authorization: `Bearer ${authToken}`
-      });
-      return this.http.post<any>(url, requestBody, { headers }).pipe(
-        catchError((error) => {
-          const errorMessage = error.error.message;
-          if(error.status === 403){
+// Method to sell stocks
+sellStock(requestBody: { symbol: string; quantity: number; currentPrice: number }): Observable<any> {
+  // Validate stock symbol and quantity
+  const symbol = requestBody.symbol;
+  const quantity = requestBody.quantity;
+  const symbolErrorMessage = this.validateStockSymbol(symbol);
+  const quantityErrorMessage = this.isValidQuantity(quantity);
+  // If there are validation errors, return an observable with an error message
+  if (symbolErrorMessage !== null || quantityErrorMessage !== null) {
+    const errorMessage = symbolErrorMessage || quantityErrorMessage || 'Unknown error message';
+    alert('Error: ' + errorMessage);
+    return EMPTY;
+  } else {
+    // If validation passes, make HTTP POST request to sell-stock endpoint
+    const authToken = this.getAuthorizationToken();
+    const url = `${this.baseUrl}/sell-stock`;
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${authToken}`
+    });
+    return this.http.post<any>(url, requestBody, { headers }).pipe(
+      catchError((error) => {
+        const errorMessage = error.error.message; // Correct way to access the error message
+        if(error.status === 403){
           // Handle authentication errors
-          console.error('Authentication error:', error);
+          console.error('Authentication error:', errorMessage);
           alert('Please log in again.');
           localStorage.removeItem('loginToken');
           window.location.reload();
-          // Return an observable with an error message
-          return throwError(() => new Error('Authentication error'));
-          } else{
-            alert('Error: ' + error.errorMessage);
-            return throwError(() => new Error(error.message));
-          }
-
-        })
-      );
-    }
+          return EMPTY;
+        } else {
+          // Corrected to use `errorMessage` directly
+          alert('Error: ' + errorMessage);
+          return EMPTY;
+        }
+      })
+    );
   }
+}
+
 
   // Method to deposit funds
   deposit(amount: number): Observable<any> {
