@@ -50,7 +50,7 @@ interface Stock {
   styleUrls: ['./portfolio.component.sass']
 })
 export class PortfolioComponent implements OnInit {
-  loading: boolean = false; // Flag to indicate loading state
+  loading: boolean = true; // Flag to indicate loading state
   stocks: Stock[] = []; // Array to hold portfolio stocks
   sellQuantity: number = 1; // Quantity for selling stocks
   sortDirection: { [key: string]: string } = {};
@@ -64,7 +64,6 @@ export class PortfolioComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loading = true; // Set loading flag to true
     this.fetchPortfolioData(); // Initial fetch of portfolio data
 
     // Set up interval to fetch portfolio data every 10 seconds
@@ -77,56 +76,60 @@ export class PortfolioComponent implements OnInit {
 
   // Function to fetch portfolio data from the server
   fetchPortfolioData(): void {
-    const token = localStorage.getItem('loginToken'); // Get JWT token from localStorage
+    this.loading = true;
+    const token = localStorage.getItem('loginToken');
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}` // Set Authorization header with JWT token
+      Authorization: `Bearer ${token}`
     });
   
-    // Make HTTP GET request to fetch portfolio data
-    this.http.get<{ portfolio: { [ticker: string]: Omit<Stock, 'ticker'> } }>(this.userService.getUserPortfolio(), { headers }).subscribe(
-      (data) => {
-        // Transform the portfolio data into an array of stocks
-        this.stocks = Object.entries(data.portfolio).map(([ticker, { quantityOwned, averageBuyPrice }]) => ({
+    this.http.get<{ portfolio: { [ticker: string]: Omit<Stock, 'ticker'> } }>(this.userService.getUserPortfolio(), { headers }).subscribe({
+      next: (data) => {
+        this.stocks = Object.entries(data.portfolio).map(([ticker, details]) => ({
           ticker,
-          quantityOwned,
-          averageBuyPrice,
-          currentPrice: undefined, 
+          ...details,
+          currentPrice: undefined,
           profitLoss: undefined,
         }));
-        // Fetch current prices for each stock
-        this.stocks.forEach((stock) => {
-          this.fetchCurrentPrices(stock);
+  
+        // Use a counter to track completion of all fetches
+        let fetchesCompleted = 0;
+        const stocksLength = this.stocks.length;
+  
+        // Now fetch current prices for each stock
+        this.stocks.forEach((stock, index) => {
+          this.fetchCurrentPrices(stock, () => {
+            fetchesCompleted++;
+            // Check if all fetches are completed
+            if (fetchesCompleted === stocksLength) {
+              this.loading = false;
+            }
+          });
         });
-        this.loading = false; // Set loading flag to false after data is fetched
-      },
-      (error) => {
-        console.error('Error fetching portfolio data:', error); // Log error if fetching portfolio data fails
-      }
-    );
-  }
-
-  // Function to fetch current prices for a given stock
-  fetchCurrentPrices(stock: Stock): void {
-   
-    this.stockService.searchStock(stock.ticker).subscribe(
-      (data) => {
-        const stockData = data['currentPrice']; // Get current price from API response
-        if (stockData) {
-
-          
-          
-          stock.currentPrice = stockData; // Set current price for the stock
-          stock.profitLoss = (stockData - stock.averageBuyPrice) * stock.quantityOwned;
-        } else {
-          console.error(`Error fetching current prices for ${stock.ticker}`); // Log error if fetching current prices fails
+  
+        // In case there are no stocks, ensure loading is set to false
+        if (stocksLength === 0) {
+          this.loading = false;
         }
-       // Set loading flag to false after data is fetched
       },
-      (error) => {
-        console.error('Error fetching current prices:', error); // Log error if fetching current prices fails
-        this.loading = false; // Set loading flag to false after data is fetched
+      error: (error) => {
+        console.error('Error fetching portfolio data:', error);
+        this.loading = false;
       }
-    );
+    });
+  }
+  
+  fetchCurrentPrices(stock: Stock, callback: () => void): void {
+    this.stockService.searchStock(stock.ticker).subscribe({
+      next: (data) => {
+        stock.currentPrice = data['currentPrice'];
+        stock.profitLoss = (data['currentPrice'] - stock.averageBuyPrice) * stock.quantityOwned;
+        callback(); // Indicate this fetch is completed
+      },
+      error: (error) => {
+        console.error(`Error fetching current prices for ${stock.ticker}`, error);
+        callback(); // Ensure callback is called even in case of error
+      }
+    });
   }
   
   // Function to open dialog for viewing stock details

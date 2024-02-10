@@ -11,11 +11,17 @@ export class TransactionFilterDialogComponent {
   selectedStartDate: Date | null = null; // Store selected start date
   selectedEndDate: Date | null = null; // Store selected end date
   ticker: string = ''; // Store ticker filter value
+  showFilterButtons: boolean = true;
 
   constructor(
     public dialogRef: MatDialogRef<TransactionFilterDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) {
+    if (data.showFilterButtons !== undefined) {
+      this.showFilterButtons = data.showFilterButtons;
+    }
+  }
+  
 
   // Function to close the dialog
   closeDialog(): void {

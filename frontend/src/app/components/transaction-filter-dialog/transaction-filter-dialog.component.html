@@ -16,7 +16,7 @@
 </mat-form-field>
 
 <!-- Ticker input -->
-<mat-form-field class="ticker-input">
+<mat-form-field *ngIf="showFilterButtons" class="ticker-input">
   <mat-label>Ticker</mat-label>
   <input matInput placeholder="Enter ticker" [(ngModel)]="ticker">
 </mat-form-field>

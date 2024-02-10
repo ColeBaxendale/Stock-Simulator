@@ -118,6 +118,8 @@ export class UserServiceService {
       });
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
+          const errorMessage = error.error.message;
+          if(error.status === 403){
           // Handle authentication errors
           console.error('Authentication error:', error);
           alert('Please log in again.');
@@ -125,6 +127,11 @@ export class UserServiceService {
           window.location.reload();
           // Return an observable with an error message
           return throwError(() => new Error('Authentication error'));
+          } else{
+            alert('Error: ' + error.errorMessage);
+            return throwError(() => new Error(error.message));
+          }
+
         })
       );
     }

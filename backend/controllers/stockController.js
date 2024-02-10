@@ -1,21 +1,4 @@
-/**
- * Stock Controller
- * 
- * Filename: stockController.js
- * Author: Cole Baxendale
- * Contact: thecodercole@gmail.com
- * Created on: January 2024
- * Version: 1.0
- * 
- * Description: 
- * This module is responsible for handling all stock-related operations in the application. 
- * It interfaces with the Alpha Vantage API to fetch real-time stock data, including current prices, 
- * detailed stock information, and news related to specific stocks. The module offers functionality 
- * to search for stocks, view detailed stock information, and retrieve news articles, thereby 
- * providing users with comprehensive stock market insights.
- * 
- * 
- */
+ 
 
 const axios = require('axios');
 

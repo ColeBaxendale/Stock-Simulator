@@ -145,57 +145,7 @@ exports.login = async (req, res) => {
  * 
  * Time Complexity: O(1)
  */
-exports.buyStock = async (req, res) => {
-    try {
-        // Extract buy details from the request body
-        const { symbol, quantity, currentPrice } = req.body;
-        const userId = req.user.userId;
-
-        // Validate input
-        if (!symbol || !quantity || isNaN(quantity) || quantity <= 0 || !currentPrice || isNaN(currentPrice) || currentPrice <= 0 || currentPrice >= 500000) {
-            return res.status(400).json({ message: 'Invalid input' });
-        }
-
-        // Check for input length exceeding maximum allowed
-        if (symbol.length > 5) {
-            return res.status(400).json({ message: 'Symbol length exceeds maximum allowed' });
-        }
-
-        if (quantity > 1000) {
-            return res.status(400).json({ message: 'Quantity exceeds maximum allowed' });
-        }
-
-        // Fetch user from the database
-        const user = await User.findById(userId);
-
-        // Check if the user is not found
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Check if the user has enough funds
-        const totalCost = quantity * currentPrice;
-        if (totalCost > user.balance) {
-            return res.status(400).json({ message: 'Insufficient funds' });
-        }
-
-        // Execute the buy stock operation
-        const result = await buyStockPortfolio(user, symbol, quantity, currentPrice);
-        if (!result) {
-            // Record the transaction
-            await addTransaction(user, 'BUY', symbol, quantity, currentPrice);
-
-            // Save the updated user details to the database
-            await saveUserDetails(user);
-            res.status(201).json({ message: `User purchased ${quantity} shares of ${symbol} for $${currentPrice} a share and user account saved` });
-        } else {
-            res.status(400).json({ message: result });
-        }
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-};
-
+F
 /**
  * Processes a stock sale for a user.
  * @param {Request} req - Express request object with user ID, stock symbol, and quantity.

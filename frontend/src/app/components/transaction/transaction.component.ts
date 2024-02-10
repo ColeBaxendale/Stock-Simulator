@@ -84,6 +84,9 @@ export class TransactionComponent implements OnInit {
   openFilterDialog(): void {
     const dialogRef = this.dialog.open(TransactionFilterDialogComponent, {
       width: '400px', // Adjust width as needed
+      data: {
+        showFilterButtons: this.showFilterButtons
+      }
     });
 
     dialogRef.afterClosed().subscribe((filters: any) => {
