@@ -85,9 +85,11 @@ async function sellStockPortfolio(user, symbol, quantity, stockPrice) {
             quantityOwned: newQuantity,
             averageBuyPrice: existingStock.averageBuyPrice
             });
+        user.buyingPower += totalSalePrice;
         return null;
     }
     user.buyingPower += totalSalePrice;
+    
 }
 
 /**

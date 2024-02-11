@@ -396,20 +396,19 @@ exports.resetUserAccount = async (req, res) => {
  */
 exports.getUserDetails = async (req, res) => {
     try {
-        // Retrieve user ID from request and fetch user's details
         const userId = req.user.userId;
-        const user = await User.findById(userId).select('username email');
-
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
+        } else {
+            return res.status(200).json(user); // Return the entire user document
         }
-
-        // Respond with the user's details
-        res.status(200).json({ username: user.username, email: user.email });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error("Error fetching user details:", error);
+        return res.status(500).json({ message: error.message });
     }
 };
+
 
 /**
  * Updates user's email and/or username.

@@ -163,7 +163,8 @@ export class PortfolioComponent implements OnInit {
             next: (response) => {
               console.log('Response:', response.message); // Log success message
               alert('Success: ' + response.message); // Show success message
-              this.ngOnInit(); // Refresh the portfolio after selling
+              window.location.reload();
+
             },
             error: (error) => {
               console.error('Error selling stock:', error); // Log error if selling stock fails
