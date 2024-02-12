@@ -137,7 +137,7 @@ export class PortfolioComponent implements OnInit {
     this.stockService.searchStock(stock.ticker).subscribe({
       next: (data) => {
         stock.currentPrice = data['currentPrice'];
-        stock.profitLoss = (data['currentPrice'] - stock.averageBuyPrice) * stock.quantityOwned ;
+        stock.profitLoss = (data['currentPrice'] - stock.averageBuyPrice) * stock.quantityOwned;
         callback(); // Indicate this fetch is completed
       },
       error: (error) => {
