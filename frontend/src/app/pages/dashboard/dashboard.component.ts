@@ -100,4 +100,17 @@ export class DashboardComponent implements OnInit {
       console.log('The transactions dialog was closed');
     });
   }
+
+  profitLossColor(profitLoss: number | undefined): string {
+    if (profitLoss === undefined) {
+      return 'black'; // Handle undefined case, use white color
+    } else if (profitLoss > 0) {
+      return 'green'; // Profit is positive, use green color
+    } else if (profitLoss < 0) {
+      return 'red'; // Loss is negative, use red color
+    } else {
+      return 'black'; // Neutral profit/loss, use white color
+    }
+  }
+
 }
