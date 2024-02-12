@@ -6,7 +6,7 @@
   <app-searchbar></app-searchbar> <!-- Display the search bar component -->
   <h2> Buying Power: ${{ buyingPower }}</h2>
   <h2> Total Investment: ${{ totalInvestment }}</h2>
-  <h2> Profit: ${{ profitLoss }}</h2>
+  <h2>Total Profit/Loss: {{ profitLoss }}</h2>
   <app-portfolio></app-portfolio> <!-- Display the portfolio component -->
   <h2 class="transaction " (click)="openTransactionsDialog()">Transaction History</h2>
 </div>

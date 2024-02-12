@@ -1,3 +1,35 @@
+/**
+ * Transaction Component
+ * 
+ * Filename:transaction.component.ts
+ * Author: [Cole Baxendale]
+ * Contact: [thecodercole@gmail.com]
+ * Created on: [February 2024]
+ * Version: 1.0
+ * 
+ * This component is responsible for displaying and managing the transaction history
+ * of a user. It allows for viewing all transactions, filtering based on various criteria
+ * such as symbol, type, and date, and sorting transactions. The component uses Angular
+ * Material for UI elements and dialogues for advanced filtering capabilities.
+ *
+ * Features:
+ * - Displays a list of all user transactions fetched from the server.
+ * - Provides functionality to filter transactions based on symbol, type, date, etc.
+ * - Supports sorting transactions in ascending or descending order based on any column.
+ * - Utilizes Angular Material Dialog for setting up advanced filters.
+ *
+ * Usage:
+ * This component is intended to be used as part of the user dashboard, where users can
+ * view their complete transaction history, filter through their transactions for better
+ * insights, and sort them as required.
+ *
+ * Implementation:
+ * - The component fetches transaction data on initialization and stores it in an array.
+ * - Filters and sorting criteria are applied to the transaction data as per the user's input.
+ * - Angular Material Dialog is used to present a filter dialogue to the user for setting up
+ *   advanced filters.
+ */
+
 import { Component, Inject, OnInit } from '@angular/core';
 import { UserServiceService } from '../../services/user-service.service';
 import { HttpClient } from '@angular/common/http';

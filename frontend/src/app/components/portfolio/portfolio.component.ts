@@ -26,7 +26,7 @@
  * 
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { StockDetailDialogComponent } from '../stock-detail-dialog/stock-detail-dialog.component';
@@ -34,6 +34,7 @@ import { Router } from '@angular/router';
 import { UserServiceService } from '../../services/user-service.service';
 import { StockService } from '../../services/stock-service.service';
 import { interval } from 'rxjs';
+import { DashboardPotfolioSharedServiceService } from '../../services/dashboard-potfolio-shared-service.service';
 
 // Define the structure of a Stock object
 interface Stock {
@@ -60,11 +61,13 @@ export class PortfolioComponent implements OnInit {
     private dialog: MatDialog,
     private router: Router,
     private userService: UserServiceService,
-    private stockService: StockService
+    private stockService: StockService,
+    private dashboardPorfolio: DashboardPotfolioSharedServiceService,
   ) {}
 
   ngOnInit(): void {
     this.fetchPortfolioData(); // Initial fetch of portfolio data
+    
 
     // Set up interval to fetch portfolio data every 10 seconds
     const portfolioUpdateInterval = interval(10000); // 10 seconds
@@ -74,6 +77,16 @@ export class PortfolioComponent implements OnInit {
     });
   }
 
+  calculateAndEmitTotalProfitLoss() {
+    let totalProfitLoss = 0;
+    this.stocks.forEach(stock => {
+      totalProfitLoss += stock.profitLoss ?? 0;
+    });
+    console.log(totalProfitLoss);
+    
+    this.dashboardPorfolio.updateProfitLoss(totalProfitLoss);
+  }
+  
   // Function to fetch portfolio data from the server
   fetchPortfolioData(): void {
     this.loading = true;
@@ -96,12 +109,13 @@ export class PortfolioComponent implements OnInit {
         const stocksLength = this.stocks.length;
   
         // Now fetch current prices for each stock
-        this.stocks.forEach((stock, index) => {
+        this.stocks.forEach((stock) => {
           this.fetchCurrentPrices(stock, () => {
             fetchesCompleted++;
             // Check if all fetches are completed
             if (fetchesCompleted === stocksLength) {
               this.loading = false;
+              this.calculateAndEmitTotalProfitLoss();
             }
           });
         });
@@ -109,6 +123,7 @@ export class PortfolioComponent implements OnInit {
         // In case there are no stocks, ensure loading is set to false
         if (stocksLength === 0) {
           this.loading = false;
+          this.calculateAndEmitTotalProfitLoss();
         }
       },
       error: (error) => {

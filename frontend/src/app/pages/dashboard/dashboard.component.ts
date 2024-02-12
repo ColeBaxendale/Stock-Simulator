@@ -30,6 +30,7 @@ import { UserServiceService } from '../../services/user-service.service';
 import { TransactionComponent } from '../../components/transaction/transaction.component';
 import { MatDialog } from '@angular/material/dialog';
 import { interval, switchMap } from 'rxjs';
+import { DashboardPotfolioSharedServiceService } from '../../services/dashboard-potfolio-shared-service.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,41 +38,49 @@ import { interval, switchMap } from 'rxjs';
   styleUrl: './dashboard.component.sass'
 })
 export class DashboardComponent implements OnInit {
+  // Properties to store user information and financial metrics
   loggedInUsername: string | null = null;
   buyingPower: number | undefined;
   totalInvestment: number | undefined;
-  profitLoss: number | undefined;
+  profitLoss: number | undefined; // Updated to store the total profit/loss from the portfolio
 
   constructor(
-    private http: HttpClient, 
-    private userService: UserServiceService, 
-    private dialog: MatDialog
+    private http: HttpClient,
+    private userService: UserServiceService,
+    private dialog: MatDialog,
+    private dashboardPortfolio: DashboardPotfolioSharedServiceService // Injecting shared service for portfolio and dashboard communication
   ) {}
 
   ngOnInit(): void {
-    // Initialize user details fetching
+    // Fetch user details upon component initialization
     this.fetchUserDetails();
 
-    // Set up interval to refresh user details every 10 seconds
+    // Subscribe to profitLoss updates from the shared service
+    this.dashboardPortfolio.profitLoss$.subscribe(profitLoss => {
+      this.profitLoss = profitLoss; // Update the profitLoss property whenever a new value is emitted
+    });
+
+    // Setup an interval to periodically refresh user details
     const userDetailsRefreshInterval = interval(10000).pipe(
-      switchMap(() => this.userService.getUserDetails())
+      switchMap(() => this.userService.getUserDetails()) // SwitchMap to cancel the previous request if it hasn't completed before starting a new one
     );
 
     userDetailsRefreshInterval.subscribe({
-      next: (response: { username: string; buyingPower: number | undefined; totalInvestment: number | undefined; }) => {
+      next: (response) => {
+        // Update user information with each refresh
         this.loggedInUsername = response.username.toUpperCase();
         this.buyingPower = response.buyingPower;
         this.totalInvestment = response.totalInvestment;
-        console.log('refresh');
-        
       },
-      error: (error: any) => console.error('Error refreshing user details:', error),
+      error: (error) => console.error('Error refreshing user details:', error),
     });
   }
 
+  // Method to fetch user details from the UserService
   fetchUserDetails(): void {
     this.userService.getUserDetails().subscribe({
       next: (response) => {
+        // Set user details from the response
         this.loggedInUsername = response.username.toUpperCase();
         this.buyingPower = response.buyingPower;
         this.totalInvestment = response.totalInvestment;
@@ -79,16 +88,16 @@ export class DashboardComponent implements OnInit {
       error: (error) => console.error('Error fetching user details initially:', error),
     });
   }
+
+  // Method to open the transactions dialog
   openTransactionsDialog(): void {
     const dialogRef = this.dialog.open(TransactionComponent, {
-      width: '1200px', // Adjust width as needed
-      data: {
-        // Pass your transactions data to the dialog if needed
-      }
+      width: '1200px',
+      data: {} // Pass any required data to the transactions dialog
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      console.log('The transactions dialog was closed');
     });
   }
 }
