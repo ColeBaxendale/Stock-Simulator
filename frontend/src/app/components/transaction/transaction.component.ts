@@ -65,7 +65,7 @@ export class TransactionComponent implements OnInit {
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<TransactionComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.loading = true;
@@ -89,7 +89,7 @@ export class TransactionComponent implements OnInit {
         this.transactions = data.transactions.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         this.filteredTransactions = [...this.transactions];
         this.loading = false;
-  
+
         // Apply symbol filter after data is fetched and sorted
         if (this.data && this.data.symbol) {
           this.applyInitialSymbolFilter(this.data.symbol);
@@ -123,38 +123,38 @@ export class TransactionComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((filters: any) => {
       if (filters) {
-        // Apply filters to transactions
         this.filteredTransactions = this.transactions.filter(transaction => {
           let matchTicker = true;
           let matchType = true;
           let matchStartDate = true;
           let matchEndDate = true;
 
-          // Check if ticker matches filter, if filter is not empty
           if (filters.ticker && filters.ticker !== '') {
             matchTicker = transaction.symbol.toLowerCase().includes(filters.ticker.toLowerCase());
           }
 
-          // Check if type matches filter, if filter is not empty
           if (filters.type && filters.type !== '') {
             matchType = transaction.transactionType === filters.type;
           }
+          if (filters.startDate) {
+            let startDate = new Date(filters.startDate);
+            // Add one day's worth of milliseconds to start date
+            startDate = new Date(startDate.getTime() + 86400000);
+            matchStartDate = new Date(transaction.timestamp) >= startDate;
+            console.log(startDate);
 
-        // Check if start date matches filter, if filter is not null
-        if (filters.startDate) {
-          const startDate = new Date(filters.startDate);
-          startDate.setHours(0, 0, 0, 0); // Set to the first minute of the day
-          matchStartDate = new Date(transaction.timestamp) >= startDate;
-        }
+          }
 
-        // Check if end date matches filter, if filter is not null
-        if (filters.endDate) {
-          const endDate = new Date(filters.endDate);
-          endDate.setHours(23, 59, 59, 999); // Set to the last minute of the day
-          matchEndDate = new Date(transaction.timestamp) <= endDate;
-        }
-          // Return true if all conditions are met, otherwise false
-          
+          if (filters.endDate) {
+            let endDate = new Date(filters.endDate);
+            // Add one day's worth of milliseconds to end date
+            endDate = new Date(endDate.getTime() + 86400000);
+            matchEndDate = new Date(transaction.timestamp) <= endDate;
+            console.log(endDate);
+
+          }
+
+
           return matchTicker && matchType && matchStartDate && matchEndDate;
         });
       }

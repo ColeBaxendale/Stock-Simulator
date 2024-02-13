@@ -45,7 +45,6 @@ export class DashboardComponent implements OnInit {
   profitLoss: number | undefined; // Updated to store the total profit/loss from the portfolio
 
   constructor(
-    private http: HttpClient,
     private userService: UserServiceService,
     private dialog: MatDialog,
     private dashboardPortfolio: DashboardPotfolioSharedServiceService // Injecting shared service for portfolio and dashboard communication
@@ -88,16 +87,15 @@ export class DashboardComponent implements OnInit {
       error: (error) => console.error('Error fetching user details initially:', error),
     });
   }
-
+  
   // Method to open the transactions dialog
   openTransactionsDialog(): void {
     const dialogRef = this.dialog.open(TransactionComponent, {
       width: '1200px',
-      data: {} // Pass any required data to the transactions dialog
+      data: {} 
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The transactions dialog was closed');
     });
   }
 

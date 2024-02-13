@@ -42,6 +42,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MomentDateAdapter, MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter } from '@angular/material/core';
+import { BuyStockComponentComponent } from './components/buy-stock-component/buy-stock-component.component';
+import { UserDetailsComponent } from './components/user-details/user-details.component';
 
 
 @NgModule({
@@ -57,6 +59,8 @@ import { DateAdapter } from '@angular/material/core';
     StockDetailDialogComponent,
     TransactionComponent,
     TransactionFilterDialogComponent,
+    BuyStockComponentComponent,
+    UserDetailsComponent,
 
   ],
   imports: [

@@ -35,6 +35,7 @@ import { UserServiceService } from '../../services/user-service.service';
 import { StockService } from '../../services/stock-service.service';
 import { interval } from 'rxjs';
 import { DashboardPotfolioSharedServiceService } from '../../services/dashboard-potfolio-shared-service.service';
+import { StockSharedServiceService } from '../../services/stock-shared-service.service';
 
 // Define the structure of a Stock object
 interface Stock {
@@ -55,6 +56,7 @@ export class PortfolioComponent implements OnInit {
   stocks: Stock[] = []; // Array to hold portfolio stocks
   sellQuantity: number = 1; // Quantity for selling stocks
   sortDirection: { [key: string]: string } = {};
+ 
 
   constructor(
     private http: HttpClient,
@@ -63,6 +65,7 @@ export class PortfolioComponent implements OnInit {
     private userService: UserServiceService,
     private stockService: StockService,
     private dashboardPorfolio: DashboardPotfolioSharedServiceService,
+    private stockSharedService: StockSharedServiceService,
   ) {}
 
   ngOnInit(): void {
@@ -147,19 +150,28 @@ export class PortfolioComponent implements OnInit {
     });
   }
   
-  // Function to open dialog for viewing stock details
   openDialog(stockData: any): void {
+    this.stockSharedService.updateCurrentStockDetails({
+      symbol: stockData.ticker,
+      currentPrice: stockData.currentPrice,
+      ownedShares: stockData.quantityOwned,
+      averageBuyPrice: stockData.averageBuyPrice,
+      profitLoss: stockData.profitLoss,
+    });
+  
     const dialogRef = this.dialog.open(StockDetailDialogComponent, {
       width: '250px',
       data: {
-        ...stockData,
         symbol: stockData.ticker,
-        currentPrice: stockData.currentPrice, // Pass the current price
-        profitLoss: stockData.profitLoss, // Pass the profit/loss
-        sellStock: (ticker: string, quantityOwned: number) => this.sellStock(ticker, quantityOwned)
+        // Additional properties...
+        sellStock: (ticker: string, quantity: number, price: number) => this.sellStock(ticker, quantity) // Correctly pass sellStock function
       }
     });
-}
+  
+    dialogRef.afterClosed().subscribe(() => {
+      this.stockSharedService.clearCurrentStockDetails();
+    });
+  }
   
   // Function to sell stocks
   sellStock(stockSymbol: string, quantityOwned: number): void {
@@ -191,6 +203,8 @@ export class PortfolioComponent implements OnInit {
       }
     );
 }
+
+
 
 toggleSortDirection(column: keyof Stock) {
   if (this.isValidColumn(column)) {

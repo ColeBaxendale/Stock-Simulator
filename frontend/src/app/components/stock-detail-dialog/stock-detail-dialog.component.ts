@@ -27,11 +27,11 @@
 
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { interval, Subscription } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 import { StockService } from '../../services/stock-service.service';
 import { UserServiceService } from '../../services/user-service.service';
 import { TransactionComponent } from '../transaction/transaction.component';
+import { StockSharedServiceService } from '../../services/stock-shared-service.service';
 
 @Component({
   selector: 'app-stock-detail-dialog',
@@ -39,55 +39,46 @@ import { TransactionComponent } from '../transaction/transaction.component';
   styleUrls: ['./stock-detail-dialog.component.sass']
 })
 export class StockDetailDialogComponent implements OnInit, OnDestroy {
-
-  sellQuantity: number = 1; // Sell quantity for the stock
-  currentPrice = -1; // Current price of the stock
-  profitLoss: number | undefined; // Profit or loss of the stock
-  symbol: string | undefined; // Symbol of the stock
-  private alive = true; // Flag to keep track of component's lifecycle
-  private subscription: Subscription | undefined; // Subscription for the interval
+  sellQuantity: number = 1;
+  currentPrice = -1;
+  profitLoss: number | undefined;
+  symbol!: string;
+  ownedShares: number | undefined;
+  averageBuyPrice: number | undefined;
+  private subscriptions: Subscription = new Subscription();
 
   constructor(
     public dialogRef: MatDialogRef<StockDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private stockService: StockService,
     private userService: UserServiceService,
-    private dialog: MatDialog
-  ) { }
+    private dialog: MatDialog,
+    private stockSharedService: StockSharedServiceService
+  ) {}
 
   ngOnInit(): void {
-    // Initialize current price, profit/loss, and symbol
-    this.currentPrice = this.data.currentPrice;
-    this.profitLoss = this.data.profitLoss;
-    this.symbol = this.data.symbol;
-
-    // Set up interval to refresh the current price every 10 seconds
-    this.subscription = interval(10000) // 10 seconds
-      .pipe(takeWhile(() => this.alive))
-      .subscribe(() => {
-        this.fetchAndUpdateCurrentPrice();
-      });
+    // Subscribe to updates from the shared service
+    this.subscriptions.add(this.stockSharedService.currentStockDetails$.subscribe(stockDetails => {
+      if (stockDetails) {
+        this.symbol = stockDetails.symbol;
+        this.currentPrice = stockDetails.currentPrice;
+        this.profitLoss = stockDetails.profitLoss;
+        this.averageBuyPrice = stockDetails.averageBuyPrice
+        this.ownedShares = stockDetails.ownedShares;
+      }
+    }));
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe from the interval when the dialog is destroyed
-    this.alive = false;
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    // Unsubscribe to prevent memory leaks
+    this.subscriptions.unsubscribe();
   }
-
-  // Method to fetch and update the current price
-  fetchAndUpdateCurrentPrice(): void {
-    this.currentPrice = this.data.currentPrice;
-    this.profitLoss = this.data.profitLoss;
-  }
-
+  
   // Method to sell the stock
   sellStock(): void {
     // Call the parent component's sellStock method if available
     if (this.data.sellStock && typeof this.data.sellStock === 'function') {
-      this.data.sellStock(this.data.ticker, this.sellQuantity, this.currentPrice);
+      this.data.sellStock(this.symbol, this.sellQuantity, this.currentPrice);
       this.dialogRef.close();
     } else {
       console.error('sellStock function not provided');

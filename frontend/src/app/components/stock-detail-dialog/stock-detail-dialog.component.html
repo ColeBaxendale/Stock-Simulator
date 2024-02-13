@@ -2,14 +2,14 @@
   <mat-icon>close</mat-icon>
 </button>
 <!-- Dialog title displaying the stock ticker -->
-<h2 mat-dialog-title>{{ data.ticker }}</h2>
+<h2 mat-dialog-title>{{ symbol }}</h2>
 
 <!-- Display the current price, quantity owned, average buy price, and profit/loss -->
 <mat-dialog-content>
-  <p>Current Price: ${{ data.currentPrice.toFixed(2) | number: '1.2-2' }}</p>
-  <p>Quantity Owned: {{ data.quantityOwned }}</p>
-  <p>Average Buy Price: ${{ data.averageBuyPrice.toFixed(2) }}</p>
-  <p>Profit: ${{ data.profitLoss | number: '1.2-2' }}</p>
+  <p>Current Price: ${{ currentPrice | number: '1.2-2' }}</p>
+  <p>Quantity Owned: {{ ownedShares }}</p>
+  <p>Average Buy Price: ${{averageBuyPrice | number: '1.2-2' }}</p>
+  <p>Profit: ${{ profitLoss | number: '1.2-2' }}</p>
   
   <!-- Input field for specifying the sell quantity -->
   <div>
@@ -26,5 +26,5 @@
   <!-- Buy more button triggers the buyStock method -->
   <button mat-button (click)="buyStock()">Buy More</button>
 
-  <button mat-button (click)="viewTransactions(data.ticker)">View All Transactions</button>
+  <button mat-button (click)="viewTransactions(symbol)">View All Transactions</button>
 </mat-dialog-actions>
