@@ -1,7 +1,6 @@
 <div class="user-details">
     <h2>Hello {{ username }}</h2>
     <p>Buying Power: ${{ buyingPower | number:'1.2-2' }}</p>
-    <p>Total Investment: ${{ totalInvestment | number:'1.2-2' }}</p>
     <p>Total Profit/Loss: <span [ngStyle]="{'color': profitLossColor(profitLoss)}">${{ profitLoss | number:'1.2-2' }}</span></p>
   </div>
   

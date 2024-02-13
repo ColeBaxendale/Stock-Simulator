@@ -36,7 +36,7 @@ import { firstValueFrom, interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { StockService } from '../../services/stockRouteService/stock-service.service';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
-
+import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 // Component decorator and class definition
 @Component({
   selector: 'app-stock-page',
@@ -60,7 +60,8 @@ export class StockPageComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private stockService: StockService,
-    private userService: UserServiceService
+    private userService: UserServiceService,
+    private buySellStockService: StockBuySellService,
   ) { }
 
   ngOnInit(): void {
@@ -113,7 +114,7 @@ private setupDataRefreshInterval(): void {
         currentPrice: this.currentPrice
       };
       // Call the buyStock method from the user service
-      this.userService.buyStock(requestBody).subscribe({
+      this.buySellStockService.buyStock(requestBody).subscribe({
         next: (response) => {
           console.log('Response:', response.message);
           alert('Success: ' + response.message);

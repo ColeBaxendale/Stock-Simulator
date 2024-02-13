@@ -8,7 +8,6 @@ import { Component, Input, OnInit } from '@angular/core';
 export class UserDetailsComponent implements OnInit {
   @Input() username: string | null = null;
   @Input() buyingPower: number | undefined;
-  @Input() totalInvestment: number | undefined;
   @Input() profitLoss: number | undefined;
 
   constructor() { }

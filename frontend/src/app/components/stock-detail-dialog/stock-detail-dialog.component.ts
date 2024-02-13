@@ -32,6 +32,7 @@ import { StockService } from '../../services/stockRouteService/stock-service.ser
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { TransactionComponent } from '../transaction/transaction.component';
 import { StockSharedServiceService } from '../../services/currentStockService/stock-shared-service.service';
+import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 
 @Component({
   selector: 'app-stock-detail-dialog',
@@ -53,7 +54,8 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     private stockService: StockService,
     private userService: UserServiceService,
     private dialog: MatDialog,
-    private stockSharedService: StockSharedServiceService
+    private stockSharedService: StockSharedServiceService,
+    private buySellStockService: StockBuySellService,
   ) {}
 
   ngOnInit(): void {
@@ -97,7 +99,7 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
         currentPrice: this.currentPrice
       };
       // Make API call to buy stock
-      this.userService.buyStock(requestBody).subscribe({
+      this.buySellStockService.buyStock(requestBody).subscribe({
         next: (response) => {
           console.log('Response:', response.message);
           alert('Success: ' + response.message);
