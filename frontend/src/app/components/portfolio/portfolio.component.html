@@ -32,9 +32,9 @@
         <td *ngIf="stock.currentPrice !== undefined">{{ stock.currentPrice | currency:'USD' }}</td>
         <!-- Apply conditional class only to the profit/loss cell -->
         <td [ngClass]="{
-            'profit-positive': (stock.profitLoss ?? 0) > 0, 
-            'profit-negative': (stock.profitLoss ?? 0) < 0, 
-            'profit-zero': (stock.profitLoss ?? 0) === 0
+            'profit-positive': (stock.profitLoss) > 0, 
+            'profit-negative': (stock.profitLoss) < 0, 
+            'profit-zero': (stock.profitLoss) === 0
           }" *ngIf="stock.profitLoss !== undefined">
           {{ stock.profitLoss | currency:'USD' }}
         </td>

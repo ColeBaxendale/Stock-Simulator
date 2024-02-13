@@ -57,6 +57,8 @@ export class PortfolioComponent implements OnInit {
   stocks: Stock[] = []; // Array to hold portfolio stocks
   sellQuantity: number = 1; // Quantity for selling stocks
   sortDirection: { [key: string]: string } = {};
+  currentViewedStockSymbol: string | null = null;
+
 
 
   constructor(
@@ -74,8 +76,7 @@ export class PortfolioComponent implements OnInit {
     this.fetchPortfolioData(); // Initial fetch of portfolio data
 
 
-    // Set up interval to fetch portfolio data every 10 seconds
-    const portfolioUpdateInterval = interval(10000); // 10 seconds
+    const portfolioUpdateInterval = interval(15000); 
     portfolioUpdateInterval.subscribe(() => {
       this.updateCurrentPricesForAllStocks();
 
@@ -95,6 +96,15 @@ export class PortfolioComponent implements OnInit {
           stock.currentPrice = data.currentPrice;
           stock.profitLoss = (data.currentPrice - stock.averageBuyPrice) * stock.quantityOwned;
           totalProfitLoss += stock.profitLoss ?? 0;
+          if (this.currentViewedStockSymbol === stock.ticker) {
+            this.stockSharedService.updateCurrentStockDetails({
+              symbol: stock.ticker,
+              currentPrice: stock.currentPrice?? 0,
+              ownedShares: stock.quantityOwned,
+              averageBuyPrice: stock.averageBuyPrice,
+              profitLoss: stock.profitLoss?? 0,
+            });
+          }
         }
         else{
           totalProfitLoss += stock.profitLoss ?? 0;
@@ -183,6 +193,8 @@ export class PortfolioComponent implements OnInit {
   }
 
   openStockDetailDialog(stockData: any): void {
+    this.currentViewedStockSymbol = stockData.ticker; // Track the currently viewed stock
+  
     this.stockSharedService.updateCurrentStockDetails({
       symbol: stockData.ticker,
       currentPrice: stockData.currentPrice,
@@ -190,7 +202,7 @@ export class PortfolioComponent implements OnInit {
       averageBuyPrice: stockData.averageBuyPrice,
       profitLoss: stockData.profitLoss,
     });
-
+  
     const dialogRef = this.dialog.open(StockDetailDialogComponent, {
       width: '250px',
       data: {
@@ -199,8 +211,9 @@ export class PortfolioComponent implements OnInit {
         sellStock: (ticker: string, quantity: number, price: number) => this.sellStock(ticker, quantity, price) 
       }
     });
-
+  
     dialogRef.afterClosed().subscribe(() => {
+      this.currentViewedStockSymbol = null; // Clear the currently viewed stock when dialog is closed
       this.stockSharedService.clearCurrentStockDetails();
     });
   }
