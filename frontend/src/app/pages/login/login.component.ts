@@ -31,7 +31,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { UserServiceService } from '../../services/user-service.service';
+import { UserServiceService } from '../../services/userRouteService/user-service.service';
 
 @Component({
   selector: 'app-login',

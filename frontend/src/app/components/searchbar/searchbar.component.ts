@@ -21,7 +21,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs'; // Import Subject and of from RxJS
 import { debounceTime, switchMap, filter, catchError } from 'rxjs/operators'; // Import necessary operators from RxJS
-import { StockService } from '../../services/stock-service.service'; // Import the StockService
+import { StockService } from '../../services/stockRouteService/stock-service.service'; // Import the StockService
 
 // Define the component decorator with its selector, template, and styles
 @Component({

@@ -31,7 +31,7 @@
  */
 
 import { Component, Inject, OnInit } from '@angular/core';
-import { UserServiceService } from '../../services/user-service.service';
+import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { HttpClient } from '@angular/common/http';
 import { TransactionFilterDialogComponent } from '../transaction-filter-dialog/transaction-filter-dialog.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';

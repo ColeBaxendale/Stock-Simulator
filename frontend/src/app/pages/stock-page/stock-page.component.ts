@@ -34,8 +34,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom, interval, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { StockService } from '../../services/stock-service.service';
-import { UserServiceService } from '../../services/user-service.service';
+import { StockService } from '../../services/stockRouteService/stock-service.service';
+import { UserServiceService } from '../../services/userRouteService/user-service.service';
 
 // Component decorator and class definition
 @Component({

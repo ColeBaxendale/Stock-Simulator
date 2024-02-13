@@ -35,7 +35,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class DashboardPotfolioSharedServiceService {
+export class PorfolioProfitLoss {
    // BehaviorSubject holding the current value of total profit/loss
   private profitLossSource = new BehaviorSubject<number>(0);
   // Publicly exposed observable of the profit/loss source for subscription

@@ -22,16 +22,16 @@
 
 // Import statements for TestBed and StockServiceService
 import { TestBed } from '@angular/core/testing';
-import { StockServiceService } from './stock-service.service';
+import { StockService } from './stock-service.service';
 
 // Describe block for testing StockServiceService
 describe('StockServiceService', () => {
-  let service: StockServiceService;
+  let service: StockService;
 
   // Before each test, configure testing module and inject StockServiceService
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(StockServiceService);
+    service = TestBed.inject(StockService);
   });
 
   // Test to check if StockServiceService is created successfully

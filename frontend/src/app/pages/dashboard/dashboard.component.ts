@@ -26,11 +26,11 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { UserServiceService } from '../../services/user-service.service';
+import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { TransactionComponent } from '../../components/transaction/transaction.component';
 import { MatDialog } from '@angular/material/dialog';
 import { interval, switchMap } from 'rxjs';
-import { DashboardPotfolioSharedServiceService } from '../../services/dashboard-potfolio-shared-service.service';
+import { PorfolioProfitLoss } from '../../services/profitLossService/portfolio-profitloss.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit {
   constructor(
     private userService: UserServiceService,
     private dialog: MatDialog,
-    private dashboardPortfolio: DashboardPotfolioSharedServiceService // Injecting shared service for portfolio and dashboard communication
+    private profitLossService: PorfolioProfitLoss // Injecting shared service for portfolio and dashboard communication
   ) {}
 
   ngOnInit(): void {
@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit {
     this.fetchUserDetails();
 
     // Subscribe to profitLoss updates from the shared service
-    this.dashboardPortfolio.profitLoss$.subscribe(profitLoss => {
+    this.profitLossService.profitLoss$.subscribe(profitLoss => {
       this.profitLoss = profitLoss; // Update the profitLoss property whenever a new value is emitted
     });
 

@@ -28,10 +28,10 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
-import { StockService } from '../../services/stock-service.service';
-import { UserServiceService } from '../../services/user-service.service';
+import { StockService } from '../../services/stockRouteService/stock-service.service';
+import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { TransactionComponent } from '../transaction/transaction.component';
-import { StockSharedServiceService } from '../../services/stock-shared-service.service';
+import { StockSharedServiceService } from '../../services/currentStockService/stock-shared-service.service';
 
 @Component({
   selector: 'app-stock-detail-dialog',

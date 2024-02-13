@@ -24,7 +24,7 @@
     </thead>
     <tbody>
       <!-- Table rows for each stock -->
-      <tr *ngFor="let stock of stocks" (click)="!loading && openDialog(stock)" class="stock-row">
+      <tr *ngFor="let stock of stocks" (click)="!loading && openStockDetailDialog(stock)" class="stock-row">
         <!-- Other cells remain unchanged -->
         <td>{{ stock.ticker }}</td>
         <td>{{ stock.quantityOwned }}</td>
