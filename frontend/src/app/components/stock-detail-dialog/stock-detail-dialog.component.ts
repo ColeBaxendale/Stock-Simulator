@@ -33,6 +33,7 @@ import { UserServiceService } from '../../services/userRouteService/user-service
 import { TransactionComponent } from '../transaction/transaction.component';
 import { StockSharedServiceService } from '../../services/currentStockService/stock-shared-service.service';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
+import { BuyStockComponentComponent } from '../buy-stock-component/buy-stock-component.component';
 
 @Component({
   selector: 'app-stock-detail-dialog',
@@ -56,6 +57,7 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private stockSharedService: StockSharedServiceService,
     private buySellStockService: StockBuySellService,
+    private buyStockDialog: BuyStockComponentComponent
   ) {}
 
   ngOnInit(): void {
@@ -87,30 +89,34 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     }
   }
 
+
+      
   // Method to buy more of the stock
   buyStock(): void {
-    // Check if symbol and current price are available
-    if (this.symbol && this.currentPrice != -1) {
-      console.log(`Buying stock with symbol: ${this.symbol} for $${this.currentPrice}`);
-      // Prepare request body
-      const requestBody = {
-        symbol: this.symbol,
-        quantity: 1,
-        currentPrice: this.currentPrice
-      };
-      // Make API call to buy stock
-      this.buySellStockService.buyStock(requestBody).subscribe({
-        next: (response) => {
-          console.log('Response:', response.message);
-          alert('Success: ' + response.message);
-          this.dialogRef.close(); // Close the dialog after buying
-          window.location.reload(); // Reload the page to update data
-        },
-        error: (error) => {
-          console.error('Error buying stock:', error);
-        }
-      });
-    }
+    const buyDialogRef = this.dialog.open(BuyStockComponentComponent, {
+      width: '250px',
+      data: { symbol: this.symbol, currentPrice: this.currentPrice }
+    });
+  
+    buyDialogRef.afterClosed().subscribe(quantity => {
+      if (quantity) {
+        console.log(`Buying ${quantity} of ${this.symbol}`);
+        // Here, you can call your service to execute the buy operation
+        // For example, using the buySellStockService
+        this.buySellStockService.buyStock({
+          symbol: this.symbol,
+          quantity: quantity,
+          currentPrice: this.currentPrice
+        }).subscribe({
+          next: (response) => {
+            console.log('Buy operation successful:', response);
+            // Handle success (e.g., show a message or close the dialog)
+          },
+          error: (error) => console.error('Error during buy operation:', error)
+          // Handle error
+        });
+      }
+    });
   }
   viewTransactions(symbol: string) {
     const dialogRef = this.dialog.open(TransactionComponent, {

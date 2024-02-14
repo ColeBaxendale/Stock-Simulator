@@ -1,21 +1,3 @@
-/**
- * App Module
- * 
- * Filename: app.module.ts
- * Author: [Cole Baxendale]
- * Contact: [thecodercole@gmail.com]
- * Created on: [February 2024]
- * Version: 1.0
- * 
- * Description:
- * This module is the root module of the Angular application. It declares and imports all the necessary components, modules, and services required for the application to run.
- * 
- * Algorithm Strategy:
- * No specific algorithmic strategy is implemented in this module. It mainly orchestrates the integration of various components and services within the application.
- * 
- * Params:
- * - NgModule: NgModule - Angular decorator to mark the class as an Angular module.
- */
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -85,3 +67,21 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
   bootstrap: [AppComponent]
 })
 export class AppModule { }
+/**
+ * App Module
+ * 
+ * Filename: app.module.ts
+ * Author: [Cole Baxendale]
+ * Contact: [thecodercole@gmail.com]
+ * Created on: [February 2024]
+ * Version: 1.0
+ * 
+ * Description:
+ * This module is the root module of the Angular application. It declares and imports all the necessary components, modules, and services required for the application to run.
+ * 
+ * Algorithm Strategy:
+ * No specific algorithmic strategy is implemented in this module. It mainly orchestrates the integration of various components and services within the application.
+ * 
+ * Params:
+ * - NgModule: NgModule - Angular decorator to mark the class as an Angular module.
+ */
