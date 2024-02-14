@@ -427,6 +427,20 @@ exports.changeUserDetails = async (req, res) => {
 
         // Fetch the user by ID
         const user = await User.findById(userId);
+        let updateFields = {};
+
+        if (email !== undefined && email !== user.email) {
+
+            
+        }
+
+
+
+
+
+
+
+
 
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
