@@ -26,11 +26,10 @@ import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.com
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { CurrentTimeComponent } from './components/current-time/current-time.component';
-import { DatePipe } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { SearchbarComponent } from './components/searchbar/searchbar.component';
 import { StockPageComponent } from './pages/stock-page/stock-page.component';
 import { PortfolioComponent } from './components/portfolio/portfolio.component';
-import { StockDetailDialogComponent } from './components/stock-detail-dialog/stock-detail-dialog.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogModule } from '@angular/material/dialog';
 import { TransactionComponent } from './components/transaction/transaction.component';
@@ -42,8 +41,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MomentDateAdapter, MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { DateAdapter } from '@angular/material/core';
-import { BuyStockComponentComponent } from './components/buy-stock-component/buy-stock-component.component';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
+import { StockDetailDialogComponent } from './components/stock-detail-dialog/stock-detail-dialog.component';
 
 
 @NgModule({
@@ -59,7 +58,6 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
     StockDetailDialogComponent,
     TransactionComponent,
     TransactionFilterDialogComponent,
-    BuyStockComponentComponent,
     UserDetailsComponent,
 
   ],
@@ -75,7 +73,8 @@ import { UserDetailsComponent } from './components/user-details/user-details.com
     MatFormFieldModule,
     MatDatepickerModule,
     MatInputModule,
-    MatMomentDateModule
+    MatMomentDateModule,
+    CommonModule,
   ],
   providers: [
     DatePipe,
