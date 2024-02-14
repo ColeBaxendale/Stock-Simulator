@@ -43,6 +43,7 @@ import { MomentDateAdapter, MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS
 import { DateAdapter } from '@angular/material/core';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { StockDetailDialogComponent } from './components/stock-detail-dialog/stock-detail-dialog.component';
+import { DepositComponent } from './components/deposit/deposit.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { StockDetailDialogComponent } from './components/stock-detail-dialog/sto
     TransactionComponent,
     TransactionFilterDialogComponent,
     UserDetailsComponent,
+    DepositComponent,
 
   ],
   imports: [

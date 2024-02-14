@@ -31,6 +31,7 @@ import { TransactionComponent } from '../../components/transaction/transaction.c
 import { MatDialog } from '@angular/material/dialog';
 import { interval, switchMap } from 'rxjs';
 import { PorfolioProfitLoss } from '../../services/profitLossService/portfolio-profitloss.service';
+import { DepositComponent } from '../../components/deposit/deposit.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -99,6 +100,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+
   profitLossColor(profitLoss: number | undefined): string {
     if (profitLoss === undefined) {
       return 'black'; // Handle undefined case, use white color
@@ -111,4 +113,8 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  openDepositDialog(){
+    const dialogRef = this.dialog.open(DepositComponent);
+    
+  }
 }

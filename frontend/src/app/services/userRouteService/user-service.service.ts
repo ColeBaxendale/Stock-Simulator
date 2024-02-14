@@ -253,17 +253,19 @@ export class UserServiceService {
 
   // Method to validate deposit amount
   private depositValidation(amount: number): string | null {
-    if (amount || isNaN(amount)) {
-      return 'Quantity is required.';
-    }
-    if (amount <= 0) {
-      return 'Must deposit more than $0'
-    }
-    if (amount > 100000) {
-      return `Maximum deposit amount is $100000. Please reduce your deposit amount.`;
-    }
-    return null;
+    
+    if (amount === undefined || amount === null || isNaN(amount)) {
+      return 'Amount is required.';
   }
+  if (amount <= 0) {
+      return 'Must deposit more than $0';
+  }
+  if (amount > 100000) {
+      return `Maximum deposit amount is $100000. Please reduce your deposit amount.`;
+  }
+  return null; // Indicates the validation passed
+}
+
 
   // Method to get authorization token
   private getAuthorizationToken(): string | Observable<any> {

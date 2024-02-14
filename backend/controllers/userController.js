@@ -271,8 +271,11 @@ exports.deposit = async (req, res) => {
         const maxBuyingPower = 100000000;
 
         // Check for invalid or excessive deposit amounts
-        if (isNaN(amountNum) || amountNum <= 0 || amountNum > maxDepositAmount || (amountNum + user.buyingPower) > maxBuyingPower) {
+        if (isNaN(amountNum) || amountNum <= 0 || amountNum > maxDepositAmount) {
             return res.status(400).json({ message: 'Invalid deposit amount' });
+        }
+        else if((amountNum + user.buyingPower) > maxBuyingPower){
+            return res.status(400).json({ message: 'Over max buying power' });
         }
 
         // Update the user's buying power and total investment
