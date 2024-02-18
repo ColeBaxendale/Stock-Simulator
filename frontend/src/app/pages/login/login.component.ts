@@ -77,6 +77,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   // Function to handle user registration
   onRegister(): void {  
+    this.registerObj.email = this.registerObj.email.toLowerCase();
     this.registerSubscription = this.userService.register(this.registerObj).subscribe({
       next: (res: any) => {
         if (res) {
@@ -84,7 +85,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           if (chk) {
             chk.checked = true;
           }
-          this.loginObj.email = this.registerObj.email;
+          this.registerObj.email = this.registerObj.email.toLowerCase();
           this.registerObj.username = '';
           this.registerObj.email = '';
           this.registerObj.password = ''; 
@@ -101,6 +102,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   // Function to handle user login
   onLogin(): void {
+    this.loginObj.email = this.loginObj.email.toLowerCase();
     this.loginSubscription = this.userService.login(this.loginObj).subscribe({
       next: (res: any) => {
         console.log('Response:', res);

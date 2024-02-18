@@ -32,6 +32,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { interval, switchMap } from 'rxjs';
 import { PorfolioProfitLoss } from '../../services/profitLossService/portfolio-profitloss.service';
 import { DepositComponent } from '../../components/deposit/deposit.component';
+import { BuyStockDialogComponent } from '../../components/buy-stock-dialog/buy-stock-dialog.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -115,6 +116,11 @@ export class DashboardComponent implements OnInit {
 
   openDepositDialog(){
     const dialogRef = this.dialog.open(DepositComponent);
+    
+  }
+
+  quickBuyDialog(){
+    const dialogRef = this.dialog.open(BuyStockDialogComponent);
     
   }
 }

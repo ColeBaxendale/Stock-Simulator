@@ -24,7 +24,7 @@
   <!-- Sell button triggers the sellStock method -->
   <button mat-button (click)="sellStock()">Sell</button>
   <!-- Buy more button triggers the buyStock method -->
-  <button mat-button (click)="buyStock()">Buy More</button>
+  <button mat-button (click)="buyStock(symbol, currentPrice)">Buy More</button>
 
   <button mat-button (click)="viewTransactions(symbol)">View All Transactions</button>
 </mat-dialog-actions>

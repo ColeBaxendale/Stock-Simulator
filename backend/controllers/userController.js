@@ -35,15 +35,16 @@ exports.register = async (req, res) => {
     try {
         // Extract user details from the request body
         const { username, email, password } = req.body;
+        const emailLC = email.toLowerCase();
 
         // Validate user input
         // Check for missing fields
-        if (!username || !email || !password) {
+        if (!username || !emailLC || !password) {
             return res.status(400).json({ message: 'Username, email, and password are required' });
         }
 
         // Validate input lengths
-        if (username.length > 50 || email.length > 100 || password.length > 100) {
+        if (username.length > 50 || emailLC.length > 100 || password.length > 100) {
             return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
 
@@ -54,7 +55,7 @@ exports.register = async (req, res) => {
 
         // Validate email format using regex
         const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!emailRegex.test(email)) {
+        if (!emailRegex.test(emailLC)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
@@ -76,7 +77,7 @@ exports.register = async (req, res) => {
         // Create a new user with the provided details
         const newUser = new User({
             username,
-            email,
+            emailLC,
             passwordHash: hashedPassword,
             portfolio: new Map() // Initialize an empty portfolio
         });
@@ -105,14 +106,14 @@ exports.login = async (req, res) => {
 
     try {
         const { email, password } = req.body;
-
+        const emailLC = email.toLowerCase();
         // Validate input
-        if (!email || !password) {
+        if (!emailLC || !password) {
             return res.status(400).json({ message: 'Email and password are required' });
         }
 
         // Test for input length exceeding maximum allowed
-        if (email.length > 100 || password.length > 100) {
+        if (emailLC.length > 100 || password.length > 100) {
             return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
         }
 

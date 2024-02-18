@@ -33,6 +33,7 @@ import { UserServiceService } from '../../services/userRouteService/user-service
 import { TransactionComponent } from '../transaction/transaction.component';
 import { StockSharedServiceService } from '../../services/currentStockService/stock-shared-service.service';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
+import { BuyStockDialogPortfolioComponent } from '../buy-stock-dialog-portfolio/buy-stock-dialog-portfolio.component';
 
 @Component({
   selector: 'app-stock-detail-dialog',
@@ -90,8 +91,20 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
 
       
   // Method to buy more of the stock
-  buyStock(): void {
+  buyStock(symbol: string, currentPrice: number): void {
+    const dialogRef = this.dialog.open(BuyStockDialogPortfolioComponent, {
+      width: '400px',
+      data: { symbol: symbol, currentPrice: currentPrice }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The buy stock dialog was closed');
+      // Optionally refresh data or perform other actions after closing
+    });
   }
+
+
+
   viewTransactions(symbol: string) {
     const dialogRef = this.dialog.open(TransactionComponent, {
       width: '1200px', // Adjust width as needed

@@ -1,0 +1,11 @@
+<h2>Buy More Stocks</h2>
+<div>
+  <p>Symbol: {{ symbol }}</p>
+  <p>Current Price: ${{ currentPrice }}</p>
+  <div>
+    <label for="buyQuantity">Quantity:</label>
+    <input type="number" [(ngModel)]="buyQuantity" min="1">
+  </div>
+  <button (click)="buyStock()">Buy</button>
+  <button (click)="closeDialog()">Cancel</button>
+</div>

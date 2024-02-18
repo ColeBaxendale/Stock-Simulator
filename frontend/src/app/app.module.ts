@@ -44,6 +44,8 @@ import { DateAdapter } from '@angular/material/core';
 import { UserDetailsComponent } from './components/user-details/user-details.component';
 import { StockDetailDialogComponent } from './components/stock-detail-dialog/stock-detail-dialog.component';
 import { DepositComponent } from './components/deposit/deposit.component';
+import { BuyStockDialogComponent } from './components/buy-stock-dialog/buy-stock-dialog.component';
+import { BuyStockDialogPortfolioComponent } from './components/buy-stock-dialog-portfolio/buy-stock-dialog-portfolio.component';
 
 
 @NgModule({
@@ -61,6 +63,8 @@ import { DepositComponent } from './components/deposit/deposit.component';
     TransactionFilterDialogComponent,
     UserDetailsComponent,
     DepositComponent,
+    BuyStockDialogComponent,
+    BuyStockDialogPortfolioComponent,
 
   ],
   imports: [
