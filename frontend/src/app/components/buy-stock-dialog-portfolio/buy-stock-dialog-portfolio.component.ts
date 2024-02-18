@@ -6,7 +6,7 @@ import { StockBuySellService } from '../../services/buySellRouteService/stock-bu
 @Component({
   selector: 'app-buy-stock-dialog-portfolio',
   templateUrl: './buy-stock-dialog-portfolio.component.html',
-  styleUrl: './buy-stock-dialog-portfolio.component.sass'
+  styleUrls: ['./buy-stock-dialog-portfolio.component.sass'] // Corrected to 'styleUrls'
 })
 export class BuyStockDialogPortfolioComponent {
   buyQuantity: number = 1;
@@ -14,7 +14,7 @@ export class BuyStockDialogPortfolioComponent {
   symbol: string;
 
   constructor(
-    public dialogRef: MatDialogRef<BuyStockDialogComponent>,
+    public dialogRef: MatDialogRef<BuyStockDialogComponent>, // Ensure this matches the type of dialog being referenced
     @Inject(MAT_DIALOG_DATA) public data: any,
     private buySellStockService: StockBuySellService
   ) {
@@ -37,8 +37,14 @@ export class BuyStockDialogPortfolioComponent {
     };
 
     this.buySellStockService.buyStock(requestBody).subscribe({
-      next: (response) => alert('Stock purchased successfully.'),
-      error: (error) => alert('Failed to purchase stock.')
+      next: (response) => {
+        alert('Stock purchased successfully.');
+        this.dialogRef.close(); // Correct placement of the close dialog call
+      },
+      error: (error) => {
+        alert('Failed to purchase stock.');
+        // Optionally, you can close the dialog here as well or handle the error differently.
+      }
     });
   }
 

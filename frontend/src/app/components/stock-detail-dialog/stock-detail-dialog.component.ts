@@ -96,11 +96,8 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
       width: '400px',
       data: { symbol: symbol, currentPrice: currentPrice }
     });
-  
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The buy stock dialog was closed');
-      // Optionally refresh data or perform other actions after closing
-    });
+    
+
   }
 
 
