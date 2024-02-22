@@ -46,6 +46,7 @@ import { StockDetailDialogComponent } from './components/stock-detail-dialog/sto
 import { DepositComponent } from './components/deposit/deposit.component';
 import { BuyStockDialogComponent } from './components/buy-stock-dialog/buy-stock-dialog.component';
 import { BuyStockDialogPortfolioComponent } from './components/buy-stock-dialog-portfolio/buy-stock-dialog-portfolio.component';
+import { BuyStockDialogStockPageComponent } from './components/buy-stock-dialog-stock-page/buy-stock-dialog-stock-page.component';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { BuyStockDialogPortfolioComponent } from './components/buy-stock-dialog-
     DepositComponent,
     BuyStockDialogComponent,
     BuyStockDialogPortfolioComponent,
+    BuyStockDialogStockPageComponent,
 
   ],
   imports: [

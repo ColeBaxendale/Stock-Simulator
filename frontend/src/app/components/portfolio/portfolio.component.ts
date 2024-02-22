@@ -37,6 +37,7 @@ import { from, interval, mergeMap } from 'rxjs';
 import { StockSharedServiceService } from '../../services/currentStockService/stock-shared-service.service';
 import { PorfolioProfitLoss } from '../../services/profitLossService/portfolio-profitloss.service';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
+import { CurrentPriceSymbolSharedServiceService } from '../../services/current-price-symbol-shared-service.service';
 
 // Define the structure of a Stock object
 interface Stock {
@@ -70,6 +71,7 @@ export class PortfolioComponent implements OnInit {
     private profitLossService: PorfolioProfitLoss,
     private stockSharedService: StockSharedServiceService,
     private buySellStockService: StockBuySellService,
+    private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
   ) { }
 
   ngOnInit(): void {
@@ -194,7 +196,10 @@ export class PortfolioComponent implements OnInit {
 
   openStockDetailDialog(stockData: any): void {
     this.currentViewedStockSymbol = stockData.ticker; // Track the currently viewed stock
-  
+    this.currentPriceSymbolSharedService.updateCurrentStockDetails({
+      symbol: stockData.ticker,
+      currentPrice: stockData.currentPrice
+    });
     this.stockSharedService.updateCurrentStockDetails({
       symbol: stockData.ticker,
       currentPrice: stockData.currentPrice,

@@ -37,6 +37,9 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import { StockService } from '../../services/stockRouteService/stock-service.service';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
+import { BuyStockDialogStockPageComponent } from '../../components/buy-stock-dialog-stock-page/buy-stock-dialog-stock-page.component';
+import { MatDialog } from '@angular/material/dialog';
+import { CurrentPriceSymbolSharedServiceService } from '../../services/current-price-symbol-shared-service.service';
 // Component decorator and class definition
 @Component({
   selector: 'app-stock-page',
@@ -53,6 +56,7 @@ export class StockPageComponent implements OnInit, OnDestroy {
   private currentSymbol: string | null = null; // Store the current symbol
   private currentPrice= 0.00 // Store the current price
   private newsFetched: boolean = false; // Flag to track whether news has been fetched
+  
 
   // Constructor to inject dependencies
   constructor(
@@ -62,6 +66,8 @@ export class StockPageComponent implements OnInit, OnDestroy {
     private stockService: StockService,
     private userService: UserServiceService,
     private buySellStockService: StockBuySellService,
+    private dialog: MatDialog,
+    private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService
   ) { }
 
   ngOnInit(): void {
@@ -93,6 +99,7 @@ private setupDataRefreshInterval(): void {
       .subscribe({
           // You can also handle errors or responses here if needed
       });
+      
 }
 
   // Lifecycle hook - ngOnDestroy
@@ -105,26 +112,13 @@ private setupDataRefreshInterval(): void {
   }
 
   // Method to handle buying stocks
-  buyStock(): void {
-    if (this.currentSymbol) {
-      console.log(`Buying stock with symbol: ${this.currentSymbol} for $${this.currentPrice}`);
-      const requestBody = {
-        symbol: this.currentSymbol,
-        quantity: 1,
-        currentPrice: this.currentPrice
-      };
-      // Call the buyStock method from the user service
-      this.buySellStockService.buyStock(requestBody).subscribe({
-        next: (response) => {
-          console.log('Response:', response.message);
-          alert('Success: ' + response.message);
-          this.ngOnInit(); // Refresh the portfolio after selling
-        },
-        error: (error) => {
-          console.error('Error buying stock:', error);
-        }
-      });
-    }
+  buyStock(symbol: string, currentPrice: number): void {
+    const dialogRef = this.dialog.open(BuyStockDialogStockPageComponent, {
+      width: '400px',
+      data: { symbol: symbol, currentPrice: currentPrice }
+    });
+    
+
   }
   
   // Method to fetch stock data
@@ -135,6 +129,12 @@ private setupDataRefreshInterval(): void {
       this.stockData = data; // Assign fetched data to stockData variable
       this.currentPrice = data.currentPrice; // Update the current price
       this.loadingStockData = false; // Set loading flag to false
+  
+      // Update shared service with the current stock details
+      this.currentPriceSymbolSharedService.updateCurrentStockDetails({
+        symbol: symbol,
+        currentPrice: this.currentPrice 
+      });
     } catch (error) {
       console.error('Error fetching stock data:', error); // Log error if fetching fails
       this.loadingStockData = false; // Set loading flag to false

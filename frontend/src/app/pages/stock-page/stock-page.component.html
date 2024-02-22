@@ -35,7 +35,7 @@
   <p>Volume: {{ stockData?.volume }}</p>
   <p>Change Percentage: {{ stockData?.change_percentage }}%</p>
   <!-- Button to buy stock -->
-  <button (click)="buyStock()">Buy Stock</button>
+  <button (click)="buyStock(stockData?.symbol,stockData?.currentPrice)">Buy Stock</button>
 </div>
 
 <!-- Stock News Section -->

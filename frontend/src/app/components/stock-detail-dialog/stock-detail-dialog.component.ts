@@ -34,6 +34,7 @@ import { TransactionComponent } from '../transaction/transaction.component';
 import { StockSharedServiceService } from '../../services/currentStockService/stock-shared-service.service';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 import { BuyStockDialogPortfolioComponent } from '../buy-stock-dialog-portfolio/buy-stock-dialog-portfolio.component';
+import { CurrentPriceSymbolSharedServiceService } from '../../services/current-price-symbol-shared-service.service';
 
 @Component({
   selector: 'app-stock-detail-dialog',
@@ -57,6 +58,7 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private stockSharedService: StockSharedServiceService,
     private buySellStockService: StockBuySellService,
+    private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService
   ) {}
 
   ngOnInit(): void {
