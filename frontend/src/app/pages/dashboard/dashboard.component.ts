@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
   totalInvestment: number | undefined;
   profitLoss: number | undefined; // Updated to store the total profit/loss from the portfolio
   totalPortfolioValue: number | undefined;
-  
+  loading: boolean = true;
   constructor(
     private userService: UserServiceService,
     private dialog: MatDialog,
@@ -59,9 +59,12 @@ export class DashboardComponent implements OnInit {
 
     // Subscribe to profitLoss updates from the shared service
     this.profitLossService.totalPortfolioValue$.subscribe(totalPortfolioValue => {
-      console.log('Total Portfolio Value updated:', totalPortfolioValue);
       this.totalPortfolioValue = totalPortfolioValue;
   });
+
+  this.profitLossService.isLoading$.subscribe(loading => {
+    this.loading = loading;
+});
 
     // Setup an interval to periodically refresh user details
     const userDetailsRefreshInterval = interval(10000).pipe(
@@ -75,7 +78,7 @@ export class DashboardComponent implements OnInit {
         this.buyingPower = response.buyingPower;
         this.totalInvestment = response.totalInvestment;
       },
-      error: (error) => console.error('Error refreshing user details:', error),
+      error: (error) => console.error('Error refreshing user details:', error),  
     });
   }
 

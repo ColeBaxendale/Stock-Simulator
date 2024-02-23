@@ -81,13 +81,14 @@ export class PortfolioComponent implements OnInit {
     const portfolioUpdateInterval = interval(15000); 
     portfolioUpdateInterval.subscribe(() => {
       this.updateCurrentPricesForAllStocks();
-
     });
   }
   updateCurrentPricesForAllStocks(): void {
     let totalPortfolioValue = 0; // Initialize total portfolio value
 
+    
     this.loading = true;
+    this.profitLossService.setLoading(this.loading);
     from(this.stocks).pipe(
         mergeMap(stock => 
             this.stockService.searchStock(stock.ticker), 
@@ -108,10 +109,12 @@ export class PortfolioComponent implements OnInit {
             // Once all updates are completed, update the total profit/loss and total portfolio value
             this.profitLossService.updatetotalPortfolioValue(totalPortfolioValue);
             this.loading = false;
+            this.profitLossService.setLoading(this.loading);
         },
         error: (error) => {
             console.error('Error updating prices', error);
             this.loading = false;
+            this.profitLossService.setLoading(this.loading);
         }
     });
 }
@@ -121,6 +124,7 @@ export class PortfolioComponent implements OnInit {
   // Function to fetch portfolio data from the server
   fetchPortfolioData(): void {
     this.loading = true;
+    this.profitLossService.setLoading(this.loading);
     const token = localStorage.getItem('loginToken');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
@@ -146,6 +150,8 @@ export class PortfolioComponent implements OnInit {
             // Check if all fetches are completed
             if (fetchesCompleted === stocksLength) {
               this.loading = false;
+             this.profitLossService.setLoading(this.loading);
+
               this.calculateAndEmitTotalProfitLoss();
             }
           });
@@ -154,12 +160,16 @@ export class PortfolioComponent implements OnInit {
         // In case there are no stocks, ensure loading is set to false
         if (stocksLength === 0) {
           this.loading = false;
+          this.profitLossService.setLoading(this.loading);
+
           this.calculateAndEmitTotalProfitLoss();
         }
       },
       error: (error) => {
         console.error('Error fetching portfolio data:', error);
         this.loading = false;
+        this.profitLossService.setLoading(this.loading);
+
       }
     });
   }
@@ -169,7 +179,6 @@ export class PortfolioComponent implements OnInit {
     this.stocks.forEach(stock => {
       if(stock.currentPrice)
         totalPortfolioValue += stock.quantityOwned * stock.currentPrice;
-        console.log(totalPortfolioValue);
 
       })
       

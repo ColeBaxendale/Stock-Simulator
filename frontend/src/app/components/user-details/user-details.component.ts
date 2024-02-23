@@ -11,6 +11,7 @@ export class UserDetailsComponent implements OnInit {
   @Input() profitLoss: number | undefined;
   @Input() totalInvestment: number | undefined;
   @Input() totalPortfolioValue: number | undefined;
+  @Input() loading: boolean | undefined ;
   totalProfitLoss: number | undefined;
 
   constructor() { }
@@ -24,7 +25,6 @@ export class UserDetailsComponent implements OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     // This will run when any input property changes
     if(changes['buyingPower'] || changes['totalPortfolioValue'] || changes['totalInvestment']) {
-      console.log(this.totalInvestment);
       this.calculateTotalProfitLoss();
     }
   }
@@ -33,7 +33,6 @@ export class UserDetailsComponent implements OnInit {
     if (this.buyingPower !== undefined && this.totalPortfolioValue !== undefined && this.totalInvestment !== undefined) {
       this.totalProfitLoss = ((this.totalPortfolioValue + this.buyingPower) - this.totalInvestment);
       console.log("totalPortfolioValue: $" + this.totalPortfolioValue + " Buying Power: $"  + this.buyingPower + " Total Invest: $ "  + this.totalInvestment );
-      console.log(this.totalProfitLoss);
     }
   }
 

@@ -1,6 +1,10 @@
 <div class="user-details">
-    <h2>Hello {{ username }}</h2>
-    <p>Buying Power: ${{ buyingPower | number:'1.2-2' }}</p>
-    <p>Total Profit/Loss: <span [ngStyle]="{'color': profitLossColor(totalProfitLoss)}">${{ totalProfitLoss | number:'1.2-2' }}</span></p>
-  </div>
-  
+  <h2>Hello {{ username }}</h2>
+  <p>Buying Power: ${{ buyingPower | number:'1.2-2' }}</p>
+  <p>Total Profit/Loss: 
+      <span *ngIf="!loading" [ngStyle]="{'color': profitLossColor(totalProfitLoss)}">
+          ${{ totalProfitLoss | number:'1.2-2' }}
+      </span>
+      <span *ngIf="loading">Loading...</span>
+  </p>
+</div>
