@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
-import { CurrentPriceSymbolSharedServiceService } from '../../services/current-price-symbol-shared-service.service';
+import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 

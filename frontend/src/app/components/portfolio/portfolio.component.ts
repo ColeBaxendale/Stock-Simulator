@@ -37,7 +37,7 @@ import { from, interval, mergeMap } from 'rxjs';
 import { StockSharedServiceService } from '../../services/currentStockService/stock-shared-service.service';
 import { PorfolioProfitLoss } from '../../services/profitLossService/portfolio-profitloss.service';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
-import { CurrentPriceSymbolSharedServiceService } from '../../services/current-price-symbol-shared-service.service';
+import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
 
 // Define the structure of a Stock object
 interface Stock {
@@ -85,45 +85,37 @@ export class PortfolioComponent implements OnInit {
     });
   }
   updateCurrentPricesForAllStocks(): void {
-    let totalProfitLoss = 0;
-    this.loading = true
-    // Convert the stocks array into an observable sequence
+    let totalPortfolioValue = 0; // Initialize total portfolio value
+
+    this.loading = true;
     from(this.stocks).pipe(
-      // Use mergeMap to handle each stock update, limiting the concurrency to avoid overwhelming the server
-      mergeMap((stock) => this.stockService.searchStock(stock.ticker), (outerValue, innerValue) => ({ stock: outerValue, data: innerValue }), 5)
+        mergeMap(stock => 
+            this.stockService.searchStock(stock.ticker), 
+            (outerValue, innerValue) => ({ stock: outerValue, data: innerValue }), 
+            5 // Concurrency limit
+        )
     ).subscribe({
-      next: ({ stock, data }) => {
-        // Update the currentPrice and profitLoss for each stock
-        if(data.currentPrice != stock.currentPrice){
-          stock.currentPrice = data.currentPrice;
-          stock.profitLoss = (data.currentPrice - stock.averageBuyPrice) * stock.quantityOwned;
-          totalProfitLoss += stock.profitLoss ?? 0;
-          if (this.currentViewedStockSymbol === stock.ticker) {
-            this.stockSharedService.updateCurrentStockDetails({
-              symbol: stock.ticker,
-              currentPrice: stock.currentPrice?? 0,
-              ownedShares: stock.quantityOwned,
-              averageBuyPrice: stock.averageBuyPrice,
-              profitLoss: stock.profitLoss?? 0,
-            });
-          }
+        next: ({ stock, data }) => {
+            // Assuming data.currentPrice is always defined for simplicity
+            const oldPrice = stock.currentPrice ?? stock.averageBuyPrice; // Fallback to averageBuyPrice if currentPrice is not set
+            stock.currentPrice = data.currentPrice;
+            stock.profitLoss = (data.currentPrice - stock.averageBuyPrice) * stock.quantityOwned;
+
+            // Accumulate total portfolio value and profit/loss
+            totalPortfolioValue += data.currentPrice * stock.quantityOwned;
+        },
+        complete: () => {
+            // Once all updates are completed, update the total profit/loss and total portfolio value
+            this.profitLossService.updatetotalPortfolioValue(totalPortfolioValue);
+            this.loading = false;
+        },
+        error: (error) => {
+            console.error('Error updating prices', error);
+            this.loading = false;
         }
-        else{
-          totalProfitLoss += stock.profitLoss ?? 0;
-        }
-      },
-      complete: () => {
-        // Once all updates are completed, update the total profit/loss
-        this.profitLossService.updateProfitLoss(totalProfitLoss);
-        this.loading = false
-        // Consider triggering change detection here if necessary
-      },
-      error: (error) => {
-        console.error('Error updating prices', error);
-        // Implement appropriate error handling
-      }
     });
-  }
+}
+
 
 
   // Function to fetch portfolio data from the server
@@ -173,11 +165,15 @@ export class PortfolioComponent implements OnInit {
   }
 
   calculateAndEmitTotalProfitLoss() {
-    let totalProfitLoss = 0;
+    let totalPortfolioValue = 0
     this.stocks.forEach(stock => {
-      totalProfitLoss += stock.profitLoss ?? 0;
-    })
-    this.profitLossService.updateProfitLoss(totalProfitLoss);
+      if(stock.currentPrice)
+        totalPortfolioValue += stock.quantityOwned * stock.currentPrice;
+        console.log(totalPortfolioValue);
+
+      })
+      
+    this.profitLossService.updatetotalPortfolioValue(totalPortfolioValue)
   }
 
   fetchCurrentPrices(stock: Stock, callback: () => void): void {

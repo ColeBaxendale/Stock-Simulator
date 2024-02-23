@@ -39,7 +39,7 @@ import { UserServiceService } from '../../services/userRouteService/user-service
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 import { BuyStockDialogStockPageComponent } from '../../components/buy-stock-dialog-stock-page/buy-stock-dialog-stock-page.component';
 import { MatDialog } from '@angular/material/dialog';
-import { CurrentPriceSymbolSharedServiceService } from '../../services/current-price-symbol-shared-service.service';
+import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
 // Component decorator and class definition
 @Component({
   selector: 'app-stock-page',

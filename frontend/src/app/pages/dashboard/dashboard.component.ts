@@ -45,7 +45,8 @@ export class DashboardComponent implements OnInit {
   buyingPower: number | undefined;
   totalInvestment: number | undefined;
   profitLoss: number | undefined; // Updated to store the total profit/loss from the portfolio
-
+  totalPortfolioValue: number | undefined;
+  
   constructor(
     private userService: UserServiceService,
     private dialog: MatDialog,
@@ -57,9 +58,10 @@ export class DashboardComponent implements OnInit {
     this.fetchUserDetails();
 
     // Subscribe to profitLoss updates from the shared service
-    this.profitLossService.profitLoss$.subscribe(profitLoss => {
-      this.profitLoss = profitLoss; // Update the profitLoss property whenever a new value is emitted
-    });
+    this.profitLossService.totalPortfolioValue$.subscribe(totalPortfolioValue => {
+      console.log('Total Portfolio Value updated:', totalPortfolioValue);
+      this.totalPortfolioValue = totalPortfolioValue;
+  });
 
     // Setup an interval to periodically refresh user details
     const userDetailsRefreshInterval = interval(10000).pipe(

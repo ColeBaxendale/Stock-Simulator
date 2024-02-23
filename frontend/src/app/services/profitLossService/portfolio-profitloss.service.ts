@@ -37,15 +37,13 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class PorfolioProfitLoss {
    // BehaviorSubject holding the current value of total profit/loss
-  private profitLossSource = new BehaviorSubject<number>(0);
+  private totalPortfolioValueSource = new BehaviorSubject<number>(0);
   // Publicly exposed observable of the profit/loss source for subscription
-  profitLoss$ = this.profitLossSource.asObservable();
+  totalPortfolioValue$ = this.totalPortfolioValueSource.asObservable();
 
-  /**
-   * Updates the total profit/loss value.
-   * @param {number} profitLoss - The new total profit/loss value to be set.
-   */
-  updateProfitLoss(profitLoss: number) {
-    this.profitLossSource.next(profitLoss); 
-  }
+
+
+  updatetotalPortfolioValue(totalPortfolioValue: number) {
+    this.totalPortfolioValueSource.next(totalPortfolioValue); // Make sure this line exists and is executed
+}
 }
