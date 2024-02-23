@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BuyStockDialogComponent } from '../buy-stock-dialog/buy-stock-dialog.component';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
+import { UserServiceService } from '../../services/userRouteService/user-service.service';
 
 @Component({
   selector: 'app-buy-stock-dialog-portfolio',
@@ -13,12 +14,14 @@ export class BuyStockDialogPortfolioComponent {
   buyQuantity: number = 1;
   currentPrice: number;
   symbol: string;
+  buyingPower: number | undefined;
 
   constructor(
     public dialogRef: MatDialogRef<BuyStockDialogComponent>, // Ensure this matches the type of dialog being referenced
     @Inject(MAT_DIALOG_DATA) public data: any,
     private buySellStockService: StockBuySellService,
     private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
+    private userService: UserServiceService
   ) {
     this.currentPrice = data.currentPrice;
     this.symbol = data.symbol;
@@ -27,6 +30,13 @@ export class BuyStockDialogPortfolioComponent {
   ngOnInit(): void {
     this.currentPriceSymbolSharedService.currentStockDetails$.subscribe(stockDetails => {
       this.currentPrice = stockDetails.currentPrice;
+    });
+    this.userService.getUserDetails().subscribe({
+      next: (response) => {
+        // Set user details from the response
+        this.buyingPower = response.buyingPower;
+      },
+      error: (error) => console.error('Error fetching user details initially:', error),
     });
   }
   buyStock(): void {

@@ -1,12 +1,22 @@
 <!-- Inside buy-stock-dialog.component.html -->
-<app-searchbar [mode]="'select'" 
+<app-searchbar [mode]="'select'"
                (stockSelected)="handleStockSelected($event)" 
                (inputChanged)="handleInputChange()"></app-searchbar>
+
 <!-- Display the stock symbol and current price -->
 <div *ngIf="stockSymbol">
   <p>Symbol: {{ stockSymbol }}</p>
-  <p *ngIf="currentPrice">Current Price: ${{ currentPrice }}</p>
+  <p *ngIf="currentPrice">Current Price: ${{ currentPrice | number:'1.2-2' }}</p>
+
+  <div>
+    <label for="buyQuantity">Quantity:</label>
+    <input type="number" [(ngModel)]="buyQuantity" min="1" id="buyQuantity">
+    <p>Total Cost: ${{ getTotalCost() | number:'1.2-2'}}</p>
+  </div>
+
+  <p>Available Buying Power: ${{ buyingPower | number:'1.2-2' }}</p>
+  <button (click)="buyStock()">Buy</button>
 </div>
 
-<input type="number" [(ngModel)]="quantity" min="1" placeholder="Quantity" *ngIf="currentPrice">
-<button (click)="buyStock()" *ngIf="currentPrice">Buy</button>
+
+<button (click)="closeDialog()">Cancel</button>

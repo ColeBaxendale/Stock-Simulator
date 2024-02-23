@@ -4,6 +4,7 @@ import { StockBuySellService } from '../../services/buySellRouteService/stock-bu
 import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserServiceService } from '../../services/userRouteService/user-service.service';
 
 @Component({
   selector: 'app-buy-stock-dialog-stock-page',
@@ -15,13 +16,15 @@ export class BuyStockDialogStockPageComponent {
   currentPrice: number;
   symbol: string;
   private destroy$ = new Subject<void>();
+  buyingPower: number | undefined;
 
   constructor(
     public dialogRef: MatDialogRef<BuyStockDialogStockPageComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private buySellStockService: StockBuySellService,
     private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
-    private router: Router
+    private router: Router,
+    private userService: UserServiceService,
   ) {
     // Initial data assignments
     this.currentPrice = data.currentPrice;
@@ -35,6 +38,13 @@ export class BuyStockDialogStockPageComponent {
       .subscribe(stockDetails => {
         this.symbol = stockDetails.symbol;
         this.currentPrice = stockDetails.currentPrice;
+      });
+      this.userService.getUserDetails().subscribe({
+        next: (response) => {
+          // Set user details from the response
+          this.buyingPower = response.buyingPower;
+        },
+        error: (error) => console.error('Error fetching user details initially:', error),
       });
   }
   buyStock(): void {
