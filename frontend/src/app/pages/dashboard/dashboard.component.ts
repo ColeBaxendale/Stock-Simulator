@@ -66,20 +66,7 @@ export class DashboardComponent implements OnInit {
     this.loading = loading;
 });
 
-    // Setup an interval to periodically refresh user details
-    const userDetailsRefreshInterval = interval(10000).pipe(
-      switchMap(() => this.userService.getUserDetails()) // SwitchMap to cancel the previous request if it hasn't completed before starting a new one
-    );
 
-    userDetailsRefreshInterval.subscribe({
-      next: (response) => {
-        // Update user information with each refresh
-        this.loggedInUsername = response.username.toUpperCase();
-        this.buyingPower = response.buyingPower;
-        this.totalInvestment = response.totalInvestment;
-      },
-      error: (error) => console.error('Error refreshing user details:', error),  
-    });
   }
 
   // Method to fetch user details from the UserService

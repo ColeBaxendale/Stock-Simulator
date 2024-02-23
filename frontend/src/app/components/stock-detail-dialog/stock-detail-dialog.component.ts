@@ -35,6 +35,7 @@ import { StockSharedServiceService } from '../../services/currentStockService/st
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 import { BuyStockDialogPortfolioComponent } from '../buy-stock-dialog-portfolio/buy-stock-dialog-portfolio.component';
 import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-stock-detail-dialog',
@@ -58,7 +59,8 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private stockSharedService: StockSharedServiceService,
     private buySellStockService: StockBuySellService,
-    private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService
+    private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -98,9 +100,9 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
       width: '400px',
       data: { symbol: symbol, currentPrice: currentPrice }
     });
-    
-
   }
+
+
 
 
 
@@ -117,6 +119,11 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  viewStockPage(symbol: string){
+    this.router.navigate(['/stock', symbol]);
+    this.closeDialog();
+  }
 
     // Function to close the dialog
     closeDialog(): void {
