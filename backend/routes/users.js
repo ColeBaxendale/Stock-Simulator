@@ -97,7 +97,7 @@ router.get('/user-details', authenticateToken, userController.getUserDetails);
  * This route is protected by the 'authenticateToken' middleware.
  * The 'changeUserDetails' function in the userController handles the user details change.
  */
-router.post('/change-user-details', authenticateToken, userController.changeUserDetails);
+router.post('/change-password', authenticateToken, userController.changePassword);
 
 // Export the router so it can be used in the main server file (usually server.js or app.js).
 module.exports = router;

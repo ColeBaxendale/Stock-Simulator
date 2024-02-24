@@ -2,6 +2,9 @@
 
 <div class="dashboard">
   <app-current-time></app-current-time> <!-- Display the current time component -->
+  <mat-icon (click)="quickSettingsDialog()">settings</mat-icon>
+  <mat-icon (click)="logout()">logout</mat-icon>
+
   <app-searchbar></app-searchbar> <!-- Display the search bar component -->
 <app-user-details
   [username]="loggedInUsername"

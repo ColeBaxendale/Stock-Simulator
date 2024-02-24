@@ -26,6 +26,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EMPTY, Observable, catchError, throwError } from 'rxjs';
+import { ChangePasswordDialogComponent } from '../../components/change-password-dialog/change-password-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -55,10 +56,10 @@ export class UserServiceService {
   login(credentials: any): Observable<any> {
     // Validate email and password
     const emailErrorMessage = this.validateEmail(credentials.email);
-    const passwordErrorMessage = this.validatePassword(credentials.password);
+
     // If there are validation errors, return an observable with an error message
-    if (emailErrorMessage !== null || passwordErrorMessage !== null) {
-      const errorMessage = emailErrorMessage || passwordErrorMessage || 'Unknown error message';
+    if (emailErrorMessage !== null) {
+      const errorMessage = emailErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
       // If validation passes, make HTTP POST request to login endpoint
@@ -109,18 +110,25 @@ export class UserServiceService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${authToken}`
     });
-    return this.http.get<any>(url, { headers }).pipe(
+    return this.http.get<any>(url,  { headers }).pipe(
       catchError((error) => {
-        // Handle authentication errors
-        console.error('Authentication error:', error);
-        alert('Please log in again.');
-        localStorage.removeItem('loginToken');
-        window.location.reload();
-        // Return an observable with an error message
-        return throwError(() => new Error('Authentication error'));
+        const errorMessage = error.error.message; // Correct way to access the error message
+        if(error.status === 403){
+          // Handle authentication errors
+          console.error('Authentication error:', errorMessage);
+          alert('Please log in again.');
+          localStorage.removeItem('loginToken');
+          window.location.reload();
+          return EMPTY;
+        } else {
+          // Corrected to use `errorMessage` directly
+          alert('Error: ' + errorMessage);
+          return EMPTY;
+        }
       })
     );
   }
+
 
   // Method to reset user account
   resetUserAccount(): Observable<any> {
@@ -129,18 +137,25 @@ export class UserServiceService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${authToken}`
     });
-    return this.http.get<any>(url, { headers }).pipe(
+    return this.http.put<any>(url, {}, { headers }).pipe(
       catchError((error) => {
-        // Handle authentication errors
-        console.error('Authentication error:', error);
-        alert('Please log in again.');
-        localStorage.removeItem('loginToken');
-        window.location.reload();
-        // Return an observable with an error message
-        return throwError(() => new Error('Authentication error'));
+        const errorMessage = error.error.message; // Correct way to access the error message
+        if(error.status === 403){
+          // Handle authentication errors
+          console.error('Authentication error:', errorMessage);
+          alert('Please log in again.');
+          localStorage.removeItem('loginToken');
+          window.location.reload();
+          return EMPTY;
+        } else {
+          // Corrected to use `errorMessage` directly
+          alert('Error: ' + errorMessage);
+          return EMPTY;
+        }
       })
     );
   }
+
 
   // Method to get user details
   getUserDetails(): Observable<any> {
@@ -151,47 +166,78 @@ export class UserServiceService {
     });
     return this.http.get<any>(url, { headers }).pipe(
       catchError((error) => {
-        // Handle authentication errors
-        console.error('Authentication error:', error);
-        alert('Please log in again.');
-        localStorage.removeItem('loginToken');
-        window.location.reload();
-        // Return an observable with an error message
-        return throwError(() => new Error('Authentication error'));
+        const errorMessage = error.error.message; // Correct way to access the error message
+        if(error.status === 403){
+          // Handle authentication errors
+          console.error('Authentication error:', errorMessage);
+          alert('Please log in again.');
+          localStorage.removeItem('loginToken');
+          window.location.reload();
+          return EMPTY;
+        } else {
+          // Corrected to use `errorMessage` directly
+          alert('Error: ' + errorMessage);
+          return EMPTY;
+        }
       })
     );
   }
 
-  // Method to change user details
-  changeUserDetails(username: string, email: string): Observable<any> {
-    // Validate username and email
-    const usernameErrorMessage = this.validateUsername(username);
-    const emailErrorMessage = this.validateEmail(email);
+
+
+
+  changeUserPassword(email: string, password: string, newPassword: string) {
+    // Validate deposit amount
+    const newPasswordValidation = this.validatePassword(newPassword);
     // If there are validation errors, return an observable with an error message
-    if (usernameErrorMessage !== null || emailErrorMessage !== null) {
-      const errorMessage = usernameErrorMessage || emailErrorMessage || 'Unknown error message';
-      return throwError(() => new Error(errorMessage));
+    if (newPasswordValidation !== null) {
+      return throwError(() => new Error(newPasswordValidation));
     } else {
-      // If validation passes, make HTTP POST request to change-user-details endpoint
+      // If validation passes, make HTTP POST request to deposit endpoint
       const authToken = this.getAuthorizationToken();
-      const url = `${this.baseUrl}/change-user-details`;
+      const url = `${this.baseUrl}/change-password`;
       const headers = new HttpHeaders({
         Authorization: `Bearer ${authToken}`
       });
-      const requestBody = { username: username, email: email };
+      const requestBody = { email: email, password: password, newPassword: newPassword };
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
-          // Handle authentication errors
-          console.error('Authentication error:', error);
-          alert('Please log in again.');
-          localStorage.removeItem('loginToken');
-          window.location.reload();
-          // Return an observable with an error message
-          return throwError(() => new Error('Authentication error'));
+          const errorMessage = error.error.message; // Correct way to access the error message
+          if(error.status === 403){
+            // Handle authentication errors
+            console.error('Authentication error:', errorMessage);
+            alert('Please log in again.');
+            localStorage.removeItem('loginToken');
+            window.location.reload();
+            return EMPTY;
+          } else {
+            // Corrected to use `errorMessage` directly
+            alert('Error: ' + errorMessage);
+            return EMPTY;
+          }
         })
       );
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   // Method to validate username
   private validateUsername(username: string): string | null {
@@ -253,18 +299,18 @@ export class UserServiceService {
 
   // Method to validate deposit amount
   private depositValidation(amount: number): string | null {
-    
+
     if (amount === undefined || amount === null || isNaN(amount)) {
       return 'Amount is required.';
-  }
-  if (amount <= 0) {
+    }
+    if (amount <= 0) {
       return 'Must deposit more than $0';
-  }
-  if (amount > 100000) {
+    }
+    if (amount > 100000) {
       return `Maximum deposit amount is $100000. Please reduce your deposit amount.`;
+    }
+    return null; // Indicates the validation passed
   }
-  return null; // Indicates the validation passed
-}
 
 
   // Method to get authorization token

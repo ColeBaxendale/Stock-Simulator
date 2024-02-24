@@ -33,6 +33,8 @@ import { interval, switchMap } from 'rxjs';
 import { PorfolioProfitLoss } from '../../services/profitLossService/portfolio-profitloss.service';
 import { DepositComponent } from '../../components/deposit/deposit.component';
 import { BuyStockDialogComponent } from '../../components/buy-stock-dialog/buy-stock-dialog.component';
+import { SettingsDialogComponent } from '../../components/settings-dialog/settings-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -50,7 +52,8 @@ export class DashboardComponent implements OnInit {
   constructor(
     private userService: UserServiceService,
     private dialog: MatDialog,
-    private profitLossService: PorfolioProfitLoss // Injecting shared service for portfolio and dashboard communication
+    private profitLossService: PorfolioProfitLoss,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -88,9 +91,6 @@ export class DashboardComponent implements OnInit {
       width: '1200px',
       data: {} 
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-    });
   }
 
 
@@ -113,6 +113,17 @@ export class DashboardComponent implements OnInit {
 
   quickBuyDialog(){
     const dialogRef = this.dialog.open(BuyStockDialogComponent);
-    
+
   }
+
+  quickSettingsDialog(){
+    const dialogRef = this.dialog.open(SettingsDialogComponent);
+
+  }
+
+  logout(){
+    localStorage.removeItem('loginToken')
+    this.router.navigate(['/login']);
+  }
+
 }

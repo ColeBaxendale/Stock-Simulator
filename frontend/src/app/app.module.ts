@@ -47,6 +47,8 @@ import { DepositComponent } from './components/deposit/deposit.component';
 import { BuyStockDialogComponent } from './components/buy-stock-dialog/buy-stock-dialog.component';
 import { BuyStockDialogPortfolioComponent } from './components/buy-stock-dialog-portfolio/buy-stock-dialog-portfolio.component';
 import { BuyStockDialogStockPageComponent } from './components/buy-stock-dialog-stock-page/buy-stock-dialog-stock-page.component';
+import { SettingsDialogComponent } from './components/settings-dialog/settings-dialog.component';
+import { ChangePasswordDialogComponent } from './components/change-password-dialog/change-password-dialog.component';
 
 
 @NgModule({
@@ -67,6 +69,8 @@ import { BuyStockDialogStockPageComponent } from './components/buy-stock-dialog-
     BuyStockDialogComponent,
     BuyStockDialogPortfolioComponent,
     BuyStockDialogStockPageComponent,
+    SettingsDialogComponent,
+    ChangePasswordDialogComponent,
 
   ],
   imports: [
@@ -83,6 +87,7 @@ import { BuyStockDialogStockPageComponent } from './components/buy-stock-dialog-
     MatInputModule,
     MatMomentDateModule,
     CommonModule,
+    MatIconModule,
   ],
   providers: [
     DatePipe,

@@ -275,7 +275,7 @@ exports.deposit = async (req, res) => {
         if (isNaN(amountNum) || amountNum <= 0 || amountNum > maxDepositAmount) {
             return res.status(400).json({ message: 'Invalid deposit amount' });
         }
-        else if((amountNum + user.buyingPower) > maxBuyingPower){
+        else if ((amountNum + user.buyingPower) > maxBuyingPower) {
             return res.status(400).json({ message: 'Over max buying power' });
         }
 
@@ -366,6 +366,10 @@ async function saveUserDetails(user) {
  * Time Complexity: O(1)
  */
 exports.resetUserAccount = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         // Retrieve user ID from request and fetch user's transactions
         const userId = req.user.userId;
@@ -414,75 +418,53 @@ exports.getUserDetails = async (req, res) => {
 };
 
 
-/**
- * Updates user's email and/or username.
- * @param {Request} req - Express request object with user ID and updated details.
- * @param {Response} res - Express response object.
- * 
- * Time Complexity: O(1)
- */
-exports.changeUserDetails = async (req, res) => {
+
+exports.changePassword = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
-        const userId = req.user.userId; // Retrieve user ID from the authenticated user
-        const { email, username } = req.body; // Get updated email and username from request body
-
-        // Fetch the user by ID
-        const user = await User.findById(userId);
-        let updateFields = {};
-
-        if (email !== undefined && email !== user.email) {
-
-            
+        const { email, password, newPassword } = req.body;
+        const emailLC = email.toLowerCase();
+        // Validate input
+        if (!emailLC || !password || !newPassword) {
+            return res.status(400).json({ message: 'Old password and new password are required' });
         }
 
+        // Check if old and new passwords are the same
+        if (password === newPassword) {
+            return res.status(400).json({ message: 'New password must be different from the old password' });
+        }
 
+        // Validate new password format
+        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+        if (!passwordRegex.test(newPassword)) {
+            return res.status(400).json({ message: 'New password must be at least 8 characters with a mix of letters, numbers, and symbols' });
+        }
 
-
-
-
-
-
-
+        // Find the user by email
+        const user = await User.findOne({ email: emailLC });
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(401).json({ message: 'User not found' });
         }
 
-        // Validate input lengths
-        if (username.length > 50 || email.length > 100) {
-            return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+        // Compare the provided old password with the stored hash
+        const isMatch = await bcrypt.compare(password, user.passwordHash);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Old password is incorrect' });
         }
 
-        // Validate email format using a regular expression
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
-        }
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-        // Validate username length
-        if (username.length < 4) {
-            return res.status(400).json({ message: 'Username must be at least 4 characters' });
-        }
-
-        // Check if the new email is already in use
-        const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: 'Email already in use' });
-        }
-
-        // Update user details if provided
-        if (email) {
-            user.email = email;
-        }
-        if (username) {
-            user.username = username;
-        }
-
-        // Save the updated user document
+        // Update user's password in the database
+        user.passwordHash = hashedNewPassword;
         await user.save();
 
-        // Respond with a success message
-        res.status(200).json({ message: 'User details updated successfully' });
+        res.status(200).json({ message: 'User password has been changed successfully' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: 'Server error occurred' });
     }
 };
