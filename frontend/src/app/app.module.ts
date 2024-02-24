@@ -49,6 +49,7 @@ import { BuyStockDialogPortfolioComponent } from './components/buy-stock-dialog-
 import { BuyStockDialogStockPageComponent } from './components/buy-stock-dialog-stock-page/buy-stock-dialog-stock-page.component';
 import { SettingsDialogComponent } from './components/settings-dialog/settings-dialog.component';
 import { ChangePasswordDialogComponent } from './components/change-password-dialog/change-password-dialog.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 
 @NgModule({
@@ -71,6 +72,7 @@ import { ChangePasswordDialogComponent } from './components/change-password-dial
     BuyStockDialogStockPageComponent,
     SettingsDialogComponent,
     ChangePasswordDialogComponent,
+    ForgotPasswordComponent,
 
   ],
   imports: [

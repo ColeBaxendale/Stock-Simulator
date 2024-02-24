@@ -32,6 +32,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ForgotPasswordComponent } from '../../components/forgot-password/forgot-password.component';
 
 @Component({
   selector: 'app-login',
@@ -55,7 +57,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     "password": ""
   };
 
-  constructor(private http: HttpClient, private router: Router, private userService: UserServiceService) { }
+  constructor(private http: HttpClient, private router: Router, private userService: UserServiceService,private dialog: MatDialog,) { }
 
   ngOnInit(): void {
     // Set the 'chk' checkbox to be checked by default
@@ -122,5 +124,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+
+  forgotPassword(){
+    const dialogRef = this.dialog.open(ForgotPasswordComponent);
   }
 }

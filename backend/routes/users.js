@@ -99,5 +99,6 @@ router.get('/user-details', authenticateToken, userController.getUserDetails);
  */
 router.post('/change-password', authenticateToken, userController.changePassword);
 
+
 // Export the router so it can be used in the main server file (usually server.js or app.js).
 module.exports = router;
