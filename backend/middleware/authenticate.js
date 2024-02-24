@@ -36,7 +36,6 @@ const authenticateToken = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         // Test 3: Error Handling
         if (err) {
-            console.error('Error authorizing user:', err);
             return res.sendStatus(403); // Test: Token Verification Failure
         }
 

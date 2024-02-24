@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs';
 import { debounceTime, switchMap, filter, catchError } from 'rxjs/operators';
 import { StockService } from '../../services/stockRouteService/stock-service.service';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
+
 
 @Component({
   selector: 'app-searchbar',
@@ -20,7 +22,7 @@ export class SearchbarComponent {
   searchPerformed: boolean = false;
   private searchTerms = new Subject<string>();
 
-  constructor(private router: Router, private stockService: StockService) {
+  constructor(private router: Router, private stockService: StockService, private snackbarService: SnackBarPopUpService) {
     this.searchTerms.pipe(
       debounceTime(500),
       filter(term => term.trim() !== ''),
@@ -41,7 +43,7 @@ export class SearchbarComponent {
     this.searchPerformed = true;
     return this.stockService.searchBar(term).pipe(
       catchError(error => {
-        console.error('Error in HTTP request', error);
+        this.snackbarService.openSnackBar('Error in HTTP request: ' + error);
         this.isLoading = false;
         return of([]);
       }),

@@ -5,6 +5,7 @@ import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPr
 import { Subject, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-buy-stock-dialog-stock-page',
@@ -25,6 +26,7 @@ export class BuyStockDialogStockPageComponent {
     private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
     private router: Router,
     private userService: UserServiceService,
+    private snackbarService: SnackBarPopUpService
   ) {
     // Initial data assignments
     this.currentPrice = data.currentPrice;
@@ -44,12 +46,12 @@ export class BuyStockDialogStockPageComponent {
           // Set user details from the response
           this.buyingPower = response.buyingPower;
         },
-        error: (error) => console.error('Error fetching user details initially:', error),
+        error: (error) => this.snackbarService.openSnackBar('Error fetching user details initially: ' + error),
       });
   }
   buyStock(): void {
     if (this.buyQuantity <= 0) {
-      alert('Please enter a valid quantity.');
+      this.snackbarService.openSnackBar('Please enter a valid quantity.');
       return;
     }
 
@@ -61,12 +63,12 @@ export class BuyStockDialogStockPageComponent {
 
     this.buySellStockService.buyStock(requestBody).subscribe({
       next: (response) => {
-        alert('Stock purchased successfully.');
+        this.snackbarService.openSnackBar('Stock purchased successfully.');
         this.dialogRef.close(); // Correct placement of the close dialog call
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
-        alert('Failed to purchase stock.');
+        this.snackbarService.openSnackBar('Failed to purchase stock.');
         // Optionally, you can close the dialog here as well or handle the error differently.
       }
     });

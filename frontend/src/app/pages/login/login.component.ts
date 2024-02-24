@@ -35,6 +35,8 @@ import { UserServiceService } from '../../services/userRouteService/user-service
 import { MatDialog } from '@angular/material/dialog';
 import { ForgotPasswordComponent } from '../../components/forgot-password/forgot-password.component';
 import { SecurityQuestionsDialogComponent } from '../../components/security-questions-dialog/security-questions-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-login',
@@ -60,7 +62,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
 
 
-  constructor(private http: HttpClient, private router: Router, private userService: UserServiceService, private dialog: MatDialog,) { }
+  constructor(private http: HttpClient, private router: Router, private userService: UserServiceService, private dialog: MatDialog,private snackbarService: SnackBarPopUpService) { }
 
   ngOnInit(): void {
     // Set the 'chk' checkbox to be checked by default
@@ -83,51 +85,51 @@ export class LoginComponent implements OnInit, OnDestroy {
   // Function to handle user registration
   onRegister(): void {
     if (!this.registerObj.username || this.registerObj.username === '') {
-      alert('Username is required.');
+      this.snackbarService.openSnackBar('Username is required.');
       return;
     }
     // Test for input length exceeding the maximum allowed
     if (this.registerObj.username.length > 50) {
-      alert('Username length exceeds maximum allowed');
+      this.snackbarService.openSnackBar('Username length exceeds maximum allowed');
       return;
     }
     // Test for input length not exceeding the minimum allowed
     if (this.registerObj.username.length < 4) {
-      alert('Username must be more than 4 characters');
+      this.snackbarService.openSnackBar('Username must be more than 4 characters');
       return;
     }
 
     if (!this.registerObj.email || this.registerObj.email === '') {
-      alert('Email is required.');
+      this.snackbarService.openSnackBar('Email is required.');
       return;
     }
     // Test for input length exceeding the maximum allowed
     if (this.registerObj.email.length > 100) {
-      alert('Email length exceeds maximum allowed');
+      this.snackbarService.openSnackBar('Email length exceeds maximum allowed');
       return;
     }
     // Check for valid email format using a regular expression
     const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(this.registerObj.email)) {
-      alert('Invalid email format');
+      this.snackbarService.openSnackBar('Invalid email format');
       return;
     }
     // Lowercase email to standardize
     this.registerObj.email = this.registerObj.email.toLowerCase();
 
     if (!this.registerObj.password || this.registerObj.password === '') {
-      alert('Password is required.');
+      this.snackbarService.openSnackBar('Password is required.');
       return;
     }
     // Test for input length exceeding the maximum allowed
     if (this.registerObj.password.length > 100) {
-      alert('Password length exceeds maximum allowed');
+      this.snackbarService.openSnackBar('Password length exceeds maximum allowed');
       return;
     }
     // Validate password format using a regular expression
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
     if (!passwordRegex.test(this.registerObj.password)) {
-      alert('Password must be at least 8 characters with a mix of letters, numbers, and symbols');
+      this.snackbarService.openSnackBar('Password must be at least 8 characters with a mix of letters, numbers, and symbols');
       return;
     }
 
@@ -153,18 +155,18 @@ export class LoginComponent implements OnInit, OnDestroy {
             if (res) {
               // Reset the form
               this.resetForm();
-              alert('Registration successful: ' + res.message);
+              this.snackbarService.openSnackBar('Registration successful: ' + res.message);
             } else {
-              alert('Registration failed.');
+              this.snackbarService.openSnackBar('Registration failed.');
             }
           },
           error: (error: any) => {
-            alert('Registration error: ' + error.message);
+            this.snackbarService.openSnackBar('Registration error: ' + error.message);
           }
         });
       } else {
         // User closed the dialog without submitting the form
-        alert('Security questions dialog was closed without saving.');
+        this.snackbarService.openSnackBar('Closed without registering.');
       }
     });
   }
@@ -188,20 +190,19 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginObj.email = this.loginObj.email.toLowerCase();
     this.loginSubscription = this.userService.login(this.loginObj).subscribe({
       next: (res: any) => {
-        console.log('Response:', res);
         if (res.token) {
           // Successful login, store the token in local storage
           localStorage.setItem('loginToken', res.token);
           this.router.navigateByUrl('/dashboard');
         } else {
-          alert('Login failed');
+          this.snackbarService.openSnackBar('Login failed');
         }
       },
       error: (error: any) => {
         if (error.status === 401) {
-          alert('Invalid email or password');
+          this.snackbarService.openSnackBar('Invalid email or password');
         } else {
-          alert(error.message);
+          this.snackbarService.openSnackBar(error.message);
         }
       }
     });
@@ -213,4 +214,5 @@ export class LoginComponent implements OnInit, OnDestroy {
       width: '800px',
     });
   }
+
 }

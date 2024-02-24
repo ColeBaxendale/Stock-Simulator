@@ -35,6 +35,7 @@ import { UserServiceService } from '../../services/userRouteService/user-service
 import { HttpClient } from '@angular/common/http';
 import { TransactionFilterDialogComponent } from '../transaction-filter-dialog/transaction-filter-dialog.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 // Define the structure of a Transaction object
 interface Transaction {
@@ -64,7 +65,8 @@ export class TransactionComponent implements OnInit {
     private http: HttpClient,
     private dialog: MatDialog,
     public dialogRef: MatDialogRef<TransactionComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private snackbarService: SnackBarPopUpService
   ) { }
 
   ngOnInit() {
@@ -96,7 +98,7 @@ export class TransactionComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error fetching transaction data:', error);
+        this.snackbarService.openSnackBar('Error fetching transaction data: ' + error);
         this.loading = false;
       }
     });
@@ -141,7 +143,7 @@ export class TransactionComponent implements OnInit {
             // Add one day's worth of milliseconds to start date
             startDate = new Date(startDate.getTime() + 86400000);
             matchStartDate = new Date(transaction.timestamp) >= startDate;
-            console.log(startDate);
+
 
           }
 
@@ -150,7 +152,7 @@ export class TransactionComponent implements OnInit {
             // Add one day's worth of milliseconds to end date
             endDate = new Date(endDate.getTime() + 86400000);
             matchEndDate = new Date(transaction.timestamp) <= endDate;
-            console.log(endDate);
+
 
           }
 

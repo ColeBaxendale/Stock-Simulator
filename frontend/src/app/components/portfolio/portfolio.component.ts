@@ -38,6 +38,7 @@ import { StockSharedServiceService } from '../../services/currentStockService/st
 import { PorfolioProfitLoss } from '../../services/profitLossService/portfolio-profitloss.service';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 // Define the structure of a Stock object
 interface Stock {
@@ -72,6 +73,7 @@ export class PortfolioComponent implements OnInit {
     private stockSharedService: StockSharedServiceService,
     private buySellStockService: StockBuySellService,
     private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
+    private snackbarService: SnackBarPopUpService
   ) { }
 
   ngOnInit(): void {
@@ -112,7 +114,7 @@ export class PortfolioComponent implements OnInit {
             this.profitLossService.setLoading(this.loading);
         },
         error: (error) => {
-            console.error('Error updating prices', error);
+          this.snackbarService.openSnackBar('Error updating prices ' + error);
             this.loading = false;
             this.profitLossService.setLoading(this.loading);
         }
@@ -166,7 +168,7 @@ export class PortfolioComponent implements OnInit {
         }
       },
       error: (error) => {
-        console.error('Error fetching portfolio data:', error);
+        this.snackbarService.openSnackBar('Error fetching portfolio data: ' + error);
         this.loading = false;
         this.profitLossService.setLoading(this.loading);
 
@@ -193,7 +195,7 @@ export class PortfolioComponent implements OnInit {
         callback(); // Indicate this fetch is completed
       },
       error: (error) => {
-        console.error(`Error fetching current prices for ${stock.ticker}`, error);
+        this.snackbarService.openSnackBar(`Error fetching current prices for ${stock.ticker}: `+ error);
         callback(); // Ensure callback is called even in case of error
       }
     });
@@ -239,13 +241,12 @@ export class PortfolioComponent implements OnInit {
     // Make the sellStock API call
     this.buySellStockService.sellStock(requestBody).subscribe({
       next: (response) => {
-        console.log('Response:', response.message); // Log success message
-        alert('Success: ' + response.message); // Show success message
+        localStorage.setItem('snackbarMessage' , 'Success: ' + response.message)
         window.location.reload();
 
       },
       error: (error) => {
-        console.error('Error selling stock:', error); // Log error if selling stock fails
+        this.snackbarService.openSnackBar('Error selling stock: ' + error); // Log error if selling stock fails
       }
     });
   }

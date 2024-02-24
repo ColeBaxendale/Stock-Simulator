@@ -95,7 +95,6 @@ exports.register = async (req, res) => {
         await newUser.save();
         res.status(201).json({ message: 'User registered successfully.' });
     } catch (error) {
-        console.error(error); // Log the error for debugging purposes
         res.status(500).json({ message: error.message });
     }
 };
@@ -423,7 +422,6 @@ exports.getUserDetails = async (req, res) => {
             return res.status(200).json(user); // Return the entire user document
         }
     } catch (error) {
-        console.error("Error fetching user details:", error);
         return res.status(500).json({ message: error.message });
     }
 };
@@ -494,11 +492,9 @@ exports.verifySecurityQuestions = async (req, res) => {
         // Use async/await with Promise.all to handle asynchronous comparison
         const verificationResults = await Promise.all(user.securityQuestions.map(async (question, index) => {
             const providedAnswer = answers.find(ans => ans.question.toLowerCase() === question.question.toLowerCase());
-            console.log(providedAnswer);
             if (!providedAnswer) return false; // No answer provided for this question
 
             // Asynchronously compare the provided answer with the stored hash
-            console.log( await bcrypt.compare(providedAnswer.answer, question.answerHash));
             return await bcrypt.compare(providedAnswer.answer, question.answerHash);
         }));
 
@@ -511,7 +507,6 @@ exports.verifySecurityQuestions = async (req, res) => {
             res.status(401).json({ message: 'Verification failed. Answers to security questions do not match.' });
         }
     } catch (error) {
-        console.error('Verification error:', error);
         res.status(500).json({ message: 'An error occurred while verifying security questions.' });
     }
 };
@@ -543,7 +538,6 @@ exports.resetPassword = async (req, res) => {
         res.status(200).json({ message: 'User password has been reset successfully' });
     } catch (error) {
         // Handle errors
-        console.error('Error resetting password:', error);
         res.status(500).json({ message: 'An error occurred while resetting user password' });
     }
 };

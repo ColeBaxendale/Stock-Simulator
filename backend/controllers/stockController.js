@@ -34,7 +34,6 @@ exports.searchStock = async (req, res) => {
     const currentPrice = await fetchStockPrice(symbol);
     res.json({ currentPrice });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'An error occurred while fetching the stock quote' });
   }
 };
@@ -114,7 +113,6 @@ exports.viewStockDetails = async (req, res) => {
       res.json(stockInfo);
     }
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'An error occurred while fetching stock details or performing search' });
   }
 };
@@ -167,7 +165,6 @@ exports.getStockNews = async (req, res) => {
     // Send the processed news articles as JSON response
     res.json(newsArticles);
   } catch (error) {
-    console.error(error);
     res.status(500).json({ error: 'An error occurred while fetching news data' });
   }
 };
@@ -201,7 +198,6 @@ exports.searchBar = async (req, res) => {
     });
 
     if (response.status !== 200) {
-      console.error('Status:', response.status);
       res.status(response.status).json({ error: 'API Error' });
       return;
     }
@@ -213,7 +209,6 @@ exports.searchBar = async (req, res) => {
 
     res.json({ bestMatches: usStocks });
   } catch (error) {
-    console.error('Error:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };

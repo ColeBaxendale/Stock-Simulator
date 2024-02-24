@@ -35,7 +35,6 @@ async function buyStockPortfolio(user, symbol, quantity, stockPrice) {
     }
     const existingStock = user.portfolio.get(symbol);
     if (existingStock) {
-        console.log('Stock already is in portfolio');
         // Calculate new average buy price and quantity
         const totalQuantity = Number(existingStock.quantityOwned) + Number(quantity);
         const newAverageBuyPrice = ((existingStock.averageBuyPrice * existingStock.quantityOwned) + (stockPrice * quantity)) / totalQuantity;
@@ -47,7 +46,6 @@ async function buyStockPortfolio(user, symbol, quantity, stockPrice) {
         });
         user.buyingPower -= totalCost;
     } else {
-        console.log('Stock put in portfolio');
         // Add the new stock to the portfolio
         user.portfolio.set(symbol, {
             quantityOwned: quantity,
@@ -78,7 +76,6 @@ async function sellStockPortfolio(user, symbol, quantity, stockPrice) {
     const newQuantity = Number(existingStock.quantityOwned) - Number(quantity);
     if(newQuantity === 0){
         user.portfolio.delete(symbol)
-        console.log('Stock removed from portfolio');
     }
     else{
         user.portfolio.set(symbol, {
@@ -115,7 +112,6 @@ async function addTransaction(user, buyOrSell, symbol, quantity, stockPrice) {
         totalPrice: stockPrice * quantity,
         timestamp: timestamp // Set the timestamp to the current time
     });
-    console.log('Stock put in transactions')
 }
 
 

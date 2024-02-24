@@ -32,7 +32,6 @@ export class UserDetailsComponent implements OnInit {
   calculateTotalProfitLoss(): void {
     if (this.buyingPower !== undefined && this.totalPortfolioValue !== undefined && this.totalInvestment !== undefined) {
       this.totalProfitLoss = ((this.totalPortfolioValue + this.buyingPower) - this.totalInvestment);
-      console.log("totalPortfolioValue: $" + this.totalPortfolioValue + " Buying Power: $"  + this.buyingPower + " Total Invest: $ "  + this.totalInvestment );
     }
   }
 

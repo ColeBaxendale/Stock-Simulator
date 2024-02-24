@@ -3,6 +3,7 @@ import { StockBuySellService } from '../../services/buySellRouteService/stock-bu
 import { StockService } from '../../services/stockRouteService/stock-service.service';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-buy-stock-dialog',
@@ -14,7 +15,7 @@ export class BuyStockDialogComponent {
   currentPrice: number | null = null;
   buyQuantity: number = 1;
   buyingPower: number | undefined;
-  constructor(public dialogRef: MatDialogRef<BuyStockDialogComponent>, private buySellStockService: StockBuySellService, private stockService: StockService,private userService: UserServiceService,) {}
+  constructor(public dialogRef: MatDialogRef<BuyStockDialogComponent>, private buySellStockService: StockBuySellService, private stockService: StockService,private userService: UserServiceService, private snackbarService: SnackBarPopUpService) {}
 
   // Handler for when a stock is selected from the SearchbarComponent
   handleStockSelected(symbol: string): void {
@@ -25,7 +26,7 @@ export class BuyStockDialogComponent {
 
       },
       error: (error) => {
-        console.error(`Error fetching current prices for ${symbol}`, error);
+       this.snackbarService.openSnackBar(`Error fetching current prices for ${symbol}: ` + error);
 
       }
     });
@@ -34,7 +35,7 @@ export class BuyStockDialogComponent {
         // Set user details from the response
         this.buyingPower = response.buyingPower;
       },
-      error: (error) => console.error('Error fetching user details initially:', error),
+      error: (error) => this.snackbarService.openSnackBar('Error fetching user details initially: ' +  error),
     });
   }
 
@@ -46,7 +47,7 @@ export class BuyStockDialogComponent {
   // Initiates the stock purchase
   buyStock(): void {
     if (!this.stockSymbol || this.buyQuantity <= 0 || this.currentPrice === null) {
-      alert('Please select a stock, enter a valid quantity, and ensure price is available.');
+      this.snackbarService.openSnackBar('Please select a stock, enter a valid quantity, and ensure price is available.');
       return;
     }
     const requestBody = {
@@ -57,13 +58,13 @@ export class BuyStockDialogComponent {
     
     this.buySellStockService.buyStock(requestBody).subscribe({
       next: (response) => {
-        console.log('Response:', response.message); // Log success message
-        alert('Success: ' + response.message); // Show success message
+        localStorage.setItem('snackbarMessage' , 'Success: ' + response.message)
         window.location.reload();
+        
 
       },
       error: (error) => {
-        console.error('Error selling stock:', error); // Log error if selling stock fails
+        this.snackbarService.openSnackBar('Error selling stock: ' + error); // Log error if selling stock fails
       }
     });
   }

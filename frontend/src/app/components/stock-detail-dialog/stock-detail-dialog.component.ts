@@ -36,6 +36,7 @@ import { StockBuySellService } from '../../services/buySellRouteService/stock-bu
 import { BuyStockDialogPortfolioComponent } from '../buy-stock-dialog-portfolio/buy-stock-dialog-portfolio.component';
 import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
 import { Router } from '@angular/router';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-stock-detail-dialog',
@@ -60,6 +61,7 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     private stockSharedService: StockSharedServiceService,
     private buySellStockService: StockBuySellService,
     private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
+    private snackbarService: SnackBarPopUpService,
     private router: Router
   ) {}
 
@@ -88,7 +90,7 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
       this.data.sellStock(this.symbol, this.sellQuantity, this.currentPrice);
       this.dialogRef.close();
     } else {
-      console.error('sellStock function not provided');
+      this.snackbarService.openSnackBar('sellStock function not provided');
     }
   }
 
@@ -115,7 +117,7 @@ export class StockDetailDialogComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+
     });
   }
 

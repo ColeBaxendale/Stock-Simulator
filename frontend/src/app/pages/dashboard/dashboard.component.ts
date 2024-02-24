@@ -35,6 +35,7 @@ import { DepositComponent } from '../../components/deposit/deposit.component';
 import { BuyStockDialogComponent } from '../../components/buy-stock-dialog/buy-stock-dialog.component';
 import { SettingsDialogComponent } from '../../components/settings-dialog/settings-dialog.component';
 import { Router } from '@angular/router';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -54,11 +55,13 @@ export class DashboardComponent implements OnInit {
     private dialog: MatDialog,
     private profitLossService: PorfolioProfitLoss,
     private router: Router,
+    private snackbarService: SnackBarPopUpService
   ) {}
 
   ngOnInit(): void {
     // Fetch user details upon component initialization
     this.fetchUserDetails();
+    this.snackbarService.checkAndDisplayStoredMessage();
 
     // Subscribe to profitLoss updates from the shared service
     this.profitLossService.totalPortfolioValue$.subscribe(totalPortfolioValue => {
@@ -81,7 +84,7 @@ export class DashboardComponent implements OnInit {
         this.buyingPower = response.buyingPower;
         this.totalInvestment = response.totalInvestment;
       },
-      error: (error) => console.error('Error fetching user details initially:', error),
+      error: (error) => this.snackbarService.openSnackBar('Error fetching user details initially: ' + error),
     });
   }
   

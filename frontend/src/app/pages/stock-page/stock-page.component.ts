@@ -40,6 +40,7 @@ import { StockBuySellService } from '../../services/buySellRouteService/stock-bu
 import { BuyStockDialogStockPageComponent } from '../../components/buy-stock-dialog-stock-page/buy-stock-dialog-stock-page.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 // Component decorator and class definition
 @Component({
   selector: 'app-stock-page',
@@ -67,7 +68,8 @@ export class StockPageComponent implements OnInit, OnDestroy {
     private userService: UserServiceService,
     private buySellStockService: StockBuySellService,
     private dialog: MatDialog,
-    private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService
+    private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
+    private snackbarService: SnackBarPopUpService
   ) { }
 
   ngOnInit(): void {
@@ -136,7 +138,7 @@ private setupDataRefreshInterval(): void {
         currentPrice: this.currentPrice 
       });
     } catch (error) {
-      console.error('Error fetching stock data:', error); // Log error if fetching fails
+      this.snackbarService.openSnackBar('Error fetching stock data: '+ error); // Log error if fetching fails
       this.loadingStockData = false; // Set loading flag to false
     }
   }

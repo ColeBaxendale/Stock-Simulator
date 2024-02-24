@@ -19,6 +19,5 @@ export class PorfolioProfitLoss {
   // Method to update loading state
   setLoading(isLoading: boolean) {
     this.isLoadingSource.next(isLoading);
-    console.log(`Loading State Updated: ${isLoading}`);
   }
 }

@@ -34,6 +34,7 @@
 
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-transaction-filter-dialog',
@@ -49,7 +50,8 @@ export class TransactionFilterDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<TransactionFilterDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private snackbarService: SnackBarPopUpService
   ) {
     if (data.showFilterButtons !== undefined) {
       this.showFilterButtons = data.showFilterButtons;

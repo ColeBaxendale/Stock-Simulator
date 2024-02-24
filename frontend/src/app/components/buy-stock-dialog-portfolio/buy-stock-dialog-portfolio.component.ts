@@ -4,6 +4,7 @@ import { BuyStockDialogComponent } from '../buy-stock-dialog/buy-stock-dialog.co
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 import { CurrentPriceSymbolSharedServiceService } from '../../services/currentPriceSymbolSharedService/current-price-symbol-shared-service.service';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-buy-stock-dialog-portfolio',
@@ -21,7 +22,8 @@ export class BuyStockDialogPortfolioComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private buySellStockService: StockBuySellService,
     private currentPriceSymbolSharedService: CurrentPriceSymbolSharedServiceService,
-    private userService: UserServiceService
+    private userService: UserServiceService,
+    private snackbarService: SnackBarPopUpService
   ) {
     this.currentPrice = data.currentPrice;
     this.symbol = data.symbol;
@@ -35,13 +37,13 @@ export class BuyStockDialogPortfolioComponent {
       next: (response) => {
         // Set user details from the response
         this.buyingPower = response.buyingPower;
-      },
-      error: (error) => console.error('Error fetching user details initially:', error),
+      }, 
+      error: (error) => this.snackbarService.openSnackBar('Error fetching user details initially: ' + error),
     });
   }
   buyStock(): void {
     if (this.buyQuantity <= 0) {
-      alert('Please enter a valid quantity.');
+      this.snackbarService.openSnackBar('Please enter a valid quantity.');
       return;
     }
 
@@ -53,12 +55,12 @@ export class BuyStockDialogPortfolioComponent {
 
     this.buySellStockService.buyStock(requestBody).subscribe({
       next: (response) => {
-        alert('Stock purchased successfully.');
+        this.snackbarService.openSnackBar('Stock purchased successfully.');
         this.dialogRef.close(); // Correct placement of the close dialog call
         window.location.reload()
       },
       error: (error) => {
-        alert('Failed to purchase stock.');
+        this.snackbarService.openSnackBar('Failed to purchase stock.');
         // Optionally, you can close the dialog here as well or handle the error differently.
       }
     });

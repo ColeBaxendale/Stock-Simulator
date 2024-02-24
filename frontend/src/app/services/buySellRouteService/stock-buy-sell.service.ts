@@ -1,13 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, catchError, throwError } from 'rxjs';
+import { SnackBarPopUpService } from '../snackBarPopUp/snack-bar-pop-up.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StockBuySellService {
   private baseUrl = 'http://localhost:3000/api/users';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private snackbarService: SnackBarPopUpService) { }
   
 
     // Method to buy stocks
@@ -33,14 +34,13 @@ export class StockBuySellService {
             const errorMessage = error.error.message; // Correct way to access the error message
             if(error.status === 403){
               // Handle authentication errors
-              console.error('Authentication error:', errorMessage);
-              alert('Please log in again.');
+              localStorage.setItem('snackbarMessage' , 'Success: ' + 'Account has been reset.')
               localStorage.removeItem('loginToken');
               window.location.reload();
               return EMPTY;
             } else {
               // Corrected to use `errorMessage` directly
-              alert('Error: ' + errorMessage);
+              this.snackbarService.openSnackBar('Error: ' + errorMessage);
               return EMPTY;
             }
           })
@@ -58,7 +58,7 @@ export class StockBuySellService {
     // If there are validation errors, return an observable with an error message
     if (symbolErrorMessage !== null || quantityErrorMessage !== null) {
       const errorMessage = symbolErrorMessage || quantityErrorMessage || 'Unknown error message';
-      alert('Error: ' + errorMessage);
+      this.snackbarService.openSnackBar('Error: ' + errorMessage);
       return EMPTY;
     } else {
       // If validation passes, make HTTP POST request to sell-stock endpoint
@@ -72,14 +72,13 @@ export class StockBuySellService {
           const errorMessage = error.error.message; // Correct way to access the error message
           if(error.status === 403){
             // Handle authentication errors
-            console.error('Authentication error:', errorMessage);
-            alert('Please log in again.');
+            localStorage.setItem('snackbarMessage' , 'Please log in again.')
             localStorage.removeItem('loginToken');
             window.location.reload();
             return EMPTY;
           } else {
             // Corrected to use `errorMessage` directly
-            alert('Error: ' + errorMessage);
+            this.snackbarService.openSnackBar('Error: ' + errorMessage);
             return EMPTY;
           }
         })

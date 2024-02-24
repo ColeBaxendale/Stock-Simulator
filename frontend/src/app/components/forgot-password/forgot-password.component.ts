@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { PasswordResetDialogComponent } from '../password-reset-dialog/password-reset-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,14 +19,14 @@ export class ForgotPasswordComponent {
 
   dialogRef!: MatDialogRef<ForgotPasswordComponent>; // Declare dialogRef with definite assignment assertion
 
-  constructor(private userService: UserServiceService, private dialog: MatDialog) {}
+  constructor(private userService: UserServiceService, private dialog: MatDialog, private snackbarService: SnackBarPopUpService) {}
 
   requestPasswordReset(): void {
     // Check if any answer is blank
     const isAnyAnswerBlank = this.securityAnswers.some(answer => answer.answer.trim() === '');
 
     if (isAnyAnswerBlank) {
-      alert('Please provide answers to all security questions.');
+      this.snackbarService.openSnackBar('Please provide answers to all security questions.');
       return;
     }
 
@@ -43,8 +45,7 @@ export class ForgotPasswordComponent {
         this.dialogRef.close();
       },
       error: (error) => {
-        console.error(error);
-        alert(error);
+        this.snackbarService.openSnackBar(error);
       }
     });
   }
@@ -58,12 +59,14 @@ export class ForgotPasswordComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        alert('Password Reset Successful');
+        this.snackbarService.openSnackBar('Password Reset Successful');
       } else {
-        alert('Password Reset Cancelled');
+        this.snackbarService.openSnackBar('Password Reset Cancelled');
       }
       this.dialog.closeAll();
       // You can handle the result here if needed
     });
   }
+
+
 }

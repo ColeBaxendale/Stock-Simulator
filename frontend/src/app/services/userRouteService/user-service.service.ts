@@ -26,6 +26,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EMPTY, Observable, catchError, throwError } from 'rxjs';
+import { SnackBarPopUpService } from '../snackBarPopUp/snack-bar-pop-up.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ import { EMPTY, Observable, catchError, throwError } from 'rxjs';
 export class UserServiceService {
   private baseUrl = 'http://localhost:3000/api/users';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private snackbarService: SnackBarPopUpService) { }
 
   /**
    * Registers a new user along with their security questions.
@@ -53,7 +54,6 @@ export class UserServiceService {
     } else {
       // If validation passes, make HTTP POST request to register endpoint
       // userData includes security questions for enhanced security
-      console.log("Registering user with data:", userData);
       return this.http.post(`${this.baseUrl}/register`, userData).pipe(
         catchError((error) => throwError(() => new Error(error.error.message || 'Registration failed due to an unknown error')))
       );
@@ -66,12 +66,19 @@ export class UserServiceService {
   login(credentials: any): Observable<any> {
     // Validate email and password
     const emailErrorMessage = this.validateEmail(credentials.email);
-
+    
     // If there are validation errors, return an observable with an error message
     if (emailErrorMessage !== null) {
       const errorMessage = emailErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
+      if (!credentials.password || credentials.password === '') {
+        return throwError(() => new Error('Password is required.'));
+      }
+      // Test for input length exceeding the maximum allowed
+      if (credentials.password.length > 100) {
+        return throwError(() => new Error('Password length exceeds maximum allowed'));
+      }
       // If validation passes, make HTTP POST request to login endpoint
       return this.http.post(`${this.baseUrl}/login`, credentials);
     }
@@ -97,8 +104,8 @@ export class UserServiceService {
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
           // Handle authentication errors
-          console.error('Authentication error:', error);
-          alert('Please log in again.');
+          this.snackbarService.openSnackBar('Authentication error: ' + error);
+          localStorage.setItem('snackbarMessage' , 'Please log in again.')
           localStorage.removeItem('loginToken');
           window.location.reload();
           // Return an observable with an error message
@@ -125,14 +132,14 @@ export class UserServiceService {
         const errorMessage = error.error.message; // Correct way to access the error message
         if(error.status === 403){
           // Handle authentication errors
-          console.error('Authentication error:', errorMessage);
-          alert('Please log in again.');
+          this.snackbarService.openSnackBar('Authentication error: ' + errorMessage);
+          localStorage.setItem('snackbarMessage' , 'Please log in again.')
           localStorage.removeItem('loginToken');
           window.location.reload();
           return EMPTY;
         } else {
           // Corrected to use `errorMessage` directly
-          alert('Error: ' + errorMessage);
+          this.snackbarService.openSnackBar('Error: ' + errorMessage);
           return EMPTY;
         }
       })
@@ -152,14 +159,13 @@ export class UserServiceService {
         const errorMessage = error.error.message; // Correct way to access the error message
         if(error.status === 403){
           // Handle authentication errors
-          console.error('Authentication error:', errorMessage);
-          alert('Please log in again.');
+          localStorage.setItem('snackbarMessage' , 'Please log in again.')
           localStorage.removeItem('loginToken');
           window.location.reload();
           return EMPTY;
         } else {
           // Corrected to use `errorMessage` directly
-          alert('Error: ' + errorMessage);
+          this.snackbarService.openSnackBar('Error: ' + errorMessage);
           return EMPTY;
         }
       })
@@ -179,14 +185,13 @@ export class UserServiceService {
         const errorMessage = error.error.message; // Correct way to access the error message
         if(error.status === 403){
           // Handle authentication errors
-          console.error('Authentication error:', errorMessage);
-          alert('Please log in again.');
+          localStorage.setItem('snackbarMessage' , 'Please log in again.')
           localStorage.removeItem('loginToken');
           window.location.reload();
           return EMPTY;
         } else {
           // Corrected to use `errorMessage` directly
-          alert('Error: ' + errorMessage);
+          this.snackbarService.openSnackBar('Error: ' + errorMessage);
           return EMPTY;
         }
       })
@@ -215,14 +220,13 @@ export class UserServiceService {
           const errorMessage = error.error.message; // Correct way to access the error message
           if(error.status === 403){
             // Handle authentication errors
-            console.error('Authentication error:', errorMessage);
-            alert('Please log in again.');
+            localStorage.setItem('snackbarMessage' , 'Please log in again.')
             localStorage.removeItem('loginToken');
             window.location.reload();
             return EMPTY;
           } else {
             // Corrected to use `errorMessage` directly
-            alert('Error: ' + errorMessage);
+            this.snackbarService.openSnackBar('Error: ' + errorMessage);
             return EMPTY;
           }
         })
@@ -235,7 +239,7 @@ export class UserServiceService {
     const url = `${this.baseUrl}/verify-security-questions`;
     return this.http.post<any>(url, { email, answers }).pipe(
       catchError((error) => {
-        console.error('Verification error:', error);
+       this.snackbarService.openSnackBar('Verification error: ' + error);
         // Extract and return an error message; adjust as needed based on your API response structure
         let errorMessage = 'An error occurred during verification.';
         if (error.error && error.error.message) {
@@ -254,7 +258,7 @@ export class UserServiceService {
     const url = `${this.baseUrl}/reset-password`;
     return this.http.post<any>(url, { email, newPassword }).pipe(
       catchError((error) => {
-        console.error('Verification error:', error);
+        this.snackbarService.openSnackBar('Verification error: ' + error);
         // Extract and return an error message; adjust as needed based on your API response structure
         let errorMessage = 'An error occurred during verification.';
         if (error.error && error.error.message) {

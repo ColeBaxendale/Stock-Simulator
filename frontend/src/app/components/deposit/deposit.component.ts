@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
+import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-deposit',
@@ -15,6 +16,7 @@ export class DepositComponent {
     private http: HttpClient,
     private userService: UserServiceService,
     private dialogRef: MatDialogRef<DepositComponent>,
+    private snackbarService: SnackBarPopUpService
   ) { }
 
   deposit(amount: string) {
@@ -25,15 +27,13 @@ export class DepositComponent {
       this.userService.deposit(amountNum).subscribe({
         next: (response) => {
           // Handle successful deposit here
-          console.log('Deposit successful:', response);
-          alert('Deposit successful!');
           this.dialogRef.close();
+          localStorage.setItem('snackbarMessage', 'Deposit successful!');
           window.location.reload();
         },
         error: (error) => {
           // Handle error here
-          console.error('Deposit error:', error);
-          alert(`Deposit failed: ${error.message}`);
+          this.snackbarService.openSnackBar(`Deposit failed: ${error.message}`);
           this.amountModel = ''; // Clear the input on error
         }
       });
@@ -47,15 +47,15 @@ export class DepositComponent {
     const depositAmount = parseFloat(amount);
 
     if (isNaN(depositAmount)) {
-      alert('Must be a valid number');
+      this.snackbarService.openSnackBar('Must be a valid number');
       return -1;
     } 
     else if (depositAmount <= 0) {
-      alert('Amount must be more than zero');
+      this.snackbarService.openSnackBar('Amount must be more than zero');
       return -1;
     } 
     else if (depositAmount > maxDepositAmount) {
-      alert('Cannot deposit more than $' + maxDepositAmount);
+      this.snackbarService.openSnackBar('Cannot deposit more than $' + maxDepositAmount);
       return -1;
     }
 
