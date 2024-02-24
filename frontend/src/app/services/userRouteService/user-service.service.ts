@@ -231,13 +231,40 @@ export class UserServiceService {
   }
 
 
+  verifySecurityQuestions(email: string, answers: any[]): Observable<any> {
+    const url = `${this.baseUrl}/verify-security-questions`;
+    return this.http.post<any>(url, { email, answers }).pipe(
+      catchError((error) => {
+        console.error('Verification error:', error);
+        // Extract and return an error message; adjust as needed based on your API response structure
+        let errorMessage = 'An error occurred during verification.';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
+        // Return an observable error
+        return throwError(() => new Error(errorMessage));
+      })
+    );
+  }
 
 
 
 
-
-
-
+  resetPassword(email: string, newPassword: string): Observable<any> {
+    const url = `${this.baseUrl}/reset-password`;
+    return this.http.post<any>(url, { email, newPassword }).pipe(
+      catchError((error) => {
+        console.error('Verification error:', error);
+        // Extract and return an error message; adjust as needed based on your API response structure
+        let errorMessage = 'An error occurred during verification.';
+        if (error.error && error.error.message) {
+          errorMessage = error.error.message;
+        }
+        // Return an observable error
+        return throwError(() => new Error(errorMessage));
+      })
+    );
+  }
 
 
 
@@ -333,4 +360,12 @@ export class UserServiceService {
       return throwError(() => new Error('Authentication error'));
     }
   }
+
+
+
+
+
 }
+
+
+

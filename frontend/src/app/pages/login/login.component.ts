@@ -209,6 +209,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   forgotPassword() {
-    const dialogRef = this.dialog.open(ForgotPasswordComponent);
+    const dialogRef = this.dialog.open(ForgotPasswordComponent, {
+      width: '800px',
+    });
   }
 }

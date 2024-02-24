@@ -21,7 +21,6 @@ export class SecurityQuestionsDialogComponent {
       question: q.question, // No need to capitalize as these are pre-filled
       answer: q.answer.toLowerCase(),
     }));
-
     this.dialogRef.close(processedQuestions);
   }
 

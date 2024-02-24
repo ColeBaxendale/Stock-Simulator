@@ -107,10 +107,9 @@ router.get('/theme-preference', authenticateToken, userController.getThemePrefer
 router.post('/update-theme-preference', authenticateToken, userController.updateThemePreference);
 
 // Route for getting the user's security questions
-router.get('/security-questions', authenticateToken, userController.getSecurityQuestions);
+router.post('/verify-security-questions',  userController.verifySecurityQuestions);
 
-// Route for updating the user's security questions
-router.post('/update-security-questions', authenticateToken, userController.updateSecurityQuestions);
+router.post('/reset-password', userController.resetPassword);
 
 
 // Export the router so it can be used in the main server file (usually server.js or app.js).

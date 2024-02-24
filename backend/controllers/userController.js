@@ -480,40 +480,41 @@ exports.changePassword = async (req, res) => {
     }
 };
 
+exports.verifySecurityQuestions = async (req, res) => {
+    const { email, answers } = req.body;
 
-exports.getSecurityQuestions = async (req, res) => {
-    const userId = req.user.userId;
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    try {
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
-    // Only return the questions, not the answers
-    const questions = user.securityQuestions.map(q => ({ question: q.question }));
-    res.json({ securityQuestions: questions });
+        let verificationPassed = true;
+
+        // Use async/await with Promise.all to handle asynchronous comparison
+        const verificationResults = await Promise.all(user.securityQuestions.map(async (question, index) => {
+            const providedAnswer = answers.find(ans => ans.question.toLowerCase() === question.question.toLowerCase());
+            console.log(providedAnswer);
+            if (!providedAnswer) return false; // No answer provided for this question
+
+            // Asynchronously compare the provided answer with the stored hash
+            console.log( await bcrypt.compare(providedAnswer.answer, question.answerHash));
+            return await bcrypt.compare(providedAnswer.answer, question.answerHash);
+        }));
+
+        // Check if all verifications passed
+        verificationPassed = verificationResults.every(result => result === true);
+
+        if (verificationPassed) {
+            res.json({ message: 'Security questions verified successfully.' });
+        } else {
+            res.status(401).json({ message: 'Verification failed. Answers to security questions do not match.' });
+        }
+    } catch (error) {
+        console.error('Verification error:', error);
+        res.status(500).json({ message: 'An error occurred while verifying security questions.' });
+    }
 };
-
-
-exports.updateSecurityQuestions = async (req, res) => {
-    const userId = req.user.userId;
-    const { securityQuestions } = req.body; // Expect an array of { question, answer }
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    // Hash the answers before saving
-    const updatedQuestions = securityQuestions.map(q => ({
-        question: q.question,
-        answerHash: bcrypt.hashSync(q.answer, 10)
-    }));
-
-    user.securityQuestions = updatedQuestions;
-    await user.save();
-
-    res.json({ message: 'Security questions updated successfully' });
-};
-
-
-
-
-
 
 exports.getThemePreference = async (req, res) => {
     const userId = req.user.userId; // Assuming you have a middleware to set req.user
@@ -533,4 +534,36 @@ exports.updateThemePreference = async (req, res) => {
     await user.save();
 
     res.json({ message: 'Theme preference updated successfully' });
+};
+
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+
+        // Validate input
+        if (!email || !newPassword) {
+            return res.status(400).json({ message: 'Email and new password are required' });
+        }
+
+        // Find the user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update user's password in the database
+        user.passwordHash = hashedPassword;
+        await user.save();
+
+        // Respond with a success message
+        res.status(200).json({ message: 'User password has been reset successfully' });
+    } catch (error) {
+        // Handle errors
+        console.error('Error resetting password:', error);
+        res.status(500).json({ message: 'An error occurred while resetting user password' });
+    }
 };

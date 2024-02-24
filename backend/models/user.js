@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema({
         answerHash: {
             type: String,
             required: true,
-            set: answer => bcrypt.hashSync(answer, 10) // Automatically hash answers when set
+            answerHash: { type: String, required: true }
         }
     }],
     themePreference: { type: String, default: 'light' } // 'light' or 'dark'

@@ -51,6 +51,7 @@ import { SettingsDialogComponent } from './components/settings-dialog/settings-d
 import { ChangePasswordDialogComponent } from './components/change-password-dialog/change-password-dialog.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { SecurityQuestionsDialogComponent } from './components/security-questions-dialog/security-questions-dialog.component';
+import { PasswordResetDialogComponent } from './components/password-reset-dialog/password-reset-dialog.component';
 
 
 @NgModule({
@@ -73,8 +74,9 @@ import { SecurityQuestionsDialogComponent } from './components/security-question
     BuyStockDialogStockPageComponent,
     SettingsDialogComponent,
     ChangePasswordDialogComponent,
-    ForgotPasswordComponent,
     SecurityQuestionsDialogComponent,
+    PasswordResetDialogComponent,
+    ForgotPasswordComponent
 
   ],
   imports: [
