@@ -99,8 +99,6 @@ router.get('/user-details', authenticateToken, userController.getUserDetails);
  */
 router.post('/change-password', authenticateToken, userController.changePassword);
 
-
-
 // Route for getting the user's security questions
 router.post('/verify-security-questions',  userController.verifySecurityQuestions);
 
