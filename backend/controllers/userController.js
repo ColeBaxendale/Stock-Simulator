@@ -34,61 +34,72 @@ const { buyStockPortfolio, addTransaction, sellStockPortfolio } = require('./buy
 exports.register = async (req, res) => {
     try {
         // Extract user details from the request body
-        const { username, email, password } = req.body;
+        const { username, email, password, securityQuestions } = req.body;
+
+        // Convert email to lowercase for consistent handling
         const emailLC = email.toLowerCase();
 
         // Validate user input
-        // Check for missing fields
-        if (!username || !emailLC || !password) {
-            return res.status(400).json({ message: 'Username, email, and password are required' });
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: 'Username, email, and password are required.' });
         }
 
         // Validate input lengths
-        if (username.length > 50 || emailLC.length > 100 || password.length > 100) {
-            return res.status(400).json({ message: 'Input length exceeds maximum allowed' });
+        if (username.length > 50 || email.length > 100 || password.length > 100) {
+            return res.status(400).json({ message: 'Input length exceeds maximum allowed.' });
         }
 
         // Validate username length
         if (username.length < 4) {
-            return res.status(400).json({ message: 'Username must be at least 4 characters' });
+            return res.status(400).json({ message: 'Username must be at least 4 characters.' });
         }
 
         // Validate email format using regex
         const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         if (!emailRegex.test(emailLC)) {
-            return res.status(400).json({ message: 'Invalid email format' });
+            return res.status(400).json({ message: 'Invalid email format.' });
         }
 
         // Validate password format
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
         if (!passwordRegex.test(password)) {
-            return res.status(400).json({ message: 'Password must be at least 8 characters with a mix of letters, numbers, and symbols' });
+            return res.status(400).json({ message: 'Password must be at least 8 characters with a mix of letters, numbers, and symbols.' });
         }
 
         // Check if a user with the given email already exists
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email: emailLC });
         if (existingUser) {
-            return res.status(409).json({ message: 'Email already in use' });
+            return res.status(409).json({ message: 'Email already in use.' });
         }
 
         // Hash the password for secure storage
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Hash security questions' answers
+        const hashedSecurityQuestions = securityQuestions.map(q => ({
+            question: q.question,
+            answerHash: bcrypt.hashSync(q.answer, 10),
+        }));
+
         // Create a new user with the provided details
         const newUser = new User({
             username,
-            emailLC,
+            email: emailLC, // Assign the lowercase email here
             passwordHash: hashedPassword,
-            portfolio: new Map() // Initialize an empty portfolio
+            portfolio: new Map(),
+            securityQuestions: hashedSecurityQuestions,
+            themePreference: 'light'
         });
 
         // Save the new user to the database
         await newUser.save();
-        res.status(201).json({ message: 'User registered successfully' });
+        res.status(201).json({ message: 'User registered successfully.' });
     } catch (error) {
+        console.error(error); // Log the error for debugging purposes
         res.status(500).json({ message: error.message });
     }
 };
+
 
 /**
  * Handles user login.
@@ -426,10 +437,9 @@ exports.changePassword = async (req, res) => {
     }
 
     try {
-        const { email, password, newPassword } = req.body;
-        const emailLC = email.toLowerCase();
+        const { password, newPassword } = req.body;
         // Validate input
-        if (!emailLC || !password || !newPassword) {
+        if (!password || !newPassword) {
             return res.status(400).json({ message: 'Old password and new password are required' });
         }
 
@@ -445,7 +455,8 @@ exports.changePassword = async (req, res) => {
         }
 
         // Find the user by email
-        const user = await User.findOne({ email: emailLC });
+        const userId = req.user.userId;
+        const user = await User.findById(userId);
         if (!user) {
             return res.status(401).json({ message: 'User not found' });
         }
@@ -470,3 +481,56 @@ exports.changePassword = async (req, res) => {
 };
 
 
+exports.getSecurityQuestions = async (req, res) => {
+    const userId = req.user.userId;
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Only return the questions, not the answers
+    const questions = user.securityQuestions.map(q => ({ question: q.question }));
+    res.json({ securityQuestions: questions });
+};
+
+
+exports.updateSecurityQuestions = async (req, res) => {
+    const userId = req.user.userId;
+    const { securityQuestions } = req.body; // Expect an array of { question, answer }
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    // Hash the answers before saving
+    const updatedQuestions = securityQuestions.map(q => ({
+        question: q.question,
+        answerHash: bcrypt.hashSync(q.answer, 10)
+    }));
+
+    user.securityQuestions = updatedQuestions;
+    await user.save();
+
+    res.json({ message: 'Security questions updated successfully' });
+};
+
+
+
+
+
+
+exports.getThemePreference = async (req, res) => {
+    const userId = req.user.userId; // Assuming you have a middleware to set req.user
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.json({ themePreference: user.themePreference });
+};
+
+exports.updateThemePreference = async (req, res) => {
+    const userId = req.user.userId;
+    const { themePreference } = req.body; // 'light' or 'dark'
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    user.themePreference = themePreference;
+    await user.save();
+
+    res.json({ message: 'Theme preference updated successfully' });
+};

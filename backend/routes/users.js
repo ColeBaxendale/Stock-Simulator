@@ -100,5 +100,18 @@ router.get('/user-details', authenticateToken, userController.getUserDetails);
 router.post('/change-password', authenticateToken, userController.changePassword);
 
 
+// Route for getting the user's theme preference
+router.get('/theme-preference', authenticateToken, userController.getThemePreference);
+
+// Route for updating the user's theme preference
+router.post('/update-theme-preference', authenticateToken, userController.updateThemePreference);
+
+// Route for getting the user's security questions
+router.get('/security-questions', authenticateToken, userController.getSecurityQuestions);
+
+// Route for updating the user's security questions
+router.post('/update-security-questions', authenticateToken, userController.updateSecurityQuestions);
+
+
 // Export the router so it can be used in the main server file (usually server.js or app.js).
 module.exports = router;

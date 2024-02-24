@@ -34,6 +34,7 @@ import { Subscription } from 'rxjs';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ForgotPasswordComponent } from '../../components/forgot-password/forgot-password.component';
+import { SecurityQuestionsDialogComponent } from '../../components/security-questions-dialog/security-questions-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -54,10 +55,12 @@ export class LoginComponent implements OnInit, OnDestroy {
   registerObj: any = {
     "username": "",
     "email": "",
-    "password": ""
+    "password": "",
+    "securityQuestions": []
   };
 
-  constructor(private http: HttpClient, private router: Router, private userService: UserServiceService,private dialog: MatDialog,) { }
+
+  constructor(private http: HttpClient, private router: Router, private userService: UserServiceService, private dialog: MatDialog,) { }
 
   ngOnInit(): void {
     // Set the 'chk' checkbox to be checked by default
@@ -78,29 +81,107 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   // Function to handle user registration
-  onRegister(): void {  
+  onRegister(): void {
+    if (!this.registerObj.username || this.registerObj.username === '') {
+      alert('Username is required.');
+      return;
+    }
+    // Test for input length exceeding the maximum allowed
+    if (this.registerObj.username.length > 50) {
+      alert('Username length exceeds maximum allowed');
+      return;
+    }
+    // Test for input length not exceeding the minimum allowed
+    if (this.registerObj.username.length < 4) {
+      alert('Username must be more than 4 characters');
+      return;
+    }
+
+    if (!this.registerObj.email || this.registerObj.email === '') {
+      alert('Email is required.');
+      return;
+    }
+    // Test for input length exceeding the maximum allowed
+    if (this.registerObj.email.length > 100) {
+      alert('Email length exceeds maximum allowed');
+      return;
+    }
+    // Check for valid email format using a regular expression
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!emailRegex.test(this.registerObj.email)) {
+      alert('Invalid email format');
+      return;
+    }
+    // Lowercase email to standardize
     this.registerObj.email = this.registerObj.email.toLowerCase();
-    this.registerSubscription = this.userService.register(this.registerObj).subscribe({
-      next: (res: any) => {
-        if (res) {
-          const chk = document.getElementById('chk') as HTMLInputElement;
-          if (chk) {
-            chk.checked = true;
+
+    if (!this.registerObj.password || this.registerObj.password === '') {
+      alert('Password is required.');
+      return;
+    }
+    // Test for input length exceeding the maximum allowed
+    if (this.registerObj.password.length > 100) {
+      alert('Password length exceeds maximum allowed');
+      return;
+    }
+    // Validate password format using a regular expression
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+    if (!passwordRegex.test(this.registerObj.password)) {
+      alert('Password must be at least 8 characters with a mix of letters, numbers, and symbols');
+      return;
+    }
+
+    this.registerObj.email = this.registerObj.email.toLowerCase();
+    const dialogRef = this.dialog.open(SecurityQuestionsDialogComponent, {
+      width: '800px',
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Assuming result is the array of security questions and answers
+        const processedQuestions = result.map((q: { question: string; answer: string; }) => ({
+          question: q.question, // Ensure proper capitalization/formatting if needed
+          answer: q.answer.toLowerCase(), // Lowercase the answer
+        }));
+        
+        // Add the security questions to the register object
+        this.registerObj.securityQuestions = processedQuestions;
+  
+        // Proceed with the registration
+        this.registerSubscription = this.userService.register(this.registerObj).subscribe({
+          next: (res: any) => {
+            if (res) {
+              // Reset the form
+              this.resetForm();
+              alert('Registration successful: ' + res.message);
+            } else {
+              alert('Registration failed.');
+            }
+          },
+          error: (error: any) => {
+            alert('Registration error: ' + error.message);
           }
-          this.registerObj.email = this.registerObj.email.toLowerCase();
-          this.registerObj.username = '';
-          this.registerObj.email = '';
-          this.registerObj.password = ''; 
-          alert('Response: ' + res.message);
-        } else {
-          alert('Register failed');
-        }
-      },
-      error: (error: any) => {
-        alert(error.message); // Display the error message from the thrown error
+        });
+      } else {
+        // User closed the dialog without submitting the form
+        alert('Security questions dialog was closed without saving.');
       }
     });
   }
+
+
+  private resetForm(): void {
+    const chk = document.getElementById('chk') as HTMLInputElement;
+    if (chk) {
+      chk.checked = true; // Switch back to the login form
+    }
+    // Clear the registration object
+    this.registerObj.username = '';
+    this.registerObj.email = '';
+    this.registerObj.password = '';
+  }
+
+
 
   // Function to handle user login
   onLogin(): void {
@@ -127,7 +208,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
 
-  forgotPassword(){
+  forgotPassword() {
     const dialogRef = this.dialog.open(ForgotPasswordComponent);
   }
 }

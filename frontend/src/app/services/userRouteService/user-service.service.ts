@@ -26,7 +26,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EMPTY, Observable, catchError, throwError } from 'rxjs';
-import { ChangePasswordDialogComponent } from '../../components/change-password-dialog/change-password-dialog.component';
 
 @Injectable({
   providedIn: 'root'
@@ -36,21 +35,32 @@ export class UserServiceService {
 
   constructor(private http: HttpClient) { }
 
-  // Method to register a new user
-  register(userData: any): Observable<any> {
+  /**
+   * Registers a new user along with their security questions.
+   * @param userData Contains user details including username, email, password, and security questions.
+   * @returns Observable of the registration response.
+   */
+  register(userData: { username: string; email: string; password: string; securityQuestions: Array<{ question: string; answer: string }> }): Observable<any> {
     // Validate username, email, and password
     const usernameErrorMessage = this.validateUsername(userData.username);
     const emailErrorMessage = this.validateEmail(userData.email);
     const passwordErrorMessage = this.validatePassword(userData.password);
+    
     // If there are validation errors, return an observable with an error message
     if (usernameErrorMessage !== null || emailErrorMessage !== null || passwordErrorMessage !== null) {
       const errorMessage = usernameErrorMessage || emailErrorMessage || passwordErrorMessage || 'Unknown error message';
       return throwError(() => new Error(errorMessage));
     } else {
       // If validation passes, make HTTP POST request to register endpoint
-      return this.http.post(`${this.baseUrl}/register`, userData);
+      // userData includes security questions for enhanced security
+      console.log("Registering user with data:", userData);
+      return this.http.post(`${this.baseUrl}/register`, userData).pipe(
+        catchError((error) => throwError(() => new Error(error.error.message || 'Registration failed due to an unknown error')))
+      );
     }
   }
+
+
 
   // Method to authenticate and login a user
   login(credentials: any): Observable<any> {
@@ -186,7 +196,7 @@ export class UserServiceService {
 
 
 
-  changeUserPassword(email: string, password: string, newPassword: string) {
+  changeUserPassword(password: string, newPassword: string) {
     // Validate deposit amount
     const newPasswordValidation = this.validatePassword(newPassword);
     // If there are validation errors, return an observable with an error message
@@ -199,7 +209,7 @@ export class UserServiceService {
       const headers = new HttpHeaders({
         Authorization: `Bearer ${authToken}`
       });
-      const requestBody = { email: email, password: password, newPassword: newPassword };
+      const requestBody = {password: password, newPassword: newPassword };
       return this.http.post<any>(url, requestBody, { headers }).pipe(
         catchError((error) => {
           const errorMessage = error.error.message; // Correct way to access the error message

@@ -17,7 +17,7 @@
  * as an array to keep a record of all stock transactions made by the user.
  * 
  */
-
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 
 // Defining the schema for the User model
@@ -55,12 +55,19 @@ const userSchema = new mongoose.Schema({
             price: Number, // Price per share for the transaction
             totalPrice: Number, // Total price of the transaction
             timestamp: Date // Timestamp when the transaction occurred
+        }],
+    securityQuestions: [{
+        question: String,
+        answerHash: {
+            type: String,
+            required: true,
+            set: answer => bcrypt.hashSync(answer, 10) // Automatically hash answers when set
         }
-    ],
+    }],
+    themePreference: { type: String, default: 'light' } // 'light' or 'dark'
 });
 
-// Creating the User model from the defined schema
+// Exporting the User model for use in other parts of the application
 const User = mongoose.model('User', userSchema);
 
-// Exporting the User model for use in other parts of the application
 module.exports = User;

@@ -20,31 +20,21 @@ export class ChangePasswordDialogComponent {
       alert('New passwords do not match.');
       return;
     }
-
-    // Get user details and email for password change
-    this.userService.getUserDetails().subscribe({
-      next: (response) => {
-        // Call the service to change the password
-        this.userService.changeUserPassword(response.email, this.password, this.newPassword)
-          .subscribe({
-            next: (response) => {
-              // Handle successful password change
-              console.log(response.message);
-              alert('Password changed successfully.');
-              this.closeDialog();
-            },
-            error: (error) => {
-              // Handle error in password change
-              console.error('Error changing password:', error);
-              alert(error.error.message || 'Error changing password.');
-            }
-          });
-      },
-      error: (error) => {
-        console.error('Error fetching user details:', error);
-        alert('Could not fetch user details.');
-      },
-    });
+    // Call the service to change the password
+    this.userService.changeUserPassword(this.password, this.newPassword)
+      .subscribe({
+        next: (response) => {
+          // Handle successful password change
+          console.log(response.message);
+          alert('Password changed successfully.');
+          this.closeDialog();
+        },
+        error: (error) => {
+          // Handle error in password change
+          console.error('Error changing password:', error);
+          alert(error.error.message || 'Error changing password.');
+        }
+      });
   }
 
   closeDialog(): void {

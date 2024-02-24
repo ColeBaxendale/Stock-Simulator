@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrl: './forgot-password.component.sass'
 })
 export class ForgotPasswordComponent {
-  private userEmail: '' | undefined
+   userEmail: '' | undefined
 
   requestPasswordReset(): void {
     // this.userService.requestPasswordReset(this.userEmail).subscribe({
