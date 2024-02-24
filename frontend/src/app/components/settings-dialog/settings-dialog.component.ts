@@ -34,13 +34,4 @@ export class SettingsDialogComponent {
     }
   }
 
-  toggleTheme(): void {
-    if(this.isDarkMode){
-      this.isDarkMode = false;
-    } else{
-      this.isDarkMode = true;
-    }
-   console.log('theme swtiched ' + this.isDarkMode);
-   
-  }
 }

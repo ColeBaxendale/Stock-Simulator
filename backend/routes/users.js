@@ -100,11 +100,6 @@ router.get('/user-details', authenticateToken, userController.getUserDetails);
 router.post('/change-password', authenticateToken, userController.changePassword);
 
 
-// Route for getting the user's theme preference
-router.get('/theme-preference', authenticateToken, userController.getThemePreference);
-
-// Route for updating the user's theme preference
-router.post('/update-theme-preference', authenticateToken, userController.updateThemePreference);
 
 // Route for getting the user's security questions
 router.post('/verify-security-questions',  userController.verifySecurityQuestions);

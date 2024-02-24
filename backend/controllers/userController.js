@@ -516,26 +516,6 @@ exports.verifySecurityQuestions = async (req, res) => {
     }
 };
 
-exports.getThemePreference = async (req, res) => {
-    const userId = req.user.userId; // Assuming you have a middleware to set req.user
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    res.json({ themePreference: user.themePreference });
-};
-
-exports.updateThemePreference = async (req, res) => {
-    const userId = req.user.userId;
-    const { themePreference } = req.body; // 'light' or 'dark'
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    user.themePreference = themePreference;
-    await user.save();
-
-    res.json({ message: 'Theme preference updated successfully' });
-};
-
 
 exports.resetPassword = async (req, res) => {
     try {

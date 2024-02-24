@@ -1,16 +1,13 @@
 <div class="settings-dialog">
+  <div>
     <button (click)="closeDialog()">Close</button>
-    <h3>Light / Dark UI</h3>
-    <label class="theme-switch">
-        <input type="checkbox" (change)="toggleTheme()" [checked]="isDarkMode">
-        <span class="slider round"></span>
-      </label>
-
-
-    <h2 (click)="changePassword()">Change Password</h2>
-
+  </div>
+  <div>
+    <button (click)="changePassword()">Change Password</button>
+  </div>
   
-  
+  <div>
     <button (click)="confirmReset()">Reset Account Data</button>
+  </div>
   </div>
   
