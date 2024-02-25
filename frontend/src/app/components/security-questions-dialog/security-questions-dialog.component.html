@@ -1,13 +1,15 @@
-<h2 mat-dialog-title>Security Questions</h2>
-<mat-dialog-content class="security-questions">
-  <div *ngFor="let question of securityQuestions; index as i">
-    <mat-form-field appearance="fill">
-      <mat-label>{{question.question}}</mat-label>
-      <input matInput [(ngModel)]="question.answer" name="answer-{{i}}">
-    </mat-form-field>
-  </div>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-button color="primary" (click)="onSave()">Save</button>
-</mat-dialog-actions>
+<div class="main">
+  <h2 mat-dialog-title class="dialog-title">Security Questions</h2>
+  <mat-dialog-content class="security-questions">
+    <div *ngFor="let question of securityQuestions; index as i" class="question-container">
+      <mat-form-field appearance="fill" class="question-field">
+        <mat-label>{{ question.question }}</mat-label>
+        <input matInput [(ngModel)]="question.answer" [name]="'answer-' + i">
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="dialog-actions">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-button color="primary" (click)="onSave()">Save</button>
+  </mat-dialog-actions>
+</div>

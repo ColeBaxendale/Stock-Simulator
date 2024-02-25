@@ -1,13 +1,60 @@
-.security-questions 
+.main
+  background-color: #1C1C1E
+  padding: 20px
+  border-radius: 8px
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+  display: flex
+  flex-direction: column
+  align-items: center
+  text-align: center
+
+.dialog-title
+  color: #86d7ff
+  font-size: 24px
+  margin-bottom: 20px
+
+.security-questions
   display: flex
   flex-direction: column
   gap: 16px
-
-
-mat-form-field 
   width: 100%
 
 
-mat-dialog-actions 
-  justify-content: flex-end
 
+.question-field
+  width: 100%
+  background-color: #2C2C2E
+  border-radius: 4px
+  color: #FFFFFF
+
+mat-form-field
+  width: 100%
+  & .mat-form-field-underline .mat-form-field-ripple
+    background-color: #86d7ff
+  & .mat-form-field-label
+    color: #86d7ff
+
+.dialog-actions
+  display: flex
+  justify-content: center
+  width: 100%
+  margin-top: 20px
+
+button
+  margin-right: 8px
+  background-color: #00A8E8
+  border: none
+  padding: 20px 30px
+  &:hover
+    cursor: pointer
+    background-color: #c4e1ed
+
+button.mat-button
+  flex-grow: 1
+
+button.mat-button
+  &:hover
+  cursor: pointer
+
+mat-form-field.mat-focused .mat-form-field-label
+  color: #000203
