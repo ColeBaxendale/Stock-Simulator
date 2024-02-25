@@ -143,7 +143,8 @@ export class TransactionComponent implements OnInit {
             // Add one day's worth of milliseconds to start date
             startDate = new Date(startDate.getTime() + 86400000);
             matchStartDate = new Date(transaction.timestamp) >= startDate;
-
+            console.log(startDate);
+            
 
           }
 
@@ -152,6 +153,7 @@ export class TransactionComponent implements OnInit {
             // Add one day's worth of milliseconds to end date
             endDate = new Date(endDate.getTime() + 86400000);
             matchEndDate = new Date(transaction.timestamp) <= endDate;
+            console.log(endDate);
 
 
           }
