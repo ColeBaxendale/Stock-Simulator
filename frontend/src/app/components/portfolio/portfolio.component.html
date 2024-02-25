@@ -16,7 +16,9 @@
         <th class="title-box" (click)="toggleSortDirection('profitLoss')">
           <!-- Conditionally display "Profit" title or loading spinner -->
           <ng-container *ngIf="loading; else profitTitle"> 
-            <div class="spinner"></div>
+            <div class="spinner-container">
+              <div class="spinner"></div>
+            </div>
           </ng-container>
           <ng-template #profitTitle>Profit</ng-template>
         </th>
@@ -34,7 +36,6 @@
         <td [ngClass]="{
             'profit-positive': (stock.profitLoss) > 0, 
             'profit-negative': (stock.profitLoss) < 0, 
-            'profit-zero': (stock.profitLoss) === 0
           }" *ngIf="stock.profitLoss !== undefined">
           {{ stock.profitLoss | currency:'USD' }}
         </td>

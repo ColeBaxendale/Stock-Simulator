@@ -86,4 +86,5 @@ onInputChange(): void {
       this.onStockSelect(this.keywords);
     }
   }
+  
 }

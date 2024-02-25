@@ -3,15 +3,15 @@ $font-family: 'Jost', sans-serif
 // Define main background color variable
 $main-bg: red
 // Define button background color variable
-$button-bg: #573b8a
+$button-bg: #00A8E8
 // Define button hover background color variable
-$button-hover-bg: #6d44b8
+$button-hover-bg: #86d7ff
 // Define login background color variable
-$login-bg: #eee
+$login-bg: #bfbebe
 // Define label color for sign-up section variable
-$label-color-signup: #fff
+$label-color-signup: #00A8E8
 // Define label color for login section variable
-$label-color-login: #573b8a
+$label-color-login: #00A8E8
 
 // Parent container styles
 .parent 
@@ -23,7 +23,7 @@ $label-color-login: #573b8a
   min-height: 100vh
   font-family: $font-family
   // Background gradient
-  background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e)
+  background: linear-gradient(to bottom, #1C1C1E, #444445, #7c7c7e)
 
 
 // Main container styles
@@ -34,7 +34,7 @@ $label-color-login: #573b8a
   overflow: hidden
   background: url("https://doc-08-2c-docs.googleusercontent.com/docs/securesc/68c90smiglihng9534mvqmq1946dmis5/fo0picsp1nhiucmc0l25s29respgpr4j/1631524275000/03522360960922298374/03522360960922298374/1Sx0jhdpEpnNIydS4rnN4kHSJtU1EyWka?e=view&authuser=0&nonce=gcrocepgbb17m&user=03522360960922298374&hash=tfhgbs86ka6divo3llbvp93mg4csvb38") no-repeat center/ cover
   border-radius: 10px
-  box-shadow: 5px 20px 50px #000
+  box-shadow: 5px 15px 40px #0488bd
 
 
 // Checkbox styles
@@ -77,6 +77,12 @@ label
 .login label 
   color: $label-color-login
   transform: scale(.6)
+  
+
+  
+.signup label 
+  color: $label-color-signup // This ensures the label text in the sign-up section is blue
+  font-size: 40px
 
 
 // Checked state for login section

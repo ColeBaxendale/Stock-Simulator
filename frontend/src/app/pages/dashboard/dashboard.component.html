@@ -1,20 +1,47 @@
-<!-- Dashboard component template -->
-
 <div class="dashboard">
-  <app-current-time></app-current-time> <!-- Display the current time component -->
-  <mat-icon (click)="quickSettingsDialog()">settings</mat-icon>
-  <mat-icon (click)="logout()">logout</mat-icon>
+  <div class="title">
+    <h1>Stock Simulator</h1>
+  </div>
+  
+  <div class="top-bar">
+    <div class="top-left">
+      
+      <div class="icon-container">
+        <mat-icon (click)="quickSettingsDialog()">settings</mat-icon>
+        <mat-icon (click)="logout()">logout</mat-icon>
+      </div>
+    </div>
+    <div class="top-right">
+      <app-current-time></app-current-time>
+    </div>
 
-  <app-searchbar></app-searchbar> <!-- Display the search bar component -->
-<app-user-details
-  [username]="loggedInUsername"
-  [buyingPower]="buyingPower"
-  [totalInvestment]="totalInvestment"
-  [totalPortfolioValue]="totalPortfolioValue"
-  [loading]="loading">
-</app-user-details>
-<h2 (click)="openDepositDialog()">Deposit</h2>
-<h2 (click)="quickBuyDialog()">Quick Buy Stock</h2>
-  <app-portfolio></app-portfolio> <!-- Display the portfolio component -->
-  <h2 class="transaction" (click)="openTransactionsDialog()">Transaction History</h2>
+  </div>
+  <div class="middle">
+    <app-searchbar></app-searchbar>
+  </div>
+
+
+<div class="userDetails">
+  <app-user-details [buyingPower]="buyingPower" [totalInvestment]="totalInvestment"
+    [totalPortfolioValue]="totalPortfolioValue" [loading]="loading">
+  </app-user-details>
+</div>
+  <!-- User details component -->
+
+
+  <!-- Deposit and Quick Buy options -->
+  <div class="action-container">
+    <h2 (click)="openDepositDialog()">Deposit</h2>
+    <h2 (click)="quickBuyDialog()">Quick Buy Stock</h2>
+    <h2 class="transaction" (click)="openTransactionsDialog()">Transaction History</h2>
+  </div>
+
+  <!-- Portfolio component -->
+  <div class="porfolio-container">
+    <app-portfolio></app-portfolio>
+
+  </div>
+
+  <!-- Transaction history -->
+  
 </div>
