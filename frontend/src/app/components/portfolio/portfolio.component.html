@@ -30,7 +30,7 @@
         <!-- Other cells remain unchanged -->
         <td>{{ stock.ticker }}</td>
         <td>{{ stock.quantityOwned }}</td>
-        <td>{{ stock.averageBuyPrice | currency }}</td>
+        <td>{{ stock.averageBuyPrice | currency: 'USD' }}</td>
         <td *ngIf="stock.currentPrice !== undefined">{{ stock.currentPrice | currency:'USD' }}</td>
         <!-- Apply conditional class only to the profit/loss cell -->
         <td [ngClass]="{
