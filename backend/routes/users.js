@@ -2,9 +2,9 @@
  * User Routes
  * 
  * Filename: users.js
- * Author: [Cole Baxendale]
- * Contact: [thecodercole@gmail.com]
- * Created on: [January 2024]
+ * Author: Cole Baxendale
+ * Contact: thecodercole@gmail.com
+ * Created on: January 2024
  * Version: 1.0
  * 
  * Description: 
@@ -14,12 +14,15 @@
  * 
  * Each route is protected with authentication middleware where necessary, ensuring that only authenticated
  * users can access certain operations.
- * 
  */
 
+// Import the express module to create route handlers.
 const express = require('express');
+// Import the userController to handle requests related to user operations.
 const userController = require('../controllers/userController');
+// Create a new router instance to define routes for user-related operations.
 const router = express.Router();
+// Import the authentication middleware to protect routes that require user authentication.
 const authenticateToken = require('../middleware/authenticate');
 
 /**
@@ -78,7 +81,8 @@ router.get('/transaction-history', authenticateToken, userController.getUserTran
 
 /**
  * PUT route for resetting the user's account back to default variables after registering.
- * Authenticated users can reset their account.
+ * Authenticated users can reset their account to initial settings.
+ * This route is protected by the 'authenticateToken' middleware.
  * The 'resetUserAccount' function in the userController resets the user's account.
  */
 router.put('/reset-account', authenticateToken, userController.resetUserAccount);
@@ -92,18 +96,27 @@ router.put('/reset-account', authenticateToken, userController.resetUserAccount)
 router.get('/user-details', authenticateToken, userController.getUserDetails);
 
 /**
- * POST route for changing user details.
+ * POST route for changing user details, specifically for changing the user's password.
  * Authenticated users can change their email or username.
  * This route is protected by the 'authenticateToken' middleware.
  * The 'changeUserDetails' function in the userController handles the user details change.
+ * Note: The route seems to be intended for changing passwords, based on the associated controller method.
  */
 router.post('/change-password', authenticateToken, userController.changePassword);
 
-// Route for getting the user's security questions
+/**
+ * POST route for verifying user's security questions.
+ * This endpoint is used as a step in the process of resetting a user's password, where the user's answers to security questions are verified.
+ * The 'verifySecurityQuestions' function in the userController handles the verification of the answers provided by the user.
+ */
 router.post('/verify-security-questions',  userController.verifySecurityQuestions);
 
+/**
+ * POST route for resetting the user's password.
+ * This route allows users to reset their password, usually after successfully answering security questions.
+ * The 'resetPassword' function in the userController handles the password reset process.
+ */
 router.post('/reset-password', userController.resetPassword);
-
 
 // Export the router so it can be used in the main server file (usually server.js or app.js).
 module.exports = router;
