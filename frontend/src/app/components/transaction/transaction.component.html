@@ -1,12 +1,13 @@
-<div>
-  <button mat-icon-button class="close-button" (click)="closeDialog()">
-  <mat-icon>close</mat-icon>
-</button>
-  <h2>Transactions</h2>
+<div class="top">
+
+  <h1>Transactions</h1>
   <!-- Close button (X) -->
 
-  <button  class="filter" mat-raised-button (click)="openFilterDialog()">Filter Transactions</button>
-  <button  class="filter" mat-raised-button color="warn" (click)="clearFilters()">Clear Filters</button>
+  <button  (click)="openFilterDialog()">Filter Transactions</button>
+  <button    (click)="clearFilters()">Clear Filters</button>
+  <button (click)="closeDialog()">
+    Close
+  </button>
   <div class="transaction-container">
    
     <table class="transaction-table">

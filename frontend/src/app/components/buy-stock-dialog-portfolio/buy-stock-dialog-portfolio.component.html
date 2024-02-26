@@ -1,13 +1,13 @@
-<h2>Buy More Stocks</h2>
+<div class="buy-container">
 <div>
-  <p>Symbol: {{ symbol }}</p>
-  <p>Current Price: ${{ currentPrice | number:'1.2-2' }}</p>
+  <h1>{{ symbol }}</h1>
+  <h2>${{ currentPrice | number:'1.2-2' }}</h2>
   <div>
-    <label for="buyQuantity">Quantity:</label>
     <input type="number" [(ngModel)]="buyQuantity" min="1" id="buyQuantity">
-    <p>Total Cost: ${{ (currentPrice * buyQuantity > 0) ? (currentPrice * buyQuantity | number:'1.2-2') : 'N/A' }}</p>
-    <p>Available Buying Power: ${{ buyingPower | number:'1.2-2' }}</p>
+    <h2>Total Cost: ${{ (currentPrice * buyQuantity > 0) ? (currentPrice * buyQuantity | number:'1.2-2') : 'N/A' }}</h2>
+    <h2>Available Buying Power: ${{ buyingPower | number:'1.2-2' }}</h2>
   </div>
   <button (click)="buyStock()">Buy</button>
   <button (click)="closeDialog()">Cancel</button>
+</div>
 </div>

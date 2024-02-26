@@ -1,9 +1,10 @@
-<h2>Filter Transactions</h2>
+<div class="main">
 
-<!-- Close button (X) -->
-<button mat-icon-button class="close-button" (click)="closeDialog()">
-  <mat-icon>close</mat-icon>
-</button>
+
+
+<h1>Filter Transactions</h1>
+
+
 
 <!-- Dropdown for transaction type -->
 <mat-form-field class="filter-dropdown">
@@ -38,3 +39,9 @@
 
 <!-- Apply button -->
 <button mat-raised-button color="primary" (click)="applyFilters()">Apply</button>
+<!-- Close button (X) -->
+<button (click)="closeDialog()">
+  Close
+</button>
+
+</div>

@@ -61,4 +61,8 @@ export class DepositComponent {
 
     return depositAmount; 
   }
+
+  cancel(){
+    this.dialogRef.close();
+  }
 }

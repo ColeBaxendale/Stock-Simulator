@@ -1,11 +1,14 @@
 <!-- stock-page.component.html -->
+<div class="background">
+  <div class="title">
+    <h1>Stock Simulator</h1>
 
+  </div>
 <!-- Search bar component -->
 <app-searchbar></app-searchbar>
 <button (click)="backToDashboard()">Back to Dashboard</button>
 
 <!-- Stock Details Section -->
-<h1>Stock Details</h1>
 <div *ngIf="loadingStockData">
   <!-- Loading animation while stock data is loading -->
   <div class="loading-animation">
@@ -13,29 +16,24 @@
     <div class="dot dot2"></div>
     <div class="dot dot3"></div>
   </div>
-  <!-- Display stock data -->
-  <h2>Stock: {{ stockData?.symbol }}</h2>
-  <p>Current Price:</p>
-  <p>Previous Close Price:</p>
-  <p>Opening Price:</p>
-  <p>High Price:</p>
-  <p>Low Price:</p>
-  <p>Volume:</p>
-  <p>Change Percentage:%</p>
 </div>
 
-<div *ngIf="!loadingStockData">
+<div *ngIf="!loadingStockData" class="stock-data">
   <!-- Display stock data once loaded -->
-  <h2>Stock: {{ stockData?.symbol }}</h2>
-  <p>Current Price: {{ stockData?.currentPrice }}</p>
-  <p>Previous Close Price: {{ stockData?.previousClosePrice }}</p>
-  <p>Opening Price: {{ stockData?.openingPrice }}</p>
-  <p>High Price: {{ stockData?.highPrice }}</p>
-  <p>Low Price: {{ stockData?.lowPrice }}</p>
-  <p>Volume: {{ stockData?.volume }}</p>
-  <p>Change Percentage: {{ stockData?.change_percentage }}%</p>
+  <h1>{{ stockData?.symbol }}</h1>
+  <h2>Price: ${{ stockData?.currentPrice }}</h2>
+  <h2>Previous Close Price: ${{ stockData?.previousClosePrice }}</h2>
+  <h2>Opening Price: ${{ stockData?.openingPrice }}</h2>
+  <h2>High Price: ${{ stockData?.highPrice }}</h2>
+  <h2>Low Price: ${{ stockData?.lowPrice }}</h2>
+  <h2>Volume: ${{ stockData?.volume }}</h2>
+  <h2>Change Percentage: ${{ stockData?.change_percentage }}%</h2>
   <!-- Button to buy stock -->
+
+</div>
+<div *ngIf="!loadingStockData">
   <button (click)="buyStock(stockData?.symbol,stockData?.currentPrice)">Buy Stock</button>
+
 </div>
 
 <!-- Stock News Section -->
@@ -61,4 +59,5 @@
       </div>
     </div>
   </div>
+</div>
 </div>

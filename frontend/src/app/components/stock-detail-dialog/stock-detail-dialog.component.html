@@ -1,14 +1,12 @@
-<button mat-icon-button class="close-button" (click)="closeDialog()">
-  <mat-icon>close</mat-icon>
-</button>
+<div class="main">
 <!-- Dialog title displaying the stock ticker -->
-<h2 mat-dialog-title>{{ symbol }}</h2>
+<h1>{{ symbol }}</h1>
 
 <!-- Display the current price, quantity owned, average buy price, and profit/loss -->
 <mat-dialog-content>
-  <p>Current Price: ${{ currentPrice | number: '1.2-2' }}</p>
-  <p>Quantity Owned: {{ ownedShares }}</p>
-  <p>Average Buy Price: ${{averageBuyPrice | number: '1.2-2' }}</p>
+  <p>Current: ${{ currentPrice | number: '1.2-2' }}</p>
+  <p>Owned: {{ ownedShares }}</p>
+  <p>Average: ${{averageBuyPrice | number: '1.2-2' }}</p>
   <p>Profit: ${{ profitLoss | number: '1.2-2' }}</p>
   
   <!-- Input field for specifying the sell quantity -->
@@ -20,13 +18,18 @@
 
 <!-- Dialog actions including close, sell, and buy more buttons -->
 <mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="true">Close</button>
+
   <!-- Sell button triggers the sellStock method -->
   <button mat-button (click)="sellStock()">Sell</button>
   <!-- Buy more button triggers the buyStock method -->
   <button mat-button (click)="buyStock(symbol, currentPrice)">Buy More</button>
 
-  <button mat-button (click)="viewTransactions(symbol)">View All Transactions</button>
+  <button mat-button (click)="viewTransactions(symbol)">View Transactions</button>
 
-  <button mat-button (click)="viewStockPage(symbol)">View Stock Page</button>
+  <button mat-button (click)="viewStockPage(symbol)">View Stock Details</button>
+<div class="quit-container">
+  <button class="quit" mat-button [mat-dialog-close]="true">Close</button>
+
+</div>
 </mat-dialog-actions>
+</div>

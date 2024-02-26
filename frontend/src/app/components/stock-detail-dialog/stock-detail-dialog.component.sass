@@ -1,33 +1,48 @@
-// Container for the loading animation
-  .loading-animation
+.main
+  padding: 5px
+  border-radius: 8px
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
   display: flex
+  flex-direction: column
   align-items: center
-  justify-content: center
-  height: 30px
-// Dot element of the loading animation
-.dot
-  width: 10px
-  height: 10px
+  text-align: center
+
+h1
+  color: #86d7ff
+  font-size: 24px
+  margin-bottom: 20px
+
+
+
+
+
+button
+  width: 45% // Adjust width to account for margin
+  padding: 10px
+  border: none
+  border-radius: 4px
   background-color: #007bff
-  border-radius: 50%
-  animation: dotScale 1s infinite
-  margin: 0 5px
+  color: white
+  cursor: pointer
+  display: inline-block // Display buttons inline
+  margin: 5px // Add margin for separation
+  &:hover
+    cursor: pointer
+    background-color: #c4e1ed
+  .quit
+    width: 80%
 
-// Delayed animation for dot1
-.dot1
-  animation-delay: 0.2s
-// Delayed animation for dot2
-.dot2
-  animation-delay: 0.4s
-// Delayed animation for dot3
-.dot3
-  animation-delay: 0.6s
-// Keyframes for the dot scale animation
-@keyframes dotScale
-  0%, 100%
-    transform: scale(1)
-  50%
-    transform: scale(1.2)
-// Sass comments describing the loading animation styles
+button.mat-button
+  flex-grow: 1
 
+button.mat-button
+  &:hover
+  cursor: pointer
 
+mat-form-field.mat-focused .mat-form-field-label
+  color: #000203
+.quit // Specific styles for the "Close" button
+  width: 80% // Set the "Close" button width to 80%
+.quit-container
+  width: 100%
+  text-align: center
