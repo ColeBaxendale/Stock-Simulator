@@ -3,6 +3,30 @@ import { Injectable } from '@angular/core';
 import { EMPTY, Observable, catchError, throwError } from 'rxjs';
 import { SnackBarPopUpService } from '../snackBarPopUp/snack-bar-pop-up.service';
 
+/*
+-----------------------------------------------------------------------
+Filename: stock-buy-sell.service.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This service provides methods for buying and selling stocks by making HTTP requests to corresponding endpoints. It includes functionality to validate stock symbols and quantities, handle authentication errors, and display error messages using a snackbar service.
+
+Dependencies:
+- HttpClient: Angular's built-in HTTP client for making requests.
+- SnackBarPopUpService: Service for displaying snackbar notifications.
+
+Usage:
+- Call the buyStock() method to buy stocks by providing symbol, quantity, and current price.
+- Call the sellStock() method to sell stocks by providing symbol, quantity, and current price.
+- Both methods handle validation of symbol and quantity, authentication errors, and display appropriate error messages.
+
+Note: Ensure that the baseUrl variable points to the correct API endpoint.
+-----------------------------------------------------------------------
+*/
+
 @Injectable({
   providedIn: 'root'
 })

@@ -1,3 +1,32 @@
+/*
+-----------------------------------------------------------------------
+Filename: searchbar.component.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This component implements a search bar functionality for searching stocks. It provides two modes: navigate and select. In navigate mode, it navigates to the stock details page upon selecting a stock symbol. In select mode, it emits the selected stock symbol to the parent component.
+
+Dependencies:
+- Angular's core library for component functionality.
+- Angular's router for navigation.
+- RxJS library for handling asynchronous operations.
+- StockService for searching stocks.
+- SnackBarPopUpService for displaying snackbar notifications.
+
+Usage:
+- Include this component in the template where stock search functionality is required.
+- Bind the mode input property to specify the component's mode ('navigate' or 'select').
+- Handle the stockSelected event in the parent component when using 'select' mode.
+- Implement the inputChanged event in the parent component to listen for input changes.
+- Customize debounceTime value as needed for input debounce.
+- Customize error handling and notifications as needed.
+-----------------------------------------------------------------------
+*/
+
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, of } from 'rxjs';

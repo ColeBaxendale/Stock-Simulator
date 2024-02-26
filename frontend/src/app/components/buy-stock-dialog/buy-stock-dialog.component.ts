@@ -1,3 +1,31 @@
+/*
+-----------------------------------------------------------------------
+Filename: buy-stock-dialog-portfolio.component.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This component represents a dialog for buying stocks on a specific page. It provides functionality to buy a certain quantity of a stock at the current price.
+
+Dependencies:
+- Angular Material dialog for creating dialog windows.
+- Services for buying and selling stocks.
+- Service for sharing current price and symbol information.
+- Router for navigation.
+- Service for retrieving user details.
+- Service for displaying snack bar messages.
+
+Usage:
+- Include this component in the template where stock buying dialogs are needed.
+- Pass necessary data to the component through the @Inject(MAT_DIALOG_DATA) decorator.
+- Call the 'buyStock' method to initiate the stock purchase process.
+- Call the 'closeDialog' method to close the dialog.
+-----------------------------------------------------------------------
+*/
+
+
 import { Component } from '@angular/core';
 import { StockBuySellService } from '../../services/buySellRouteService/stock-buy-sell.service';
 import { StockService } from '../../services/stockRouteService/stock-service.service';

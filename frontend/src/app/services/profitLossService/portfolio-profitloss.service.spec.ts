@@ -6,9 +6,9 @@ import { PorfolioProfitLoss } from './portfolio-profitloss.service';
  * Test Suite: PortfolioProfitLoss Service
  * 
  * Filename: portfolio-profitloss.service.spec.ts
- * Author: [Your Name or Team]
- * Contact: [Your Contact Information]
- * Created on: [Creation Date]
+ * Author: [Cole Baxendale]
+ * Contact: [thecodercole@gmail.com]
+ * Created on: [February 2024]
  * Version: 1.0
  * 
  * Description: 

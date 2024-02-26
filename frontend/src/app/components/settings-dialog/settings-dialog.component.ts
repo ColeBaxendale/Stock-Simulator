@@ -1,3 +1,30 @@
+/*
+-----------------------------------------------------------------------
+Filename: settings-dialog.component.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This component handles the settings dialog functionality including changing password and resetting user account. It utilizes Angular Material dialog for interaction with users.
+
+Dependencies:
+- Angular's core library for component functionality.
+- Angular Material dialog for displaying dialog windows.
+- UserServiceService for handling user-related operations.
+- SnackBarPopUpService for displaying snackbar notifications.
+- ChangePasswordDialogComponent for changing user password.
+- ConfirmationDialogComponent for confirming account reset.
+
+Usage:
+- Include this component in the template where settings need to be accessed.
+- Use the methods changePassword() and confirmReset() to trigger corresponding actions.
+- Ensure proper dependency injection for UserServiceService and SnackBarPopUpService.
+- Customize confirmation dialog messages as needed.
+-----------------------------------------------------------------------
+*/
+
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
@@ -8,7 +35,7 @@ import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation
 @Component({
   selector: 'app-settings-dialog',
   templateUrl: './settings-dialog.component.html',
-  styleUrl: './settings-dialog.component.sass'
+  styleUrls: ['./settings-dialog.component.sass']
 })
 export class SettingsDialogComponent {
   isDarkMode: boolean | undefined;

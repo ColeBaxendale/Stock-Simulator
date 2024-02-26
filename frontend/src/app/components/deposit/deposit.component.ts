@@ -1,3 +1,27 @@
+/*
+-----------------------------------------------------------------------
+Filename: deposit.component.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This component implements functionality for depositing funds into the user's account. It validates the deposit amount, calls the UserServiceService to perform the deposit operation, and handles success and error cases accordingly.
+
+Dependencies:
+- Angular's HttpClient for making HTTP requests.
+- Angular Material dialog for displaying dialog windows.
+- UserServiceService for handling user-related operations.
+- SnackBarPopUpService for displaying notifications.
+
+Usage:
+- Include this component in the template where deposit functionality is required.
+- Handle the deposit process and display feedback to the user accordingly.
+- Customize validation messages and error handling as needed.
+-----------------------------------------------------------------------
+*/
+
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -7,7 +31,7 @@ import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop
 @Component({
   selector: 'app-deposit',
   templateUrl: './deposit.component.html',
-  styleUrl: './deposit.component.sass'
+  styleUrls: ['./deposit.component.sass']
 })
 export class DepositComponent {
   amountModel: string = '';
@@ -62,7 +86,7 @@ export class DepositComponent {
     return depositAmount; 
   }
 
-  cancel(){
+  cancel(): void {
     this.dialogRef.close();
   }
 }

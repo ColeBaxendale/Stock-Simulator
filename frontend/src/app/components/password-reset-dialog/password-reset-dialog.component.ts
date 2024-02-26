@@ -1,3 +1,29 @@
+/*
+-----------------------------------------------------------------------
+Filename: password-reset-dialog.component.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This component implements a dialog for resetting user passwords. It validates the new password format and length, and then calls the UserServiceService to reset the password.
+
+Dependencies:
+- Angular's core library for component functionality.
+- Angular Material dialog for displaying dialog windows.
+- UserServiceService for handling user-related operations.
+- SnackBarPopUpService for displaying snackbar notifications.
+
+Usage:
+- Include this component in the template where password reset functionality is required.
+- Pass the user email as data to the dialog.
+- Handle the result of the dialog (true/false) in the parent component to take further action.
+- Customize password validation messages and regular expression as needed.
+- Customize error handling and notifications as needed.
+-----------------------------------------------------------------------
+*/
+
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';

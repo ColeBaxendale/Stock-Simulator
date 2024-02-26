@@ -5,9 +5,9 @@ import { BehaviorSubject } from 'rxjs';
  * PorfolioProfitLoss Service
  * 
  * Filename: porfolioProfitLoss.service.ts
- * Author: [Your Name or Team]
- * Contact: [Your Contact Information]
- * Created on: [Creation Date]
+ * Author: [Cole Baxendale]
+ * Contact: [thecodercole@gmail.com]
+ * Created on: [February 2024]
  * Version: 1.0
  * 
  * Description: 

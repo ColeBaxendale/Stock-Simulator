@@ -1,12 +1,36 @@
-import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+/*
+-----------------------------------------------------------------------
+Filename: security-questions-dialog.component.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This component handles the security questions dialog functionality including validation of answers and processing questions and answers. It utilizes Angular Material dialog for interaction with users.
+
+Dependencies:
+- Angular's core library for component functionality.
+- Angular Material dialog for displaying dialog windows.
+- SnackBarPopUpService for displaying snackbar notifications.
+
+Usage:
+- Include this component in the template where security questions need to be updated.
+- Pre-fill securityQuestions array with the default security questions.
+- Implement onSave() and onCancel() methods to handle user actions.
+- Ensure proper dependency injection for SnackBarPopUpService.
+- Customize validation messages as needed.
+-----------------------------------------------------------------------
+*/
+
+import { Component } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-security-questions-dialog',
   templateUrl: './security-questions-dialog.component.html',
-  styleUrl: './security-questions-dialog.component.sass'
+  styleUrls: ['./security-questions-dialog.component.sass']
 })
 export class SecurityQuestionsDialogComponent {
   // Pre-filled security questions
@@ -15,7 +39,7 @@ export class SecurityQuestionsDialogComponent {
     { question: 'What was the model of your first car?', answer: '' }
   ];
 
-  constructor(public dialogRef: MatDialogRef<SecurityQuestionsDialogComponent>,private snackbarService: SnackBarPopUpService) {}
+  constructor(public dialogRef: MatDialogRef<SecurityQuestionsDialogComponent>, private snackbarService: SnackBarPopUpService) {}
 
   onSave(): void {
     // Validate answers

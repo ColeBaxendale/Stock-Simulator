@@ -1,9 +1,31 @@
+/*
+-----------------------------------------------------------------------
+Filename: user-details.component.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This component handles the display of user details including username, buying power, profit/loss, total investment, and total portfolio value. It calculates and displays the total profit/loss based on these values and updates dynamically when any input property changes. It also provides a method to determine the color of the profit/loss value for visual representation.
+
+Dependencies:
+- Angular's core library for component, input, and lifecycle hook functionalities.
+
+Usage:
+- Include this component in the template where user details need to be displayed.
+- Bind input properties to respective data from the parent component.
+- The component will automatically calculate and display the total profit/loss.
+- Use the profitLossColor() method to determine the color of the profit/loss value for visual representation.
+-----------------------------------------------------------------------
+*/
+
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-user-details',
   templateUrl: './user-details.component.html',
-  styleUrl: './user-details.component.sass'
+  styleUrls: ['./user-details.component.sass']
 })
 export class UserDetailsComponent implements OnInit {
   @Input() username: string | null = null;
@@ -11,15 +33,13 @@ export class UserDetailsComponent implements OnInit {
   @Input() profitLoss: number | undefined;
   @Input() totalInvestment: number | undefined;
   @Input() totalPortfolioValue: number | undefined;
-  @Input() loading: boolean | undefined ;
+  @Input() loading: boolean | undefined;
   totalProfitLoss: number | undefined;
 
   constructor() { }
 
   ngOnInit(): void {
     this.calculateTotalProfitLoss();
-    
-    
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -39,5 +59,4 @@ export class UserDetailsComponent implements OnInit {
     if (totalProfitLoss === undefined) return 'white';
     return totalProfitLoss > 0 ? 'green' : totalProfitLoss < 0 ? 'red' : 'black';
   }
-  
 }

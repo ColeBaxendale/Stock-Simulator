@@ -1,14 +1,38 @@
+/*
+-----------------------------------------------------------------------
+Filename: forgot-password.component.ts
+Author: Cole Baxendale
+Contact: thecodercole@gmail.com
+Creation Date: February 2024
+Version: 1.0
+
+Description:
+This component implements functionality for handling password reset requests. It collects user email and security question answers, verifies them with the UserServiceService, and opens the PasswordResetDialogComponent for password reset upon successful verification.
+
+Dependencies:
+- Angular's core library for component functionality.
+- Angular Material dialog for displaying dialog windows.
+- Angular Material snackbar for displaying notifications.
+- UserServiceService for handling user-related operations.
+- PasswordResetDialogComponent for resetting passwords.
+
+Usage:
+- Include this component in the template where password reset functionality is required.
+- Handle the password reset process and display feedback to the user accordingly.
+- Customize security question answers and error handling as needed.
+-----------------------------------------------------------------------
+*/
+
 import { Component } from '@angular/core';
 import { UserServiceService } from '../../services/userRouteService/user-service.service';
 import { PasswordResetDialogComponent } from '../password-reset-dialog/password-reset-dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarPopUpService } from '../../services/snackBarPopUp/snack-bar-pop-up.service';
 
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
-  styleUrl: './forgot-password.component.sass'
+  styleUrls: ['./forgot-password.component.sass']
 })
 export class ForgotPasswordComponent {
   userEmail = '';
@@ -50,7 +74,6 @@ export class ForgotPasswordComponent {
     });
   }
 
-
   openPasswordResetDialog(): void {
     const dialogRef = this.dialog.open(PasswordResetDialogComponent, {
       data: { userEmail: this.userEmail } // Pass user email to dialog if needed
@@ -67,7 +90,7 @@ export class ForgotPasswordComponent {
     });
   }
 
-  cancel(){
+  cancel(): void {
     this.dialog.closeAll();
   }
 }
