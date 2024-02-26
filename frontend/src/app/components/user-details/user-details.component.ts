@@ -57,6 +57,6 @@ export class UserDetailsComponent implements OnInit {
 
   profitLossColor(totalProfitLoss: number | undefined): string {
     if (totalProfitLoss === undefined) return 'white';
-    return totalProfitLoss > 0 ? 'green' : totalProfitLoss < 0 ? 'red' : 'black';
+    return totalProfitLoss > 0 ? 'green' : totalProfitLoss < 0 ? 'red' : '#86d7ff';
   }
 }
