@@ -53,7 +53,6 @@ export class ForgotPasswordComponent {
 
   openPasswordResetDialog(): void {
     const dialogRef = this.dialog.open(PasswordResetDialogComponent, {
-      width: '250px', // Set the width of your dialog
       data: { userEmail: this.userEmail } // Pass user email to dialog if needed
     });
 
@@ -68,5 +67,7 @@ export class ForgotPasswordComponent {
     });
   }
 
-
+  cancel(){
+    this.dialog.closeAll();
+  }
 }
