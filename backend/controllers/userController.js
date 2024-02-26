@@ -428,7 +428,13 @@ exports.getUserDetails = async (req, res) => {
 
 
 
+/**
+ * Changes the password of an existing user after validating the old password and ensuring the new password meets security criteria.
+ * @param {Request} req - The request object, containing the old and new password submitted by the user.
+ * @param {Response} res - The response object used to send the operation's result back to the client.
+ */
 exports.changePassword = async (req, res) => {
+    // Validate the input using express-validator results
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -436,70 +442,76 @@ exports.changePassword = async (req, res) => {
 
     try {
         const { password, newPassword } = req.body;
-        // Validate input
+
+        // Check for the presence of both old and new passwords in the request
         if (!password || !newPassword) {
             return res.status(400).json({ message: 'Old password and new password are required' });
         }
 
-        // Check if old and new passwords are the same
+        // Ensure the new password is different from the old one
         if (password === newPassword) {
             return res.status(400).json({ message: 'New password must be different from the old password' });
         }
 
-        // Validate new password format
+        // Validate the format of the new password for security purposes
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
         if (!passwordRegex.test(newPassword)) {
             return res.status(400).json({ message: 'New password must be at least 8 characters with a mix of letters, numbers, and symbols' });
         }
 
-        // Find the user by email
+        // Retrieve the user from the database using the user ID stored in the request (usually set by authentication middleware)
         const userId = req.user.userId;
         const user = await User.findById(userId);
         if (!user) {
             return res.status(401).json({ message: 'User not found' });
         }
 
-        // Compare the provided old password with the stored hash
+        // Compare the old password with the stored hash to ensure it matches
         const isMatch = await bcrypt.compare(password, user.passwordHash);
         if (!isMatch) {
             return res.status(401).json({ message: 'Old password is incorrect' });
         }
 
-        // Hash the new password
+        // Hash the new password for secure storage
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update user's password in the database
+        // Update the user's password hash in the database
         user.passwordHash = hashedNewPassword;
         await user.save();
 
+        // Respond to the request indicating the password has been changed successfully
         res.status(200).json({ message: 'User password has been changed successfully' });
     } catch (error) {
         res.status(500).json({ message: 'Server error occurred' });
     }
 };
 
+/**
+ * Verifies the answers to security questions provided by the user, as a part of account recovery or verification processes.
+ * @param {Request} req - The request object, containing the user's email and their answers to security questions.
+ * @param {Response} res - The response object for sending the verification result back to the client.
+ */
 exports.verifySecurityQuestions = async (req, res) => {
     const { email, answers } = req.body;
 
     try {
+        // Find the user associated with the email, converting email to lowercase for case-insensitive matching
         const user = await User.findOne({ email: email.toLowerCase() });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        let verificationPassed = true;
-
-        // Use async/await with Promise.all to handle asynchronous comparison
+        // Use Promise.all to asynchronously compare each provided answer with the stored hash
         const verificationResults = await Promise.all(user.securityQuestions.map(async (question, index) => {
             const providedAnswer = answers.find(ans => ans.question.toLowerCase() === question.question.toLowerCase());
-            if (!providedAnswer) return false; // No answer provided for this question
+            if (!providedAnswer) return false; // Missing answer for a question
 
-            // Asynchronously compare the provided answer with the stored hash
+            // Compare the provided answer with the hashed answer stored in the database
             return await bcrypt.compare(providedAnswer.answer, question.answerHash);
         }));
 
-        // Check if all verifications passed
-        verificationPassed = verificationResults.every(result => result === true);
+        // Check if all provided answers match the stored hashes
+        const verificationPassed = verificationResults.every(result => result === true);
 
         if (verificationPassed) {
             res.json({ message: 'Security questions verified successfully.' });
@@ -511,12 +523,16 @@ exports.verifySecurityQuestions = async (req, res) => {
     }
 };
 
-
+/**
+ * Resets the password for a user identified by email, after validating the new password for security criteria.
+ * @param {Request} req - The request object, containing the user's email and new password.
+ * @param {Response} res - The response object for confirming the password reset to the client.
+ */
 exports.resetPassword = async (req, res) => {
     try {
         const { email, newPassword } = req.body;
 
-        // Validate input
+        // Validate input for email and new password
         if (!email || !newPassword) {
             return res.status(400).json({ message: 'Email and new password are required' });
         }
@@ -527,17 +543,16 @@ exports.resetPassword = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Hash the new password
+        // Hash the new password for secure storage
         const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-        // Update user's password in the database
+        // Update the user's password hash in the database
         user.passwordHash = hashedPassword;
         await user.save();
 
-        // Respond with a success message
+        // Confirm the password reset to the client
         res.status(200).json({ message: 'User password has been reset successfully' });
     } catch (error) {
-        // Handle errors
         res.status(500).json({ message: 'An error occurred while resetting user password' });
     }
 };
